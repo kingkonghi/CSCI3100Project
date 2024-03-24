@@ -1,0 +1,25 @@
+// Student Name : Chu Tsz Chim James, Chow Ka Shing, Fong Kwai Yiu, Lee Ho Kan
+// Student ID : 1155142348, 1155160080, 1155160139, 1155157376
+
+#app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  
+    header{
+      display: flex;
+      justify-content: center;
+  
+      background: rgb(54, 44, 44);
+  
+      font-size: 2rem;
+      color: white;
+      #title {
+        margin: 10px 0;
+      }
+    }
+    footer{
+        display: flex;
+        justify-content: center;
+    }
+}
