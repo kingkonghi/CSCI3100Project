@@ -17,8 +17,6 @@ const User = () => {
     return (
         <>
             <div id="profile">
-            <button type="button" className="directButton">Log out</button>
-
                 <div className="form-container">
                     <div class="icon-container">
                         <i class="bi bi-person-circle"></i>
