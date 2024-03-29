@@ -14,6 +14,7 @@
 import React from 'react'
 import './index.scss'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 // import components and pages
 import Root from './components/Root'
@@ -21,6 +22,7 @@ import Home from './pages/Sample'
 import Main from './pages/Main'
 import Search from './pages/Search'
 import Product from './pages/Product'
+import Cart from './pages/Cart'
 
 const router = createBrowserRouter([
   {
@@ -58,6 +60,10 @@ const router = createBrowserRouter([
       {
         path: '/product',
         element: <Product/>
+      },
+      {
+        path: '/cart',
+        element: <Cart/>
       }
     ]
 
