@@ -14,10 +14,10 @@ const Root = ({ nav, home }) => {
     //display root element
     return (
         <>
-            <div className='fixed-top'>
-                {home ? content : <header id="Title">
-                    <div id='title'>This is title bar</div>
-                    {nav ? <div>This is nav bar{content}</div> : content}
+            <div>
+                {home ? content : <header>
+                    <div id='titleBar'>Title Bar</div>
+                    {nav ? <div><div id='navBar'>Nav BAR</div>{content}</div> : content}
                 </header>}
             </div>
         </>
