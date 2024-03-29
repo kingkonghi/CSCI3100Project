@@ -24,8 +24,9 @@ import Search from './pages/Search'
 import Product from './pages/Product'
 import Cart from './pages/Cart'
 import Login from './pages/Login'
+import Payment from './pages/Payment'
+import Admin from './pages/Admin'
 import User from './pages/User'
-
 const router = createBrowserRouter([
   {
     //insert paths (no nav bar, no title bar)
@@ -70,6 +71,14 @@ const router = createBrowserRouter([
       {
         path: '/cart',
         element: <Cart/>
+      },
+      {
+        path: '/payment',
+        element: <Payment />
+      },
+      {
+        path: '/admin',
+        element: <Admin />
       },
       {
         path: '/user',
