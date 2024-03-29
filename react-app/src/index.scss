@@ -8,9 +8,60 @@
 }
 #titleBar{
   text-align: center;
+  background-color: rgb(255, 169, 8);
+  font-size: 30px;
+  font-weight: bold;
+  svg{
+    font-size: 40px;
+    left: 0px;
+    top: 5px;
+    position: absolute;
+    margin: auto;
+    cursor: pointer;
+    display: block;
+  }
+  #user{
+    height: 50px;
+    width: 50px;
+    top: 0px;
+    position: absolute;
+    right: 5px;
+    svg{
+      font-size: 35px;
+      margin: auto;
+      cursor: pointer;
+      display: block;
+    }
+  }
 }
 #navBar{
-  text-align: center;
+  background-color: rgb(9, 66, 9);
+  position: relative;
+  text-align: left;
+  height: 35px;
+  p{
+    display: inline;
+    color: white;
+    font-weight: bold;
+    margin: 0 10px;
+    cursor: pointer;
+    line-height: 35px;
+  }
+  #searchBar{
+    position: absolute;
+    right: 10px;
+    color: white;
+    display: inline;
+    font-size: 15 px;
+    cursor: pointer;
+    input{
+      width: 250px;
+      height: 25px;
+      margin: 5px;
+      cursor: text;
+    }
+  }
+
 }
 #main {
   min-height: 100vh;
@@ -367,6 +418,7 @@
   #productSession{
     background-color: white;
     position: relative;
+    width: 100%;
     img{
       height: 100%;
       padding: 2%;
@@ -374,14 +426,22 @@
     }
     #productDesc{
       height: 100%;
-      padding: 1% 2%;
+      padding: 1% 30px;
       top: 0px;
       bottom: 0px;
       right: 0px;
-      td{
-        position: relative;
+      position: relative;
+      #like{
+        margin-left: 20px;
+        display: inline;
+        transform: translateY(-2px);
+        color: red;
+        svg{
+          transform: translateY(-2px);
+          cursor: pointer;
+        }
       }
-      p{
+      p, pre{
         top: 0;
         margin: 0;
         padding: 0;
@@ -397,14 +457,140 @@
         position: absolute;
         right: 1%;
         bottom: 5%;
+        text-align: center;
+        p{
+          display: inline;
+          font-size: 16px;
+        }
+        svg{
+          cursor: pointer;
+        }
+        input{
+          display: inline;
+          width: 40px;
+          margin: 5px 10px;
+        };
         .directButton{
           display: block;
           border-radius: 10px;
           background-color: rgb(151, 172, 230);
-          font-size: 12px;
+          font-size: 15px;
           font-weight: bold;
         }
       }
+    }
+  }
+  #otherProductSession{
+    margin-top: 2%;
+    .placeholder{
+      width: 10px;
+      color: transparent;
+      cursor: default;
+    }
+    .productCard{
+      background-color: white;
+      border: black 1px solid;
+      width: 300px;
+      height: 400px;
+      padding: 2px;
+      position: relative;
+      img{
+        max-width: 300px;
+        max-height: 200px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      hr{
+        margin: 10px 0 ;
+      }
+      p{
+        padding: 0;
+        margin: 0 5px;
+      }
+      .cardTitle{
+        font-weight: bold;
+        font-size: 18px;
+      }
+      .cardInfo{
+        font-size: 15px;
+        font-style: italic;
+        font-family: "Proggy Fonts";
+      }
+      button{
+        display: block;
+        border-radius: 10px;
+        background-color: rgb(151, 172, 230);
+        font-size: 15px;
+        font-weight: bold;
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+  }
+  #commentSession{
+    margin-top: 2%;
+    .comments{
+      position: relative;
+      background-color: white;
+      border: 1px solid black;
+      height: 100px;
+      padding: 0 10px;
+      margin: 20px 0;
+      p{
+        padding: 0;
+        margin: 0;
+      }
+      .star{
+        position: absolute;
+        right: 10px;
+        top: 0;
+        font-size: 20px;
+        color: rgb(224, 202, 0);
+      }
+      .userName{
+        text-decoration: underline;
+        font-style: italic;
+      }
+      .userComment{
+        font-size: 14px;
+        font-family: sans-serif;
+      }
+
+    }
+  }
+  #ratingSession{
+    width: 100%;
+    textarea{
+      width: 100%;
+      height: 100px;
+    }
+    p{
+      font-weight: bold;
+      color: red;
+      padding: 0;
+      margin-bottom: 10px;
+    }
+    #rate{
+      color: black;
+      font-weight: 500;
+      svg{
+        color: rgb(224, 202, 0);
+        font-size: 20px;
+        margin-bottom: 4px;
+      }
+    }
+    textarea{
+      margin-bottom: 4px;
+    }
+    button{
+      display: block;
+      border-radius: 10px;
+      background-color: rgb(151, 172, 230);
+      font-size: 15px;
+      font-weight: bold;
     }
   }
 }
