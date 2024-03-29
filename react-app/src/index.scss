@@ -408,3 +408,44 @@
     }
   }
 }
+
+#login {
+  min-height: 100vh;
+  background-color: rgb(225, 255, 179);
+  min-width: 600px;
+  padding: 10%;
+
+  .form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+  }
+
+  .form-container h2 {
+    text-align: center;
+  }
+
+  .form-container .form-content {
+    display: none;
+  }
+
+  .form-container .form-content.active {
+    display: block;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
+
+  .navbar {
+    border-top-right-radius: 50px;
+    border-top-left-radius: 50px;
+  }
+}
+

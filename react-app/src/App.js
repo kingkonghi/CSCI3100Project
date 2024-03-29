@@ -21,6 +21,7 @@ import Home from './pages/Sample'
 import Main from './pages/Main'
 import Search from './pages/Search'
 import Product from './pages/Product'
+import Login from './pages/Login'
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
     path: '',
     element: <Root nav={false} home={false} />,
     children: [
+      {
+        path: '/login',
+        element: <Login />
+      }
     ]
 
   },
