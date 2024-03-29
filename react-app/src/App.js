@@ -1,12 +1,11 @@
-// Student Name : Chu Tsz Chim James, Chow Ka Shing, Fong Kwai Yiu, Lee Ho Kan
-// Student ID : 1155142348, 1155160080, 1155160139, 1155157376
+// Student Name : Lee Ho Kan, Leung Tsz Chung, Lee Kong Yau, Lui Chak Sum, Ho Yan Tung
+// Student ID : 1155157376, 1155141896, 1155149600, 1155158054, 1155176122
 
 /***************************************************************************************
 *    Title: App.js
-*    Author: CHU Tsz Chim James, CHEUNG Hin Hang, CHAN Tsz Leung, PO Tsz Hin, LEE Su Zie
-*    Date: 12/4/2023
+*    Author: Lee Ho Kan, Leung Tsz Chung, Lee Kong Yau, Lui Chak Sum, Ho Yan Tung
+*    Date: 29/3/2024
 *    Code version: 1.0
-*    Availability: https://github.com/hhcheung0/OF-COURSE/blob/main/react-app/src/App.js
 *
 ***************************************************************************************/
 /* Code has been modified in the following aspects:
