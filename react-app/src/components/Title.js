@@ -10,7 +10,7 @@ import { FaRegUserCircle } from "react-icons/fa";
 // import React components
 import "../index.scss"
 
-const Nav = () => {
+const Title = () => {
 
     //display root element
     return (
@@ -23,4 +23,4 @@ const Nav = () => {
         </>
     )
 }
-export default Nav
+export default Title

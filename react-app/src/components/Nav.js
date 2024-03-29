@@ -6,16 +6,18 @@ import React from 'react';
 // import React components
 import "../index.scss"
 import { FaSearch } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 
-const Title = () => {
+const Nav = () => {
 
     //display root element
     return (
         <>
             <div id="navBar">
-                <p>Home Page</p>
-                <p>My Favorite Product</p>
-                <p>My Order</p>
+                <p><Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>Home Page</Link></p>
+                <p><Link to="/cart" style={{ textDecoration: 'none', color: 'inherit' }}>My Shopping Cart</Link></p>
+                <p><Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>My Favorite Product</Link></p>
+                <p><Link to="/order" style={{ textDecoration: 'none', color: 'inherit' }}>My Order</Link></p>
                 <div id="searchBar">
                     <input type="text" placeholder="Search product..."/>
                     <FaSearch />
@@ -24,4 +26,4 @@ const Title = () => {
         </>
     )
 }
-export default Title
+export default Nav
