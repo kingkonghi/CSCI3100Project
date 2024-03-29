@@ -1,16 +1,13 @@
-// Student Name : Lee Ho Kan, Leung Tsz Chung, Lee Kong Yau, Lui Chak Sum, Ho Yan Tung
-// Student ID : 1155157376, 1155141896, 1155149600, 1155158054, 1155176122
-
-import "../index.scss"
-import React, { useState } from 'react';
-import { Container, Row, Col, ListGroup, Form, Button, InputGroup } from 'react-bootstrap';
-
+import "../index.scss";
+import React, { useState, useEffect } from 'react';
+import { Card, Container, Row, Col, ListGroup, Form, Button, InputGroup } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 // Hard code data
 const CartData = [
     [1, "Table", 20, 2, "Made with the rare oak wood found in India, the finest table that you..."],
     [2, "Washing machine", 2000, 1, "Assist with AI production line, a washing machine for life."]
-]; // id, name, price, quantity_in_cart, desc
+];
 
 const SavedAddress = [
     "19 ABC Road, Kwun Tong",
@@ -19,21 +16,41 @@ const SavedAddress = [
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState(CartData);
-    const [selectedAddress, setSelectedAddress] = useState('');
+    const [selectedAddress, setSelectedAddress] = useState(SavedAddress[0]);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (SavedAddress.length > 0 && !selectedAddress) {
+            setSelectedAddress(SavedAddress[0]);
+        }
+    }, [selectedAddress]);
 
     const calculateTotal = () => {
         return cartItems.reduce((acc, item) => acc + (item[2] * item[3]), 0);
     };
 
     const updateQuantity = (index, quantity) => {
+        let updatedQuantity = quantity;
+        if (quantity === '' || quantity < 1 || isNaN(quantity)) {
+            updatedQuantity = 1;
+        }
         const updatedCartItems = [...cartItems];
-        updatedCartItems[index][3] = quantity;
+        updatedCartItems[index][3] = updatedQuantity;
         setCartItems(updatedCartItems);
     };
 
     const removeItem = (index) => {
         const updatedCartItems = cartItems.filter((item, i) => i !== index);
         setCartItems(updatedCartItems);
+    };
+
+    const handleAddressChange = (e) => {
+        const value = e.target.value;
+        if (value === "add-new") {
+            navigate('/add-address');
+        } else {
+            setSelectedAddress(value);
+        }
     };
 
     return (
@@ -50,6 +67,7 @@ const Cart = () => {
                                     <InputGroup.Text>Qty</InputGroup.Text>
                                     <Form.Control
                                         type="number"
+                                        min="1"
                                         value={item[3]}
                                         onChange={(e) => updateQuantity(index, parseInt(e.target.value))}
                                     />
@@ -62,25 +80,47 @@ const Cart = () => {
                     </ListGroup>
                 </Col>
                 <Col>
-                    <h4>Grand Total: ${calculateTotal()}</h4>
+                    <Card className="mb-3">
+                    <Card.Header>Summary</Card.Header>
+                        <ListGroup variant="flush">
+                            <ListGroup.Item className="d-flex justify-content-between">
+                            <div>Order Total</div>
+                            <div>$ {calculateTotal()}</div>
+                            </ListGroup.Item>
+                            <ListGroup.Item className="d-flex justify-content-between">
+                            <div>Discount</div>
+                            <div>$ {0}</div>
+                            </ListGroup.Item>
+                            <ListGroup.Item className="d-flex justify-content-between">
+                            <div>Delivery Fee</div>
+                            <div>$ {50}</div>
+                            </ListGroup.Item>
+                            <ListGroup.Item className="d-flex justify-content-between">
+                            <strong>Total Payment</strong>
+                            <strong>$ {calculateTotal() + 50}</strong>
+                            </ListGroup.Item>
+                        </ListGroup>
+                    </Card>
+                    <Card className="mb-3">
+                        <Card.Header>Delivery Schedule</Card.Header>
+                        <ListGroup variant="flush">
+                            <ListGroup.Item>
+                            <div>Estimated delivery by 1-3 days.</div>
+                            </ListGroup.Item>
+                        </ListGroup>
+                    </Card>
+
                     <Form>
                         <Form.Group className="mb-3" controlId="formAddressSelect">
                             <Form.Label>Select Address</Form.Label>
                             <Form.Select
                                 value={selectedAddress}
-                                onChange={(e) => setSelectedAddress(e.target.value)}
+                                onChange={handleAddressChange}
                             >
-                                <option value="">Choose...</option>
                                 {SavedAddress.map((address, index) => (
                                     <option key={index} value={address}>{address}</option>
                                 ))}
-                            </Form.Select>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="formPaymentMethod">
-                            <Form.Label>Payment Method</Form.Label>
-                            <Form.Select>
-                                <option>Credit Card/Debit Card</option>
-                                <option>PayPal</option>
+                                <option value="add-new">Add New Address...</option>
                             </Form.Select>
                         </Form.Group>
                         <Button variant="primary" type="submit">
