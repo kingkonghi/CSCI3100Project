@@ -13,13 +13,15 @@ const Root = ({ nav, home }) => {
     
     const content = <div id='main-container'><Outlet /></div>
 
+    const loggedIn = true
+
     //display root element
     return (
         <>
             <div>
                 {home ? content : <header>
-                    <Title/>
-                    {nav ? <div><Nav />{content}</div> : content}
+                    <Title login={loggedIn}/>
+                    {nav ? <div><Nav/>{content}</div> : content}
                 </header>}
             </div>
         </>

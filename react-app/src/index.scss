@@ -6,6 +6,48 @@
   display: flex;
   flex-direction: column;
 }
+#userInfo{
+  width: 200px;
+  position: fixed;
+  right: 10px;
+  top: 50px;
+  z-index: 1;
+  background-color: rgb(233, 131, 131);
+  border: 1px black solid;
+  border-radius: 15px;
+  padding: 10px;
+  hr{
+    margin: 5px 0;
+  }
+  p{
+    padding: 0;
+    margin: 0;
+    font-size: 15px;
+    text-align: left;
+  }
+  #intro{
+    font-style: italic;
+    text-decoration: underline;
+  }
+  #name{
+    font-weight: bold;
+    font-size: large;
+  }
+  #name-warn{
+    color: rgb(156, 0, 0);
+  }
+  button{
+    margin: 10px auto;
+    display: block;
+    border-radius: 10px;
+    background-color: rgb(151, 172, 230);
+    font-size: 15px;
+    font-weight: bold;
+    width: 175px;
+    height: 30px;
+    bottom: 0;
+  }
+}
 #titleBar{
   text-align: center;
   background-color: rgb(255, 169, 8);
