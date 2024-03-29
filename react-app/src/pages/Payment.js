@@ -26,74 +26,74 @@ const CardPayment = ({ onSubmit }) => {
         onSubmit(cardDetails);
     };
     return (
-        <>
-        <Col className="col-6">
-            <Card style={{ padding: '20px' }}>
-            <Card.Body>
-                <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-3">
-                    <Form.Label>Card Number</Form.Label>
-                    <Form.Control
-                    type="text"
-                    name="cardNumber"
-                    placeholder="Card number"
-                    value={cardDetails.cardNumber}
-                    onChange={handleChange}
-                    required
-                    />
-                </Form.Group>
+        <Row>
+            <Col className="col-6">
+                <Card style={{ padding: '20px' }}>
+                <Card.Body>
+                    <Form onSubmit={handleSubmit}>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Card Number</Form.Label>
+                        <Form.Control
+                        type="text"
+                        name="cardNumber"
+                        placeholder="Card number"
+                        value={cardDetails.cardNumber}
+                        onChange={handleChange}
+                        required
+                        />
+                    </Form.Group>
 
-                <Form.Group className="mb-3">
-                    <Form.Label>Cardholder Name</Form.Label>
-                    <Form.Control
-                    type="text"
-                    name="cardHolderName"
-                    placeholder="Cardholder name"
-                    value={cardDetails.cardHolderName}
-                    onChange={handleChange}
-                    required
-                    />
-                </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Cardholder Name</Form.Label>
+                        <Form.Control
+                        type="text"
+                        name="cardHolderName"
+                        placeholder="Cardholder name"
+                        value={cardDetails.cardHolderName}
+                        onChange={handleChange}
+                        required
+                        />
+                    </Form.Group>
 
-                <Form.Label>Expiry Date</Form.Label>
-                <InputGroup className="mb-3">
-                    <FormControl
-                    placeholder="MM"
-                    name="expiryMonth"
-                    value={cardDetails.expiryMonth}
-                    onChange={handleChange}
-                    style={{ maxWidth: '70px' }}
-                    required
-                    />
-                    <FormControl
-                    placeholder="YY"
-                    name="expiryYear"
-                    value={cardDetails.expiryYear}
-                    onChange={handleChange}
-                    style={{ maxWidth: '70px' }}
-                    required
-                    />
-                    <FormControl
-                    placeholder="CVV"
-                    name="cvv"
-                    value={cardDetails.cvv}
-                    onChange={handleChange}
-                    style={{ maxWidth: '70px' }}
-                    required
-                    />
-                </InputGroup>
+                    <Form.Label>Expiry Date</Form.Label>
+                    <InputGroup className="mb-3">
+                        <FormControl
+                        placeholder="MM"
+                        name="expiryMonth"
+                        value={cardDetails.expiryMonth}
+                        onChange={handleChange}
+                        style={{ maxWidth: '70px' }}
+                        required
+                        />
+                        <FormControl
+                        placeholder="YY"
+                        name="expiryYear"
+                        value={cardDetails.expiryYear}
+                        onChange={handleChange}
+                        style={{ maxWidth: '70px' }}
+                        required
+                        />
+                        <FormControl
+                        placeholder="CVV"
+                        name="cvv"
+                        value={cardDetails.cvv}
+                        onChange={handleChange}
+                        style={{ maxWidth: '70px' }}
+                        required
+                        />
+                    </InputGroup>
 
-                <Button variant="primary" type="submit" className="me-2">
-                    Pay Now
-                </Button>
-                </Form>
-            </Card.Body>
-            </Card>
-        </Col>
-        <Col className="col-6">
-            <img className="img-fluid" src={"/img/credit_card_cvv.png"} />
-        </Col>
-        </>
+                    <Button variant="primary" type="submit" className="me-2">
+                        Pay Now
+                    </Button>
+                    </Form>
+                </Card.Body>
+                </Card>
+            </Col>
+            <Col className="col-6">
+                <img className="img-fluid" src={"/img/payment/credit_card_cvv.png"} />
+            </Col>
+        </Row>
     );
 };
 
@@ -118,7 +118,7 @@ const Payment = () => {
         setTimeout(() => {
             setIsLoading(false);
             setShowSuccess(true);
-        }, 4000); // 4s delay simulating payment loading
+        }, 3000); // 3s delay simulating payment loading
     };
 
     const renderPaymentInterface = () => {
@@ -142,9 +142,19 @@ const Payment = () => {
     }
 
     if (showSuccess) {
+        const orderId = "ORD123456";
+        const orderCreationTime = new Date().toLocaleString();
+        const amountPaid = 340;
         return (
-            <Container>
-                Payment Success!
+            <Container className="text-center my-5">
+                <img src="/img/payment/payment_success.png" alt="Success" style={{ width: '200px', height: '200px' }} />
+                <h2>Payment Success!</h2>
+                <p>Your order has been successfully placed.</p>
+                <div className="my-3">
+                    <strong>Order ID:</strong> {orderId}<br/>
+                    <strong>Order Time:</strong> {orderCreationTime}<br/>
+                    <strong>Amount Paid:</strong> ${amountPaid}
+                </div>
                 <Button variant="primary" onClick={() => navigate('/order')}>
                     Proceed to My Orders
                 </Button>
@@ -170,10 +180,8 @@ const Payment = () => {
                 </Form.Select>
                 </Form.Group>
             </Form>
-            <Row>
-                {renderPaymentInterface()}
-            </Row>
-            <Button variant="secondary" type="button" onClick={() => {navigate('/cart')}}>
+            {renderPaymentInterface()}
+            <Button className="my-3" variant="secondary" type="button" onClick={() => {navigate('/cart')}}>
                     Back to Cart
             </Button>
         </Container>
