@@ -2,7 +2,7 @@
 // Student ID : 1155157376, 1155141896, 1155149600, 1155158054, 1155176122
 import "../index.scss"
 import * as React from 'react';
-import { FaMinus, FaPlus, FaStar, FaRegStar } from "react-icons/fa";
+import { FaMinus, FaPlus, FaStar, FaRegStar, FaHeart } from "react-icons/fa";
 
 
 
@@ -22,7 +22,7 @@ const Search = () => {
                             <img src={"/photo/"+productData[0]+".png"} alt={productData[1]} />
                         </td>
                         <td id="productDesc">
-                            <p className="titleBar">{productData[1]}</p>
+                            <p className="titleBar">{productData[1] + " "}<p id="like"><FaHeart /> You have liked this product!</p></p>
                             <pre>{productData[6] + "\n\n*Remaining stock(s): " + productData[2]}</pre>
                             <div id="toOrder">
                                 <p>Quantity: </p>
