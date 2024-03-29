@@ -123,7 +123,7 @@ const Cart = () => {
                                 <option value="add-new">Add New Address...</option>
                             </Form.Select>
                         </Form.Group>
-                        <Button variant="primary" type="submit">
+                        <Button variant="primary" type="submit" onClick={() => {navigate('/payment')}}>
                             Checkout
                         </Button>
                     </Form>

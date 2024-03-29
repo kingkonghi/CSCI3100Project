@@ -1,55 +1,184 @@
 import React, { useState } from 'react';
-import { Form } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { Card, Container, Row, Col, ListGroup, Form, FormControl, Button, InputGroup, Spinner } from 'react-bootstrap';
 
-const CardPayment = () => {
+// Hard code data
+const CartData = [
+    [1, "Table", 20, 2, "Made with the rare oak wood found in India, the finest table that you..."],
+    [2, "Washing machine", 2000, 1, "Assist with AI production line, a washing machine for life."]
+];
+
+const CardPayment = ({ onSubmit }) => {
+    const [cardDetails, setCardDetails] = useState({
+        cardNumber: '',
+        cardHolderName: '',
+        expiryMonth: '',
+        expiryYear: '',
+        cvv: '',
+    });
+    
+    const handleChange = (e) => {
+        setCardDetails({ ...cardDetails, [e.target.name]: e.target.value });
+    };
+    
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSubmit(cardDetails);
+    };
     return (
-      <div>
-        <h3>Card Payment</h3>
-      </div>
+        <>
+        <Col className="col-6">
+            <Card style={{ padding: '20px' }}>
+            <Card.Body>
+                <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3">
+                    <Form.Label>Card Number</Form.Label>
+                    <Form.Control
+                    type="text"
+                    name="cardNumber"
+                    placeholder="Card number"
+                    value={cardDetails.cardNumber}
+                    onChange={handleChange}
+                    required
+                    />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                    <Form.Label>Cardholder Name</Form.Label>
+                    <Form.Control
+                    type="text"
+                    name="cardHolderName"
+                    placeholder="Cardholder name"
+                    value={cardDetails.cardHolderName}
+                    onChange={handleChange}
+                    required
+                    />
+                </Form.Group>
+
+                <Form.Label>Expiry Date</Form.Label>
+                <InputGroup className="mb-3">
+                    <FormControl
+                    placeholder="MM"
+                    name="expiryMonth"
+                    value={cardDetails.expiryMonth}
+                    onChange={handleChange}
+                    style={{ maxWidth: '70px' }}
+                    required
+                    />
+                    <FormControl
+                    placeholder="YY"
+                    name="expiryYear"
+                    value={cardDetails.expiryYear}
+                    onChange={handleChange}
+                    style={{ maxWidth: '70px' }}
+                    required
+                    />
+                    <FormControl
+                    placeholder="CVV"
+                    name="cvv"
+                    value={cardDetails.cvv}
+                    onChange={handleChange}
+                    style={{ maxWidth: '70px' }}
+                    required
+                    />
+                </InputGroup>
+
+                <Button variant="primary" type="submit" className="me-2">
+                    Pay Now
+                </Button>
+                </Form>
+            </Card.Body>
+            </Card>
+        </Col>
+        <Col className="col-6">
+            <img className="img-fluid" src={"/img/credit_card_cvv.png"} />
+        </Col>
+        </>
     );
 };
 
 const PayPalPayment = () => {
     return (
         <div>
-        <h3>PayPal Payment</h3>
-        {/* Add PayPal integration or instructions here */}
+        <h4>PayPal Payment</h4>
         </div>
     );
 };
 
 const Payment = () => {
-  const [paymentMethod, setPaymentMethod] = useState('');
+    const navigate = useNavigate();
+    const [paymentMethod, setPaymentMethod] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
 
-  const renderPaymentInterface = () => {
-    switch (paymentMethod) {
-      case 'Credit Card':
-        return <CardPayment />;
-      case 'PayPal':
-        return <PayPalPayment />;
-      default:
-        return <p>Please select a payment method</p>;
+    const handlePaymentSubmit = (paymentDetails) => {
+        setIsLoading(true);
+        console.log(paymentDetails);
+
+        setTimeout(() => {
+            setIsLoading(false);
+            setShowSuccess(true);
+        }, 4000); // 4s delay simulating payment loading
+    };
+
+    const renderPaymentInterface = () => {
+        switch (paymentMethod) {
+            case 'Card':
+                return <CardPayment onSubmit={handlePaymentSubmit} />;
+            case 'PayPal':
+                return <PayPalPayment />;
+            default:
+                return <p>Please select a payment method</p>;
+        }
+    };
+
+    if (isLoading) {
+        return (
+            <div className="text-center my-5">
+                <h5>Payment in progress... Please do NOT leave this page or close the browser</h5>
+                <Spinner animation="border" role="status"></Spinner>
+            </div>
+        );
     }
-  };
 
-  return (
-    <div>
-      <Form>
-        <Form.Group controlId="paymentMethodSelect">
-          <Form.Label>Select Payment Method</Form.Label>
-          <Form.Select
-            value={paymentMethod}
-            onChange={(e) => setPaymentMethod(e.target.value)}
-          >
-            <option value="">Choose...</option>
-            <option value="Credit Card">Credit Card</option>
-            <option value="PayPal">PayPal</option>
-          </Form.Select>
-        </Form.Group>
-      </Form>
-      {renderPaymentInterface()}
-    </div>
-  );
+    if (showSuccess) {
+        return (
+            <Container>
+                Payment Success!
+                <Button variant="primary" onClick={() => navigate('/order')}>
+                    Proceed to My Orders
+                </Button>
+            </Container>
+        );
+    }
+
+    return (
+        <div>
+        <Container>
+            <h2 className="my-3">Payment</h2>
+            <p className="my-3">Amount to be paid: ${340}</p>
+            <Form className="my-3">
+                <Form.Group controlId="paymentMethodSelect">
+                <Form.Label><strong>Payment Method</strong></Form.Label>
+                <Form.Select
+                    value={paymentMethod}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                >
+                    <option value="">Choose...</option>
+                    <option value="Card">Credit Card / Debit Card</option>
+                    <option value="PayPal">PayPal</option>
+                </Form.Select>
+                </Form.Group>
+            </Form>
+            <Row>
+                {renderPaymentInterface()}
+            </Row>
+            <Button variant="secondary" type="button" onClick={() => {navigate('/cart')}}>
+                    Back to Cart
+            </Button>
+        </Container>
+        </div>
+    );
 };
 
 export default Payment;
