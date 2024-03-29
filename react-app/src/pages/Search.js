@@ -12,8 +12,8 @@ const Search = () => {
 
     const returnProductData = [
                             [1, "Table", 20, 1000, [["User0112","The prefect table with high quality."],["Bernald Meriq","Cheapest table I've seen in a while."]], [5.0, 4.5], "Made with the rare oakk wood found in India, the finest table that you..."],
-                            [1, "Washing machine", 20, 2000, [["User0445","Been using it for 10 years, perfect."],["Marina C.","Flawless."]], [5.0, 5.0], "Assist with AI production line, a washing machine for life."],
-                            [1, "Lamp", 20, 100, [["ProCommentor","Nice Lamp!"],["User0002","A little decoration to my pretty room."]], [5.0, 4.5], "Brighten your room with this lamp made with masters based in Germany."]
+                            [2, "Washing machine", 20, 2000, [["User0445","Been using it for 10 years, perfect."],["Marina C.","Flawless."]], [5.0, 5.0], "Assist with AI production line, a washing machine for life."],
+                            [3, "Lamp", 20, 100, [["ProCommentor","Nice Lamp!"],["User0002","A little decoration to my pretty room."]], [5.0, 4.5], "Brighten your room with this lamp made with masters based in Germany."]
                         ] //id, name, price, stock, reviews (array), rating (array), desc
 
 
@@ -24,7 +24,7 @@ const Search = () => {
                     <p id="searchTitle"> 3 products matching your filters - </p>     
                     <p id="searchFilter"> Contain word "a" | Price between $500 and $3,000 </p>                      
                     <div className="productDesc">
-                        <img src={"/photo/"+returnProductData[0][1]+".png"} alt={returnProductData[0][1]} />
+                        <img src={"/photo/"+returnProductData[0][0]+".png"} alt={returnProductData[0][1]} />
                         <div className="descArea">
                             <p className="titleBar">{returnProductData[0][1]}</p>
                             <p>{returnProductData[0][6]}</p>
@@ -36,8 +36,9 @@ const Search = () => {
                             <button type="button" className="directButton">Find out more &rarr;</button>
                         </div>
                     </div>
+                    <hr/>
                     <div className="productDesc">
-                        <img src={"/photo/"+returnProductData[1][1]+".png"} alt={returnProductData[1][1]} />
+                        <img src={"/photo/"+returnProductData[1][0]+".png"} alt={returnProductData[1][1]} />
                         <div className="descArea">
                             <p className="titleBar">{returnProductData[1][1]}</p>
                             <p>{returnProductData[1][6]}</p>
@@ -49,8 +50,9 @@ const Search = () => {
                             <button type="button" className="directButton">Find out more &rarr;</button>
                         </div>
                     </div>
+                    <hr/>
                     <div className="productDesc">
-                        <img src={"/photo/"+returnProductData[2][1]+".png"} alt={returnProductData[2][1]} />
+                        <img src={"/photo/"+returnProductData[2][0]+".png"} alt={returnProductData[2][1]} />
                         <div className="descArea">
                             <p className="titleBar">{returnProductData[2][1]}</p>
                             <p>{returnProductData[2][6]}</p>
