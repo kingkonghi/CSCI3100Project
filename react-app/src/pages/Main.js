@@ -148,7 +148,7 @@ const Main = () => {
                         </div>
                     </div>
                     <div id="recommendProduct">
-                        <p id="titleRecommendation">Recommend for you base on your search history</p>
+                        <p id="titleRecommendation">Recommend for you base on your purchase history and favorite item</p>
                         <div id="productGroup">                      
                             <div className="productDesc">
                                 <img src={"/photo/"+ProductData[0][0]+".png"} alt={ProductData[0][1]} />
