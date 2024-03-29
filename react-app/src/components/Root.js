@@ -5,6 +5,8 @@ import { Outlet } from 'react-router-dom'
 import React from 'react';
 
 // import React components
+import Nav from "./Nav.js"
+import Title from "./Title.js"
 import "../index.scss"
 
 const Root = ({ nav, home }) => {
@@ -16,8 +18,8 @@ const Root = ({ nav, home }) => {
         <>
             <div>
                 {home ? content : <header>
-                    <div id='titleBar'>Title Bar</div>
-                    {nav ? <div><div id='navBar'>Nav BAR</div>{content}</div> : content}
+                    <Title/>
+                    {nav ? <div><Nav />{content}</div> : content}
                 </header>}
             </div>
         </>

@@ -8,9 +8,60 @@
 }
 #titleBar{
   text-align: center;
+  background-color: rgb(255, 169, 8);
+  font-size: 30px;
+  font-weight: bold;
+  svg{
+    font-size: 40px;
+    left: 0px;
+    top: 5px;
+    position: absolute;
+    margin: auto;
+    cursor: pointer;
+    display: block;
+  }
+  #user{
+    height: 50px;
+    width: 50px;
+    top: 0px;
+    position: absolute;
+    right: 5px;
+    svg{
+      font-size: 35px;
+      margin: auto;
+      cursor: pointer;
+      display: block;
+    }
+  }
 }
 #navBar{
-  text-align: center;
+  background-color: rgb(9, 66, 9);
+  position: relative;
+  text-align: left;
+  height: 35px;
+  p{
+    display: inline;
+    color: white;
+    font-weight: bold;
+    margin: 0 10px;
+    cursor: pointer;
+    line-height: 35px;
+  }
+  #searchBar{
+    position: absolute;
+    right: 10px;
+    color: white;
+    display: inline;
+    font-size: 15 px;
+    cursor: pointer;
+    input{
+      width: 250px;
+      height: 25px;
+      margin: 5px;
+      cursor: text;
+    }
+  }
+
 }
 #main {
   min-height: 100vh;
@@ -380,6 +431,16 @@
       bottom: 0px;
       right: 0px;
       position: relative;
+      #like{
+        margin-left: 20px;
+        display: inline;
+        transform: translateY(-2px);
+        color: red;
+        svg{
+          transform: translateY(-2px);
+          cursor: pointer;
+        }
+      }
       p, pre{
         top: 0;
         margin: 0;
