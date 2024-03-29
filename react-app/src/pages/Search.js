@@ -1,5 +1,5 @@
-// Student Name : Chu Tsz Chim James, Chow Ka Shing, Fong Kwai Yiu, Lee Ho Kan
-// Student ID : 1155142348, 1155160080, 1155160139, 1155157376
+// Student Name : Lee Ho Kan, Leung Tsz Chung, Lee Kong Yau, Lui Chak Sum, Ho Yan Tung
+// Student ID : 1155157376, 1155141896, 1155149600, 1155158054, 1155176122
 
 import "../index.scss"
 import * as React from 'react';
