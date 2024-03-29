@@ -18,6 +18,7 @@ const Nav = () => {
                 <p><Link to="/cart" style={{ textDecoration: 'none', color: 'inherit' }}>My Shopping Cart</Link></p>
                 <p><Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>My Favorite Product</Link></p>
                 <p><Link to="/order" style={{ textDecoration: 'none', color: 'inherit' }}>My Order</Link></p>
+                <p><Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>Login (temp)</Link></p>
                 <div id="searchBar">
                     <input type="text" placeholder="Search product..."/>
                     <FaSearch />
