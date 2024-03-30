@@ -54,7 +54,6 @@ const Cart = () => {
     };
 
     return (
-        <div id="mainBGColor">
         <Container>
             <Row>
                 <h3 className="my-3">Shopping Cart</h3>
@@ -134,7 +133,6 @@ const Cart = () => {
                 </Col>
             </Row>
         </Container>
-        </div>
     );
 }
 
