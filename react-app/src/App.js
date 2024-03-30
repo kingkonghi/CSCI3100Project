@@ -27,6 +27,8 @@ import Login from './pages/Login'
 import Payment from './pages/Payment'
 import Admin from './pages/Admin'
 import User from './pages/User'
+import Favour from './pages/Favourite'
+
 const router = createBrowserRouter([
   {
     //insert paths (no nav bar, no title bar)
@@ -83,6 +85,10 @@ const router = createBrowserRouter([
       {
         path: '/user',
         element: <User/>
+      },
+      {
+        path: '/favourite',
+        element: <Favour/>
       }
     ]
 
