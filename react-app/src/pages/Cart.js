@@ -54,7 +54,11 @@ const Cart = () => {
     };
 
     return (
+        <div id="mainBGColor">
         <Container>
+            <Row>
+                <h3 className="my-3">Shopping Cart</h3>
+            </Row>
             <Row>
                 <Col>
                     <ListGroup>
@@ -130,6 +134,7 @@ const Cart = () => {
                 </Col>
             </Row>
         </Container>
+        </div>
     );
 }
 
