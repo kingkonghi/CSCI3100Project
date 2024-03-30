@@ -28,6 +28,7 @@ import Payment from './pages/Payment'
 import Admin from './pages/Admin'
 import User from './pages/User'
 import Favour from './pages/Favourite'
+import OrderList from './pages/Orderlist'
 
 const router = createBrowserRouter([
   {
@@ -89,6 +90,10 @@ const router = createBrowserRouter([
       {
         path: '/favourite',
         element: <Favour/>
+      },
+      {
+        path: '/orderlist',
+        element: <OrderList/>
       }
     ]
 
