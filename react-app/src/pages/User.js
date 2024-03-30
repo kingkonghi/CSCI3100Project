@@ -3,46 +3,122 @@
 import "../index.scss"
 import * as React from 'react';
 import {useState} from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Card, Container, Row, Col, ListGroup, Form, FormControl, Button, InputGroup, Spinner } from 'react-bootstrap';
+
 
 const User = () => {
-
-    let username = "givemelenggradepls"
-    let fullname = "Joe Go"
-    let email = "sleepy@gmail.com"
-    let contactno = null
-    let password = "newpw"
-    let defaultpay = "huh"
-    let creditcard = ""
-
+    const navigate = useNavigate();
+    const [formValues, setFormValues] = useState({
+      username: 'givemelenggradepls',
+      fullname: 'Joe Go',
+      email: 'sleepy@gmail.com',
+      contactno: '',
+      password: '',
+      creditcard: '',
+      cardholdername: '',
+      cardnumber: '',
+      expirydate: '',
+      paymenttype: 'debit',
+    });
+  
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        let processedValue = value;
+        
+        if (name === 'contactno') {
+          processedValue = value.replace(/\D/g, '');
+        }
+        
+        setFormValues((prevValues) => ({ ...prevValues, [name]: processedValue }));
+      };
+  
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      // Perform form submission logic here
+      console.log(formValues);
+    };
+  
     return (
-        <>
-            <div id="profile">
-                <div className="form-container">
-                    <div class="icon-container">
-                        <i class="bi bi-person-circle"></i>
-                        <h4>{username}</h4>
-                    </div>
-
-                    <hr />
-                    <div className="signup">
-                    <h3>Edit User Information</h3>
-                    <form>
-                        <input type="text" id="signupUsername" name="signupUsername" placeholder="Username" required />
-                        <br />
-                        <input type="email" id="signupEmail" name="signupEmail" placeholder="Email" required />
-                        <br />
-                        <input type="password" id="signupPassword" name="signupPassword" placeholder="Password" required />
-                        <br />
-                        <input type="password" id="signupconPassword" name="signupconPassword" placeholder="Confirm Password" required />
-                        <br />
-                        <input type="submit" value="Sign Up" />
-                    </form>
-                    </div>
-
-                </div>            
+      <>
+        <div id="profile">
+          <div className="form-container">
+            <div className="icon-container">
+              <i className="bi bi-person-circle"></i>
+              <h4>{formValues.username}</h4>
             </div>
-        </>
+            <hr />
+
+            <h3>Edit User Information</h3>
+            <div className="editinfo">
+                <form id="general" onSubmit={handleSubmit}>
+                    <p id="row">
+                        <label for="name" class="cell label">Full Name</label>
+                        <input 
+                            id="name" 
+                            type="text" 
+                            name="fullname" 
+                            placeholder="Full Name" 
+                            value={formValues.fullname} 
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </p>
+                    <br/>
+                    <p id="row">
+                        <label for="email" class="cell label">Email</label>
+                        <input
+                            id="email"
+                            type="email"
+                            name="email"
+                            placeholder="Email"
+                            value={formValues.email}
+                            onChange={handleInputChange}
+                            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
+                            required
+                        />
+                    </p>
+                    <br/>
+                    <p id="row">
+                        <label for="phone" class="cell label">Contact Number (+852)</label>
+                        <input
+                            id="phone"
+                            type="tel"
+                            name="contactno"
+                            placeholder="Contact Number"
+                            value={formValues.contactno}
+                            onChange={handleInputChange}
+                            pattern="[0-9]{8}"
+                            required
+                        />
+                    </p>
+                    <br/>
+                    <p id="row">
+                        <label class="cell label">Change Password</label>
+                        <a href="#" onclick="document.getElementById('changepw').style.display='block'">Set a new password</a>
+                    </p>
+                    <br/>
+                    <Form className="my-3">
+                        <Form.Group controlId="paymentMethodSelect">
+                        <Form.Label><strong>Default Payment Method</strong></Form.Label>
+                        <Form.Select>
+                            <option value="">Choose...</option>
+                            <option value="Card">Credit Card / Debit Card</option>
+                            <option value="PayPal">PayPal</option>
+                        </Form.Select>
+                        </Form.Group>
+                    </Form>
+                    <br />
+                    <p id="ButtonContainer">
+                        <input type="submit" value="Cancel"/>
+                        <input type="submit" value="Save Changes" />
+                    </p>
+                </form>
+            </div>
+          </div>
+        </div>
+      </>
     );
-}
+  };
 
 export default User;

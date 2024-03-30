@@ -701,4 +701,18 @@
       margin-right: 10px;
       margin-top: -5px;
     }
+
+    #general  {display: table;}
+    #row {display: table-row;}
+    .cell {display: table-cell;}
+    .label {
+      padding-right: 10px;
+    }
+
+    #ButtonContainer {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+      
 }
