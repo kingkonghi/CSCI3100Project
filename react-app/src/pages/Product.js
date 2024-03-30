@@ -23,7 +23,7 @@ const Search = () => {
                         </td>
                         <td id="productDesc">
                             <p className="titleBar">{productData[1] + " "}<p id="like"><FaHeart /> You have liked this product!</p></p>
-                            <pre>{productData[6] + "\n\n*Remaining stock(s): " + productData[2]}</pre>
+                            <pre>{productData[6] + "\n\n*Remaining stock(s): " + productData[2] +"\n\n*Price: $" + productData[3]}</pre>
                             <div id="toOrder">
                                 <p>Quantity: </p>
                                 <FaMinus /><input type="text" placeholder={1}/><FaPlus />
