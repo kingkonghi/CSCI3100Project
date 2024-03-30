@@ -7,9 +7,9 @@ import { Link } from 'react-router-dom';
 
 const Orderlist = () => {
     const [orderlist, setorderlist] = useState([
-      { oid: "202403301", date: "2024-03-30", totalprice: 20 , status: "Completed"},
+      { oid: "202403301", date: "2024-03-30", totalprice: 40 , status: "Completed"},
       { oid: "202403311", date: "2024-03-31", totalprice: 2000 , status: "Delivering"},
-      { oid: "202403312", date: "2024-03-31", totalprice: 3000 , status: "Packing"}
+      { oid: "202403312", date: "2024-03-31", totalprice: 2020 , status: "Packing"}
     ]);
   
     const updateOrder = (updatedOrder) => {

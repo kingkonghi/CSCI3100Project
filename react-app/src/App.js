@@ -29,6 +29,7 @@ import Admin from './pages/Admin'
 import User from './pages/User'
 import Favour from './pages/Favourite'
 import OrderList from './pages/Orderlist'
+import Order from './pages/Order'
 
 const router = createBrowserRouter([
   {
@@ -94,6 +95,10 @@ const router = createBrowserRouter([
       {
         path: '/orderlist',
         element: <OrderList/>
+      },
+      {
+        path: '/order/:oid',
+        element: <Order/>
       }
     ]
 
