@@ -2,6 +2,7 @@
 // Student ID : 1155157376, 1155141896, 1155149600, 1155158054, 1155176122
 
 #app{
+  background-color: rgb(225, 255, 179);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -106,8 +107,6 @@
 
 }
 #main {
-  min-height: 100vh;
-    background-color: rgb(225, 255, 179);
     min-width: 1200px;
     padding: 1%;
     #hotProduct {
