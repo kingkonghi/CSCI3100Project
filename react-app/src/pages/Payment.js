@@ -155,7 +155,7 @@ const Payment = () => {
                     <strong>Order Time:</strong> {orderCreationTime}<br/>
                     <strong>Amount Paid:</strong> ${amountPaid}
                 </div>
-                <Button variant="primary" onClick={() => navigate('/order')}>
+                <Button variant="primary" onClick={() => navigate('/orderlist')}>
                     Proceed to My Orders
                 </Button>
             </Container>

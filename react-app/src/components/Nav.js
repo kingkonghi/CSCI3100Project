@@ -6,9 +6,10 @@ import React from 'react';
 // import React components
 import "../index.scss"
 import { FaSearch } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Nav = () => {
+    const navigate = useNavigate();
 
     //display root element
     return (
@@ -16,12 +17,13 @@ const Nav = () => {
             <div id="navBar">
                 <p><Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>Home Page</Link></p>
                 <p><Link to="/cart" style={{ textDecoration: 'none', color: 'inherit' }}>My Shopping Cart</Link></p>
-                <p><Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>My Favorite Product</Link></p>
-                <p><Link to="/order" style={{ textDecoration: 'none', color: 'inherit' }}>My Order</Link></p>
+                <p><Link to="/favourite" style={{ textDecoration: 'none', color: 'inherit' }}>My Favorite Product</Link></p>
+                <p><Link to="/orderlist" style={{ textDecoration: 'none', color: 'inherit' }}>My Order</Link></p>
                 <p><Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>Login (temp)</Link></p>
+                <p><Link to="/admin" style={{ textDecoration: 'none', color: 'inherit' }}>Admin CRUD</Link></p>
                 <div id="searchBar">
                     <input type="text" placeholder="Search product..."/>
-                    <FaSearch />
+                    <FaSearch onClick={() => navigate("/search")} />
                 </div>
             </div>
         </>

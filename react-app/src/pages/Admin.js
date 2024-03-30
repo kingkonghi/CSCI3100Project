@@ -16,8 +16,8 @@ const Admin = () => {
     const [view, setView] = useState('users'); // 'users' or 'products'
     const [users, setUsers] = useState(initialUserData);
     const [products, setProducts] = useState(initialProductData);
-    const [userForm, setUserForm] = useState({ id: '', username: '', password: '', phone: '', email: '' });
-    const [productForm, setProductForm] = useState({ id: '', name: '', price: '', stock: '', description: '' });
+    const [userForm, setUserForm] = useState({ id: 'New', username: '', password: '', phone: '', email: '' });
+    const [productForm, setProductForm] = useState({ id: 'New', name: '', price: '', stock: '', description: '' });
 
     const handleUserChange = (e) => {
         setUserForm({ ...userForm, [e.target.name]: e.target.value });
@@ -27,40 +27,39 @@ const Admin = () => {
         setProductForm({ ...productForm, [e.target.name]: e.target.value });
     };
 
+    const resetUserForm = () => {
+        setUserForm({ id: 'New', username: '', password: '', phone: '', email: '' });
+    };
+
+    const resetProductForm = () => {
+        setProductForm({ id: 'New', name: '', price: '', stock: '', description: '' });
+    };
+
     const submitUserForm = (e) => {
         e.preventDefault();
         // backend call
         console.log('Submitting User Form:', userForm);
-
-        setUserForm({ id: '', username: '', password: '', phone: '', email: '' });
+        resetUserForm();
     };
 
     const submitProductForm = (e) => {
         e.preventDefault();
         // backend call
         console.log('Submitting Product Form:', productForm);
-
-        setProductForm({ id: '', name: '', price: '', stock: '', description: '' });
+        resetProductForm();
     };
 
-    const resetUserForm = (e) => {
-        e.preventDefault();
-        setUserForm({ id: '', username: '', password: '', phone: '', email: '' });
-    };
-
-    const resetProductForm = (e) => {
-        e.preventDefault();
-        setProductForm({ id: '', name: '', price: '', stock: '', description: '' });
-    };
 
     const deleteUser = (userId) => {
         // backend call
         setUsers(users.filter(user => user[0] !== userId));
+        resetUserForm();
     };
 
     const deleteProduct = (productId) => {
         // backend call
         setProducts(products.filter(product => product[0] !== productId));
+        resetProductForm();
     };
 
     const selectUser = (userId) => {
@@ -85,6 +84,7 @@ const Admin = () => {
             </Nav>
             {view === 'users' ? (
                 <>
+                    User ID: {userForm.id}
                     <Form className="my-3">
                         <Form.Group controlId="formUserName">
                             <Form.Label>Username</Form.Label>
@@ -131,9 +131,9 @@ const Admin = () => {
                             />
                         </Form.Group>
                         <Button variant="primary" onClick={submitUserForm}>
-                            {userForm.id ? 'Update User' : 'Add User'}
+                            {userForm.id == "New" ? 'Add User' : 'Update User'}
                         </Button>
-                        <Button variant="secondary" onClick={resetUserForm}>
+                        <Button variant="secondary" onClick={() => resetUserForm()}>
                             Reset
                         </Button>
                     </Form>
@@ -167,6 +167,7 @@ const Admin = () => {
                 </>
             ) : (
                 <>
+                    Product ID: {productForm.id}
                     <Form className="my-3">
                         <Form.Group controlId="formProductName">
                             <Form.Label>Name</Form.Label>
@@ -213,9 +214,9 @@ const Admin = () => {
                             />
                         </Form.Group>
                         <Button variant="primary" onClick={submitProductForm}>
-                            {productForm.id ? 'Update Product' : 'Add Product'}
+                            {productForm.id == "New" ? 'Add Product' : 'Update Product'}
                         </Button>
-                        <Button variant="secondary" onClick={resetProductForm}>
+                        <Button variant="secondary" onClick={() => resetProductForm()}>
                             Reset
                         </Button>
                     </Form>
