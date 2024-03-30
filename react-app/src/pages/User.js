@@ -14,6 +14,7 @@ const User = () => {
       fullname: 'Joe Go',
       email: 'sleepy@gmail.com',
       contactno: '',
+      address: '',
       password: '',
       creditcard: '',
       cardholdername: '',
@@ -89,6 +90,19 @@ const User = () => {
                             value={formValues.contactno}
                             onChange={handleInputChange}
                             pattern="[0-9]{8}"
+                            required
+                        />
+                    </p>
+                    <br/>
+                    <p id="row">
+                        <label for="address" class="cell label">Address</label>
+                        <input
+                            id="address"
+                            type="text"
+                            name="address"
+                            placeholder="Address"
+                            value={formValues.address}
+                            onChange={handleInputChange}
                             required
                         />
                     </p>
