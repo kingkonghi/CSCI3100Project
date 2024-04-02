@@ -27,6 +27,12 @@ def add_item():
     print("Item added.")
     cur.close()
 
+def edit_item_quantity():
+    cur = conn.cursor()
+    cur.execute("UPDATE item SET ITEMQUANTITY = 2 WHERE itemID = '1'")
+    conn.commit()
+    print("Item quantity updated.")
+    cur.close()
 
 def remove_item():
     cur = conn.cursor()
