@@ -27,9 +27,9 @@ def add_item():
     print("Item added.")
     cur.close()
 
-def edit_item_quantity():
+def edit_item_quantity(item):
     cur = conn.cursor()
-    cur.execute("UPDATE item SET ITEMQUANTITY = 2 WHERE itemID = '1'")
+    cur.execute("UPDATE item SET ITEMQUANTITY = ? WHERE itemID = ?", (item.quantity,item.itemid))
     conn.commit()
     print("Item quantity updated.")
     cur.close()
