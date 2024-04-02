@@ -1,6 +1,5 @@
 import mariadb
 import sys
-
 try:
     conn = mariadb.connect(
         user="root",
@@ -11,7 +10,8 @@ try:
 except mariadb.Error as e:
     print(f"Error connecting to MariaDB Platform: {e}")
     sys.exit(1)
-        
+print("Connected to MariaDB")
+
 
 def list_item():
     cur = conn.cursor()
@@ -40,3 +40,5 @@ def remove_item():
     conn.commit()
     print("Item removed.")
     cur.close()
+    
+list_item()
