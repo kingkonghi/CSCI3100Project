@@ -13,7 +13,7 @@ except mariadb.Error as e:
     sys.exit(1)
         
 
-def list():
+def list_item():
     cur = conn.cursor()
     cur.execute("SELECT * FROM item")
     for(itemid, itemname, itemdesc, itemcategory, itemimage, itemprice, itemquantity, itemstatus) in cur:

@@ -13,6 +13,12 @@ except mariadb.Error as e:
     sys.exit(1)
 
 cur = conn.cursor()
+def list_order(userID):
+    cur.execute("SELECT * FROM orders WHERE USERID = ?", (userID,))
+    for(orderid, userid, orderdate, orderstatus, ordertotal) in cur:
+        print(f"Order ID: {orderid}, User ID: {userid}, Order Date: {orderdate}, Order Status: {orderstatus}, Order Total: {ordertotal}")
+    cur.close()
+
 def add_order(order):
     cur.execute("INSERT INTO orders (USERID, ORDERDATE, ORDERSTATUS, ORDERTOTAL) VALUES (?, ?, ?, ?)", (order.userID, order.orderDate, order.orderStatus, order.orderTotal))
     orderID = cur.lastrowid
@@ -20,6 +26,7 @@ def add_order(order):
         cur.execute("INSERT INTO orderitems (ORDERID, ITEMID, QUANTITY) VALUES (?, ?, ?)", (orderID, item.itemid, item.quantity))
     conn.commit()
     print("Order added to database.")
+    
     
 def edit_order_status(orderID, orderStatus):
     cur.execute("UPDATE orders SET ORDERSTATUS = ? WHERE ORDERID = ?", (orderStatus, orderID))
