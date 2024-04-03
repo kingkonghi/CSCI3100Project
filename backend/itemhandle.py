@@ -20,23 +20,23 @@ def list():
         print(f"Item ID: {itemid}, Item Name: {itemname}, Item Description: {itemdesc}, Item Category: {itemcategory}, Item Image: {itemimage}, Item Price: {itemprice}, Item Quantity: {itemquantity}, Item Status: {itemstatus}")
     cur.close()
 
-def add_item():
+def add_item(name, description, category, image, price, quantity, status):
     cur = conn.cursor()
-    cur.execute("INSERT INTO item (name, description, category, image, price, quantity, status) VALUES ('Test Item1', 'Test Description1', 1, '', 200, 1, 1)")
+    cur.execute(f"INSERT INTO item (name, description, category, image, price, quantity, status) VALUES ('{name}', '{description}', '{category}', '{image}', {price}, {quantity}, '{status}')")
     conn.commit()
     print("Item added.")
     cur.close()
 
-def edit_item():
+def edit_item(name,quantity):
     cur = conn.cursor()
-    cur.execute("UPDATE item SET ITEMQUANTITY = 2 WHERE itemID = '1'")
+    cur.execute(f"UPDATE item SET QUANTITY = {quantity} WHERE NAME = '{name}'")
     conn.commit()
     print("Item quantity updated.")
     cur.close()
 
-def remove_item():
+def remove_item(name):
     cur = conn.cursor()
-    cur.execute("DELETE FROM item WHERE ITEMNAME = 'Test Item'")
+    cur.execute(f"DELETE FROM item WHERE NAME = '{name}'")
     conn.commit()
     print("Item removed.")
     cur.close()
