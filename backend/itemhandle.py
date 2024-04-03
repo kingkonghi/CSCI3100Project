@@ -5,8 +5,10 @@ try:
     conn = mariadb.connect(
         user="root",
         password="csci3100",
-        host="localhost",
+        host="119.246.239.30",
+        port=3306,
         database="ShopMore"
+
     )
 except mariadb.Error as e:
     print(f"Error connecting to MariaDB Platform: {e}")
@@ -21,13 +23,14 @@ def list():
     cur.close()
 
 def add_item():
+
     cur = conn.cursor()
-    cur.execute("INSERT INTO item (ITEMNAME, ITEMDESC, ITEMCATEGORY, ITEMIMAGE, ITEMPRICE, ITEMQUANTITY, ITEMSTATUS) VALUES ('Test Item', 'Test Description', 'Test Category', 'Test Image', 1, 1, 'Available')")
+    cur.execute("INSERT INTO item (name, description, category, image, price, quantity, status) VALUES ('Test Item1', 'Test Description1', 1, '', 200, 1, 1)")
     conn.commit()
     print("Item added.")
     cur.close()
 
-def edit_item_quantity():
+def edit_item():
     cur = conn.cursor()
     cur.execute("UPDATE item SET ITEMQUANTITY = 2 WHERE itemID = '1'")
     conn.commit()
@@ -40,3 +43,4 @@ def remove_item():
     conn.commit()
     print("Item removed.")
     cur.close()
+add_item()
