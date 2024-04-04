@@ -1,4 +1,3 @@
-
 class User:
     def __init__(self, UID, ACCOUNTTYPE, UNAME, UPASSWORD, EMAILL, PROFILEPHOT, ADDRESS):
         self.UID = UID

@@ -15,7 +15,7 @@ def test():
         sys.exit(1)
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT * FROM users")
+        cursor.execute("SELECT * FROM user")
         rows = cursor.fetchall()
     except Exception as e:
         print(e)
@@ -30,9 +30,9 @@ def test():
         "EMAILL": row[4],
         "PROFILEPHOT": row[5],
         "ADDRESS": row[6]
-    }
-    user = User(**user_data)
-    users.append(user)
+        }
+        user = User(**user_data)
+        users.append(user)
     conn.close()
 
     for user in users:
