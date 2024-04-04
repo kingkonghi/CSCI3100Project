@@ -1,9 +1,9 @@
 import mariadb
 import sys
 
-from .database.connection import mariadb_connection
+from database.connection import *
 
-conn = mariadb_connection.connect()
+conn = connect()
 
 def list():
     cur = conn.cursor()
@@ -32,3 +32,5 @@ def remove_item(name):
     conn.commit()
     print("Item removed.")
     cur.close()
+
+list()

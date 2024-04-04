@@ -1,8 +1,8 @@
 import mariadb
 import sys
-from .database.connection import mariadb_connection
+from database.connection import *
 
-conn = mariadb_connection.connect()
+conn = connect()
 cur = conn.cursor()
 def list_order():
     cur.execute("SELECT * FROM ShopOrder")
