@@ -1,6 +1,6 @@
 class User:
-    def __init__(self, UID, ACCOUNTTYPE, UNAME, UPASSWORD, EMAILL, PROFILEPHOT, ADDRESS):
-        self.UID = UID
+    def __init__(self, userid, ACCOUNTTYPE, UNAME, UPASSWORD, EMAILL, PROFILEPHOT, ADDRESS):
+        self.UID = userid
         self.ACCOUNTTYPE = ACCOUNTTYPE
         self.UNAME = UNAME
         self.UPASSWORD = UPASSWORD
