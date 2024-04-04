@@ -1,5 +1,5 @@
-DB_HOST = 'localhost'
-DB_PORT = 3307
-DB_USER = 'root'
-DB_PASSWORD = 'shopmore123'
-DB_NAME = 'shopmore'
+DB_HOST = 'sql6.freemysqlhosting.net'
+DB_PORT = 3306
+DB_USER = 'sql6696311'
+DB_PASSWORD = 'kWjC94rLvl'
+DB_NAME = 'ShopMore'
