@@ -1,17 +1,9 @@
 import mariadb
 import sys
 
-try:
-    conn = mariadb.connect(db = 'sql6696311', 
-                  user   = 'sql6696311', 
-                  passwd = 'kWjC94rLvl', 
-                  host   = 'sql6.freemysqlhosting.net',
-                  port=3306
-                  ) 
-except mariadb.Error as e:
-    print(f"Error connecting to MariaDB Platform: {e}")
-    sys.exit(1)
-        
+from .database.connection import mariadb_connection
+
+conn = mariadb_connection.connect()
 
 def list():
     cur = conn.cursor()
@@ -40,5 +32,3 @@ def remove_item(name):
     conn.commit()
     print("Item removed.")
     cur.close()
-    
-list()

@@ -1,17 +1,8 @@
 import mariadb
 import sys
+from .database.connection import mariadb_connection
 
-try:
-    conn = mariadb.connect(
-        user="root",
-        password="csci3100",
-        host="localhost",
-        database="ShopMore"
-    )
-except mariadb.Error as e:
-    print(f"Error connecting to MariaDB Platform: {e}")
-    sys.exit(1)
-    
+conn = mariadb_connection.connect()
 cur = conn.cursor()
 
 def add_item_to_cart(itemid, quantity, userid):
