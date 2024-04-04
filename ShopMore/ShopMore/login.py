@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from .serialiers import UserSerializer
+from .serializers import UserSerializer
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
