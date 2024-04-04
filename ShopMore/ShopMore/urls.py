@@ -1,9 +1,9 @@
 from django.urls import path
- 
+from django.views.generic import TemplateView
 from . import views
  
 urlpatterns = [
-    path("", views.hello, name="hello"),
+    path('', views.hello, name="hello"),
     path('hello/', views.hello),
     path('login/', views.login),
     path('test_token/', views.test_token),

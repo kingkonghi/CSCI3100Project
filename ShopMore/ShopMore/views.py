@@ -6,7 +6,7 @@ from rest_framework.authentication import SessionAuthentication, TokenAuthentica
 from rest_framework.permissions import IsAuthenticated
 from .register import registerfunction
 from .login import loginfunction
- 
+from .backend.handleitem import *
 def hello(request):
     return HttpResponse("Hello world ! ")
 
@@ -28,9 +28,12 @@ def test_token(request):
 
 
 def product(request):
-    return HttpResponse("Product page")
+    row = list_item()
+    return HttpResponse(row)
 
+@api_view(['GET'])
 def cart(request):
+    
     return HttpResponse("Cart page")
 
 def checkout(request):
