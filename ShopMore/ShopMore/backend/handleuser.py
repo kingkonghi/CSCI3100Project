@@ -1,7 +1,4 @@
-from .database.connection import connect
 from .models.user import *
-
-conn = connect()
 
 def list_user():
     rows = User.objects.all()
