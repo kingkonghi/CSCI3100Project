@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib import admin
-from .models.item import Item
+from backend.models.item import Item
 
 
 class ItemAdmin(admin.ModelAdmin):
