@@ -5,8 +5,8 @@ def list_cart():
         print(rows)
         return rows
     
-def add_item_to_cart(userID, itemID, quantity):
-        cart1 = cart(userID=userID,itemID=itemID,quantity=quantity)
+def add_item_to_cart(userID, itemlist):
+        cart1 = cart(userID=userID,itemlist=itemlist)
         cart1.save()
         print("Item added to cart.")
     

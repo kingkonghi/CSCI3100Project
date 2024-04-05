@@ -14,11 +14,8 @@ def add_item(name, description, category, image, price, quantity, status):
         print("Item added.")
 
 def edit_item(name,quantity):
-        cur = connect().cursor()
-        cur.execute(f"UPDATE item SET QUANTITY = {quantity} WHERE NAME = '{name}'")
-        connect().commit()
-        print("Item quantity updated.")
-        cur.close()
+        item1 = Item.objects.filter(itemName=name).update(itemquantity=quantity)
+        return item1
 
 def remove_item(ID):
         Item.objects.filter(itemID=ID).delete()

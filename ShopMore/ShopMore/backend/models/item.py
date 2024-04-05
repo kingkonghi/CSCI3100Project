@@ -14,5 +14,7 @@ class Item(models.Model):
     def __repr__(self):
         return f"Item(ITERID={self.itemID}, ITEMNAME={self.itemName}, ITEMDESC={self.itemDescription}, ITEMCATEGORY={self.itemCategory}, ITEMIMAGE={self.itemImage}, ITEMPRICE={self.itemPrice}, ITEMQUANTITY={self.itemQuantity}, ITEMSTATUS={self.itemStatus})"
 
+    def __str__(self):
+        return f"{self.itemName}"
     class Meta:
         db_table = 'item'

@@ -12,11 +12,7 @@ def add_user(user):
     print(f"User {user.username} added.")
 
 def edit_user(user):
-    cur = conn.cursor()
-    cur.execute("UPDATE userlist SET username = ?, accountType = ?, password = ?, email = ?, profilePhoto = ?, address = ? WHERE userID = ?", (user.username, user.accountType, user.password, user.email, user.profilePhoto, user.address, user.userID))
-    conn.commit()
-    print("User updated.")
-    cur.close()
+    User.objects.filter(userID=user.userID).update(username=user.username, accountType=user.accountType, password=user.password, email=user.email, profilePhoto=user.profilePhoto, address=user.address)
     
 def delete_user(userID):
     User.objects.filter(userID=userID).delete()

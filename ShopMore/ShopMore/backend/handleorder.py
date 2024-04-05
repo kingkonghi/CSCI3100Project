@@ -15,11 +15,7 @@ def add_order(order):
 
     
 def edit_order_status(orderID, orderStatus):
-        cur = conn.cursor()
-        cur.execute("UPDATE orderlist SET ORDERSTATUS = ? WHERE ORDERID = ?", (orderStatus, orderID))
-        conn.commit()
-        print("Order status updated.")
-        cur.close()
+        Order.objects.filter(orderID=orderID).update(orderStatus=orderStatus)
 
 def delete_order(orderID):
         Order.objects.filter(orderID=orderID).delete()
