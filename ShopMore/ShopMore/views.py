@@ -28,7 +28,7 @@ def logout(request):
     request.user.auth_token.delete()
     return Response({'detail': 'Successfully logged out'}, status=status.HTTP_200_OK)
 
-@api_view(['GET'])
+@api_view(['POST'])
 def register(request):
    response = registerfunction(request)
    return response
