@@ -1,5 +1,5 @@
 from django.db import models
-class order(models.Model):  
+class Order(models.Model):  
     
     orderID = models.AutoField(primary_key=True)
     userID = models.IntegerField()
@@ -12,4 +12,4 @@ class order(models.Model):
         return f"order(orderID={self.orderID}, userID={self.userID}, orderDate={self.orderDate}, orderStatus={self.orderStatus}, orderTotal={self.orderTotal}, orderItems={self.orderItems})"
     
     class Meta:
-        db_table = 'order'
+        db_table = 'orderlist'

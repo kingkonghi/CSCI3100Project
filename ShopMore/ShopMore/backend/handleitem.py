@@ -1,22 +1,17 @@
 from .database.connection import connect
-
+from .models.item import *
 conn = connect()
 
 def list_item():
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM item")
-        for(itemid, itemname, itemdesc, itemcategory, itemimage, itemprice, itemquantity, itemstatus) in cur:
-            print(f"Item ID: {itemid}, Item Name: {itemname}, Item Description: {itemdesc}, Item Category: {itemcategory}, Item Image: {itemimage}, Item Price: {itemprice}, Item Quantity: {itemquantity}, Item Status: {itemstatus}")
-        rows = cur.fetchall()
-        cur.close()
+        rows = Item.objects.all()
+        print(rows)
         return rows
 
 def add_item(name, description, category, image, price, quantity, status):
-        cur = connect().cursor()
-        cur.execute(f"INSERT INTO item (name, description, category, image, price, quantity, status) VALUES ('{name}', '{description}', '{category}', '{image}', {price}, {quantity}, '{status}')")
-        connect().commit()
+        item_count = Item.objects.count()
+        item1 = Item(itemID=item_count+1,itemName=name, itemDescription=description, itemcategory=category, itemimage=image, itemprice=price, itemquantity=quantity, itemstatus=status)
+        item1.save()
         print("Item added.")
-        cur.close()
 
 def edit_item(name,quantity):
         cur = connect().cursor()
@@ -25,11 +20,5 @@ def edit_item(name,quantity):
         print("Item quantity updated.")
         cur.close()
 
-def remove_item(name):
-        cur = connect().cursor()
-        cur.execute(f"DELETE FROM item WHERE NAME = '{name}'")
-        connect().commit()
-        print("Item removed.")
-        cur.close()
-        
-list_item()
+def remove_item(ID):
+        Item.objects.filter(itemID=ID).delete()

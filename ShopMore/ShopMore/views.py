@@ -13,6 +13,7 @@ from .backend.handlecart import *
 from .backend.handleorder import *
 from .backend.handleuser import *
 
+@api_view(['GET'])
 def hello(request):
     return HttpResponse("Hello world ! ")
 
