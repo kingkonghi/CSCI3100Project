@@ -9,3 +9,11 @@ class FavoriteList(models.Model):
 
     class Meta:
         db_table = 'favoritelist' # Optional: Define the database table name explicitly
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+
+        
+>>>>>>> 92073c000f0bd3892be7d03eb38cf9ebee218adf
+>>>>>>> 26a515bd51d0ddd5e7d5a7efc3cb9e340a54f85f
