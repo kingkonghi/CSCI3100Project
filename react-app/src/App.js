@@ -61,6 +61,10 @@ const router = createBrowserRouter([
     element: <Root nav={true} home={false} />,
     children: [
       {
+        path: '/main',
+        element: <Main />
+      },
+      {
         path: '/home',
         element: <Main />
       },

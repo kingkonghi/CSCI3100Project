@@ -9,6 +9,9 @@ from rest_framework import status
 from .register import registerfunction
 from .login import loginfunction
 from .backend.handleitem import *
+from .backend.handlecart import *
+from .backend.handleorder import *
+from .backend.handleuser import *
 
 def hello(request):
     return HttpResponse("Hello world ! ")

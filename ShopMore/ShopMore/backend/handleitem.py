@@ -1,7 +1,9 @@
-from .database.connection import *
+from .database.connection import connect
+
+conn = connect()
 
 def list_item():
-        cur = connect().cursor()
+        cur = conn.cursor()
         cur.execute("SELECT * FROM item")
         for(itemid, itemname, itemdesc, itemcategory, itemimage, itemprice, itemquantity, itemstatus) in cur:
             print(f"Item ID: {itemid}, Item Name: {itemname}, Item Description: {itemdesc}, Item Category: {itemcategory}, Item Image: {itemimage}, Item Price: {itemprice}, Item Quantity: {itemquantity}, Item Status: {itemstatus}")
@@ -29,3 +31,5 @@ def remove_item(name):
         connect().commit()
         print("Item removed.")
         cur.close()
+        
+list_item()

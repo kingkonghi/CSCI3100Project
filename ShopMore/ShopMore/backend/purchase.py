@@ -1,4 +1,3 @@
-import mariadb
 import sys
 from database.connection import *
 from models.cart import *
