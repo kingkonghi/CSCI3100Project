@@ -78,7 +78,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'item',                       # Or path to database file if using sqlite3.
+        'NAME': 'ShopMore',                       # Or path to database file if using sqlite3.
         'USER': 'admin',                       # Not used with sqlite3.
         'PASSWORD': 'CSCI3100_a6',               # Not used with sqlite3.
         'HOST': 'shopmore.c9u0000689ff.ap-southeast-1.rds.amazonaws.com',    # Set to empty string for localhost. Not used with sqlite3.

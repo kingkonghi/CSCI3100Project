@@ -1,9 +1,13 @@
+from django.db import models
 
-class cart:
-    def __init__(self, userid, itemid, quantity):
-        self.userid = userid
-        self.itemid = itemid
-        self.quantity = quantity
+
+class cart(models.Model):
+    userid = models.IntegerField()
+    itemid = models.JSONField()
+    quantity = models.JSONField()
         
     def __repr__(self):
         return f"cart(userid={self.userid}, itemid={self.itemid}, quantity={self.quantity})"
+    
+    class Meta:
+        db_table = 'cart' # Optional: Define the database table name explicitly
