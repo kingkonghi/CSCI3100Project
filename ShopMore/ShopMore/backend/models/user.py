@@ -14,4 +14,4 @@ class User(models.Model):
         return f"User(UID={self.userID}, ACCOUNTTYPE={self.ACCOUNTTYPE}, UNAME={self.UNAME}, UPASSWORD={self.UPASSWORD}, EMAILL={self.EMAILL}, PROFILEPHOT={self.PROFILEPHOT}, ADDRESS={self.ADDRESS})"
 
     class Meta:
-        db_table = 'user'
+        db_table = 'userlist'

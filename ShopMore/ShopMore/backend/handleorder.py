@@ -1,14 +1,18 @@
 from .database.connection import connect
-
+from .models.order import *
 conn=connect()
 
+def list_order():
+        rows = Order.objects.all()
+        print(rows)
+        return rows
+
 def add_order(order):
-        cur = conn.cursor()
-        cur.execute("INSERT INTO orderlist (USERID, ORDERDATE, ORDERSTATUS, ORDERTOTAL) VALUES (?, ?, ?, ?)", (order.userID, order.orderDate, order.orderStatus, order.orderTotal))
-        conn.commit()
-        print("Order added to database.")
-        cur.close()
-    
+        Order_count = Order.objects.count()
+        order1 = Order(orderID = Order_count+1,userID=order.userID, orderDate=order.orderDate, orderStatus=order.orderStatus, orderItems=order.orderItems, orderTotal=order.orderTotal)
+        order1.save()
+        print("Order added.")
+
     
 def edit_order_status(orderID, orderStatus):
         cur = conn.cursor()
@@ -18,8 +22,4 @@ def edit_order_status(orderID, orderStatus):
         cur.close()
 
 def delete_order(orderID):
-        cur = conn.cursor()
-        cur.execute("DELETE FROM orderlist WHERE ORDERID = ?", (orderID))
-        conn.commit()
-        print("Order deleted from database.")
-        cur.close()
+        Order.objects.filter(orderID=orderID).delete()
