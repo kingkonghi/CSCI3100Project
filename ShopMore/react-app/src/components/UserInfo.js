@@ -12,7 +12,7 @@ import "../index.scss"
 
 const UserInfo = ({login}) => {
 
-    const username = "Chan"
+    const username = "givemelenggradepls"
     //display root element
     return (
         <>
