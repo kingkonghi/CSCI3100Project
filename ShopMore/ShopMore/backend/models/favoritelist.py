@@ -8,5 +8,7 @@ class FavoriteList(models.Model):
     def __repr__(self):
         return f'FavoriteList(favouriteID={self.favouriteID}, user={self.userid}, item={self.itemid})'
 
+    def __str__(self):
+        return f"{self.favouriteID}"
     class Meta:
         db_table = 'favouritelist' # Optional: Define the database table name explicitly
