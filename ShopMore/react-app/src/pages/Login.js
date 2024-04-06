@@ -3,6 +3,7 @@
 import "../index.scss"
 import * as React from 'react';
 import {useState} from 'react';
+import { Button, Table, Form, Container, Row, Col, Nav } from 'react-bootstrap';
 
 
 const Login = () => {
@@ -21,16 +22,16 @@ const Login = () => {
                         <nav id="navbar" className="navbar navbar-expand-lg navbar-light justify-content-center" >
                             <ul className='navbar-nav flex-row'>
                             <li className='nav-item active'>
-                                <a className='nav-link' href='#signup' onClick={() => toggleForm('signup')} style={activeForm === 'signup'?{fontWeight: "bolder", color: "Highlight"}:{fontWeight: "bolder"}}>Sign Up</a>
+                                <a className='nav-link' onClick={() => toggleForm('signup')} style={activeForm === 'signup'?{fontWeight: "bolder", color: "Highlight"}:{fontWeight: "bolder"}}>Sign Up</a>
                             </li>
                             <li className='nav-item active'>
-                                <a className='nav-link' href='#login' onClick={() => toggleForm('login')} style={activeForm === 'login'?{fontWeight: "bolder", color: "Highlight"}:{fontWeight: "bolder"}}>Login</a>
+                                <a className='nav-link' onClick={() => toggleForm('login')} style={activeForm === 'login'?{fontWeight: "bolder", color: "Highlight"}:{fontWeight: "bolder"}}>Login</a>
                             </li>
                             </ul>
                         </nav>
                     </div>
 
-                    {activeForm === 'signup' && (
+                    {activeForm === 'signup' ? (
                         <div className="signup">
                         <h2>Sign Up</h2>
                         <form>
@@ -45,9 +46,7 @@ const Login = () => {
                             <input type="submit" value="Sign Up" />
                         </form>
                         </div>
-                    )}
-
-                    {activeForm === 'login' && (
+                    ) : (
                         <div className="login">
                         <h2>Login</h2>
                         <form>
@@ -59,6 +58,7 @@ const Login = () => {
                         </form>
                         </div>
                     )}
+
                 </div>            
             </div>
         </>
