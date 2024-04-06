@@ -42,15 +42,16 @@ def register(request):
 def edit_info(request):
     return HttpResponse('edit_info')
 
-@api_view
+@api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
+@csrf_exempt
 def add_to_favorite(request):
     if request.method == 'POST':
         item_id = request.data.get('item_id')
         user_id = request.user.id
 
-        item = get_object_or_404(Item, id=item_id)
+        item = get_object_or_404(Item, itemID=item_id)
         fovorite_item =  FavoriteList.objects.create(userid=user_id, itemid=item_id)
 
         return Response({'success: True'})
