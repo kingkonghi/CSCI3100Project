@@ -13,9 +13,63 @@ from .backend.handlecart import *
 from .backend.handleorder import *
 from .backend.handleuser import *
 
+import paypalrestsdk
+from django.conf import settings
+from django.shortcuts import render, redirect
+from django.urls import reverse
+
+paypalrestsdk.configure({
+    "mode": "sandbox",  # Change to "live" for production
+    "client_id": 'AUa1rfUgzv8xxIVJa4Bq1kdQE7y7X1KjwuFl21Anr7xmJSIQ9YosRGF4dNf-GJasV_c81_E6mnEH4jXg',
+    "client_secret": 'EPUqMwS7TahZ0KvqalVuNnRFQUYNJtHdSs82mOkufIqh4TMScqikRkfscDp62xjQ69kH-sjv9WQc28Dj',
+})
+
+def create_payment(request):
+    payment = paypalrestsdk.Payment({
+        "intent": "sale",
+        "payer": {
+            "payment_method": "paypal",
+        },
+        "redirect_urls": {
+            "return_url": "http://localhost:8000/execute_payment",
+            "cancel_url": "http://localhost:8000/payment_failed",
+        },
+        "transactions": [
+            {
+                "amount": {
+                    "total": "10.00",  # Total amount in USD
+                    "currency": "HKD",
+                },
+                "description": "Payment for Product/Service",
+            }
+        ],
+    })
+
+    if payment.create():
+        return redirect(payment.links[1].href)  # Redirect to PayPal for payment
+    else:
+        return render(request, 'payment_failed.html')
+    
+def execute_payment(request):
+    payment_id = request.GET.get('paymentId')
+    payer_id = request.GET.get('PayerID')
+
+    payment = paypalrestsdk.Payment.find(payment_id)
+
+    if payment.execute({"payer_id": payer_id}):
+        return render(request, 'payment_success.html')
+    else:
+        return render(request, 'payment_failed.html')
+    
+def payment_failed(request):
+    return render(request, 'payment_failed.html')
+
+def payment_checkout(request):
+    return render(request, 'checkout.html')
+
 @api_view(['GET'])
 def hello(request):
-    return HttpResponse("Hello world ! ")
+    return render(request, 'index.html')
 
 @api_view(['POST'])
 def login(request):
@@ -50,11 +104,8 @@ def product(request):
 
 @api_view(['GET'])
 def cart(request):
-    
     return HttpResponse("Cart page")
 
-def checkout(request):
-    return HttpResponse("Checkout page")
 
 def order(request):
     return HttpResponse("Order page")

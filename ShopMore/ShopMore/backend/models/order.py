@@ -10,6 +10,7 @@ class Order(models.Model):
 
     def __repr__(self):
         return f"order(orderID={self.orderID}, userID={self.userID}, orderDate={self.orderDate}, orderStatus={self.orderStatus}, orderTotal={self.orderTotal}, orderItems={self.orderItems})"
-    
+    def __str__(self):
+        return f"{self.orderID}"
     class Meta:
         db_table = 'orderlist'

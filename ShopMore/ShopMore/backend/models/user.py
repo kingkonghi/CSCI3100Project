@@ -11,7 +11,8 @@ class User(models.Model):
     address = models.CharField(max_length=100)
 
     def __repr__(self):
-        return f"User(UID={self.userID}, ACCOUNTTYPE={self.ACCOUNTTYPE}, UNAME={self.UNAME}, UPASSWORD={self.UPASSWORD}, EMAILL={self.EMAILL}, PROFILEPHOT={self.PROFILEPHOT}, ADDRESS={self.ADDRESS})"
-
+        return f"User(UID={self.userID}, ACCOUNTTYPE={self.accountType}, UNAME={self.username}, UPASSWORD={self.password}, EMAILL={self.email}, PROFILEPHOT={self.profilePhoto}, ADDRESS={self.address})"
+    def __str__(self):
+        return f"{self.username}"
     class Meta:
         db_table = 'userlist'

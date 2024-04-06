@@ -8,6 +8,7 @@ class cart(models.Model):
         
     def __repr__(self):
         return f"cart(cardID={self.cartID}, userid={self.userID}, itemlist={self.itemlist})"
-    
+    def __str__(self):
+        return f"{self.cartID}"
     class Meta:
         db_table = 'cart' # Optional: Define the database table name explicitly
