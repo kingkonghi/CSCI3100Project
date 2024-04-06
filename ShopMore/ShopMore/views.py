@@ -7,9 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.middleware import csrf
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import get_object_or_404
-from .backend.models.favoritelist import FavoriteList
-from .backend.models.item import Item
+from .backend.handlefavoritelist import add_favorite
 from rest_framework import status
 from .register import registerfunction
 from .login import loginfunction
@@ -42,18 +40,18 @@ def register(request):
 def edit_info(request):
     return HttpResponse('edit_info')
 
-@api_view
+@api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
+@csrf_exempt
 def add_to_favorite(request):
     if request.method == 'POST':
         item_id = request.data.get('item_id')
         user_id = request.user.id
 
-        item = get_object_or_404(Item, id=item_id)
-        fovorite_item =  FavoriteList.objects.create(userid=user_id, itemid=item_id)
+        response = add_favorite(user_id, item_id)
 
-        return Response({'success: True'})
+        return Response({'success': True, 'response': response})
     return Response({'success': False})
     
 
