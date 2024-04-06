@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.middleware import csrf
 from django.views.decorators.csrf import csrf_exempt
-from .backend.handlefavoritelist import add_favorite
+from .backend.handlefavoritelist import *
 from rest_framework import status
 from .register import registerfunction
 from .login import loginfunction
@@ -53,6 +53,14 @@ def add_to_favorite(request):
 
         return Response({'success': True, 'response': response})
     return Response({'success': False})
+
+@api_view(['DELETE'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+@csrf_exempt
+def delete_favorite(request, favorite_id):
+    response = delete_favorite_item(favorite_id)
+    return Response({'success': True, 'response': response})
     
 
 def product(request):
