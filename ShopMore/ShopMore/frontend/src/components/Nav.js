@@ -11,6 +11,11 @@ import { Link, useNavigate } from 'react-router-dom';
 const Nav = () => {
     const navigate = useNavigate();
 
+    function search(){
+        const navSearch = document.getElementById("navSearch")
+        navigate("/search/" + navSearch.value + "&&0-5000")
+    }
+
     //display root element
     return (
         <>
@@ -22,8 +27,8 @@ const Nav = () => {
                 <p><Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>Login (temp)</Link></p>
                 <p><Link to="/admin" style={{ textDecoration: 'none', color: 'inherit' }}>Admin CRUD</Link></p>
                 <div id="searchBar">
-                    <input type="text" placeholder="Search product..."/>
-                    <FaSearch onClick={() => navigate("/search")} />
+                    <input id="navSearch" type="text" placeholder="Search product..."/>
+                    <FaSearch onClick={() => search()} />
                 </div>
             </div>
         </>
