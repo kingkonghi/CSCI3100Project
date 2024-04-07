@@ -2,6 +2,7 @@
 // Student ID : 1155157376, 1155141896, 1155149600, 1155158054, 1155176122
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MdOutlineKeyboardArrowUp } from "react-icons/md";
 import { FaRegUserCircle } from "react-icons/fa";
 
@@ -13,6 +14,7 @@ import "../index.scss"
 const UserInfo = ({login}) => {
 
     const username = "givemelenggradepls"
+    const navigate = useNavigate();
     //display root element
     return (
         <>
@@ -20,9 +22,9 @@ const UserInfo = ({login}) => {
                 {login?<div><p id='intro'>You are logged in as </p><p id='name'>{username}</p></div>:<div><p id='name-warn'>You are not logged in.</p><button type='text'>Log in</button></div>}
                 {login? <div>
                             <hr/>
-                            <button type='text'>View personal info</button>
+                            <button type='text' onClick={() => navigate('/user')}>View personal info</button>
                             <hr/>
-                            <button type='text'>Log out</button>
+                            <button type='text' onClick={() => navigate('/login')}>Log out</button>
                         </div>:<div></div>}
             </div>
         </>
