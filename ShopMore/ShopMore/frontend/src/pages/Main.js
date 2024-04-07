@@ -68,8 +68,9 @@ const Main = () => {
                 setShowHot(newHot);
             }, 3000);
         
+        console.log(showHot)
         return () => clearInterval(interval)    
-    }, []);
+    }, [showHot]);
 
     return (
         <>
