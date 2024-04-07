@@ -3,22 +3,43 @@
 import "../index.scss"
 import * as React from 'react';
 import { FaMinus, FaPlus, FaStar, FaRegStar, FaHeart } from "react-icons/fa";
+import { useParams } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 
 
 
-const Search = () => {
+const Product = () => {
 
-    const productData = [1, "Table", 20, 1000, [["User0112","The prefect table with high quality."],["Bernald Meriq","Cheapest table I've seen in a while."]], [5.0, 4.5], "Made with the rare oakk wood found in India, the finest table that you could ever found.\nThe manufacturer is origin from England with over 700 years of enterprise and once a producer for the royal family.\n\nOrigin: London, England"] //id, name, price, stock, reviews (array), rating (array), desc
+    let {pid} = useParams()
+    let navigate = useNavigate();
+
+    const allProductData = [
+        [1, "Table", 20, 1000, [["User0112","The prefect table with high quality."],["Bernald Meriq","Cheapest table I've seen in a while."]], [5.0, 4.5], "Made with the rare oakk wood found in India, the finest table that you could ever found.\nThe manufacturer is origin from England with over 700 years of enterprise and once a producer for the royal family.\n\nOrigin: London, England"],
+        [2, "Washing machine", 20, 2000, [["User0445","Been using it for 10 years, perfect."],["Marina C.","Flawless."]], [5.0, 5.0], "Assist with AI production line, a washing machine for life."],
+        [3, "Lamp", 20, 100, [["ProCommentor","Nice Lamp!"],["User0002","A little decoration to my pretty room."]], [5.0, 4.5], "Brighten your room with this lamp made with masters based in Germany."]
+    ] //id, name, price, stock, reviews (array), rating (array), desc
+
+    let productData = []
+    for (let i=0; i<allProductData.length; i++){
+        if (allProductData[i][0]==pid){
+            productData.push(allProductData[i])
+        }
+    }
+    productData = productData[0]
     const relatedProduct = [[3, "Lamp", "Brighten your room with this lamp made with masters based in Germany."], [2, "Washing machine", "Assist with AI production line, a washing machine for life."]]
     const userName = "User5566"
+
+    function redirect(id){
+        navigate('/product/' + id)
+    }
 
     return (
         <>
             <div id="product">
                 <table id="productSession">
                     <tr>
-                        <td>
+                        <td id="imgArea">
                             <img src={"/photo/"+productData[0]+".png"} alt={productData[1]} />
                         </td>
                         <td id="productDesc">
@@ -37,21 +58,22 @@ const Search = () => {
                     <p>You might also found these products interesting...</p>
                     <table>
                         <tr>
-                            <td className="productCard">
-                                <img src={"/photo/" + relatedProduct[0][0]+".png"} alt={relatedProduct[0][1]} /> 
-                                <hr/>
-                                <p className="cardTitle">{relatedProduct[0][1]}</p>
-                                <p className="cardInfo">{relatedProduct[0][2]}</p>
-                                <button type="button">Check it out now!</button>
-                            </td>
-                            <td className="placeholder"></td>
-                            <td className="productCard">
-                                <img src={"/photo/" + relatedProduct[1][0]+".png"} alt={relatedProduct[1][1]} /> 
-                                <hr/>
-                                <p className="cardTitle">{relatedProduct[1][1]}</p>
-                                <p className="cardInfo">{relatedProduct[1][2]}</p>
-                                <button type="button">Check it out now!</button>
-                            </td>
+                            {
+                                relatedProduct.map((element, index)=>{
+                                    return (
+                                        <span>
+                                            <td className="productCard">
+                                                <img src={"/photo/" + element[0]+".png"} alt={element[1]} /> 
+                                                <hr/>
+                                                <p className="cardTitle">{element[1]}</p>
+                                                <p className="cardInfo">{element[2]}</p>
+                                                <button type="button" onClick={()=>redirect(element[0])}>Check it out now!</button>
+                                            </td>
+                                            <td className="placeholder"></td>
+                                        </span>
+                                    )
+                                })
+                            }
                         </tr>
                     </table>
                 </div>
@@ -80,4 +102,4 @@ const Search = () => {
     );
 }
 
-export default Search;
+export default Product;
