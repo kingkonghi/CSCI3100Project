@@ -4,7 +4,7 @@ class Item(models.Model):
     
     itemID = models.AutoField(primary_key=True)
     itemName = models.CharField(max_length=20)
-    itemDescription = models.CharField(max_length=100)
+    itemDescription = models.CharField(max_length=300)
     itemCategory = models.IntegerField()
     itemImage = models.CharField(max_length=100)
     itemPrice = models.FloatField()

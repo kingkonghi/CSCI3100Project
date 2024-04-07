@@ -17,6 +17,7 @@ from .backend.handleitem import *
 from .backend.handlecart import *
 from .backend.handleorder import *
 from .backend.handleuser import *
+from .backend.handlerecommendation import *
 
 import paypalrestsdk
 from django.conf import settings
@@ -147,6 +148,20 @@ def delete_favorite(request, favorite_id):
 def product(request):
     row = list_item()
     return HttpResponse(row)
+
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+@csrf_exempt  #csrf_exempt is just for testing, if frontend can get csrf_token, can remove this
+def recommendation (request):
+    recommended_items = generate_recommendation(request.user)
+    item_ids = list(recommended_items.values_list('itemID', flat=True))
+    recommendation_items = Item.objects.filter(itemID__in = item_ids)
+    response_data = {
+        'recommended items': list(recommendation_items.values())
+    }
+
+    return JsonResponse(response_data)
 
 @api_view(['GET'])
 def cart(request):
