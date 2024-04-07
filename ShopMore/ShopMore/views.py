@@ -1,10 +1,12 @@
 from django.http import HttpResponse
+from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.core import serializers
 from django.middleware import csrf
 from django.views.decorators.csrf import csrf_exempt
 from .backend.handlefavoritelist import *
@@ -91,9 +93,30 @@ def register(request):
    response = registerfunction(request)
    return response
 
-def edit_info(request):
-    return HttpResponse('edit_info')
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+@csrf_exempt
+def user(request):
+    user_info = list_user_info(request.user)
+    serialized_user_info = serializers.serialize('json', user_info)
+    return JsonResponse({'message': serialized_user_info})
 
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+@csrf_exempt
+def edit_info(request):
+    username = request.data.get('username')
+    accountType = request.data.get('accountType')
+    password = request.data.get('password')
+    email = request.data.get('email')
+    profilePhoto = request.data.get('profilePhoto')
+    address = request.data.get('address')
+
+    response = edit_user(request.user, username=username, accountType=accountType, password=password, email=email, profilePhoto=profilePhoto, address=address)
+
+    return JsonResponse({'message': response})
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])

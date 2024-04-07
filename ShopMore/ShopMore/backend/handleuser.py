@@ -22,14 +22,40 @@ def add_user(user):
     auth_user.save()
     print(f"User {user.username} added.")
 
-def edit_user(user):
-    UserList.objects.filter(user_id=user.id).update(username=user.username, accountType=user.accountType, password=user.password, email=user.email, profilePhoto=user.profilePhoto, address=user.address)
+
+def edit_user(user, username=None, accountType=None, password=None, email=None, profilePhoto=None, address=None):
+    user_list_data = {}
+    auth_user_data = {}
+
+    if username is not None:
+        user_list_data['username'] = username
+        auth_user_data['username'] = username
+
+    if accountType is not None:
+        user_list_data['accountType'] = accountType
+
+    if password is not None:
+        user_list_data['password'] = password
+        auth_user_data['password'] = password
+
+    if email is not None:
+        user_list_data['email'] = email
+        auth_user_data['email'] = email
+
+    if profilePhoto is not None:
+        user_list_data['profilePhoto'] = profilePhoto
+
+    if address is not None:
+        user_list_data['address'] = address
+
+    UserList.objects.filter(user_id=user.id).update(**user_list_data)
 
     auth_user = User.objects.get(id=user.id)
-    auth_user.username = user.username
-    auth_user.set_password(user.password)
-    auth_user.email = user.email
+    for key, value in auth_user_data.items():
+        setattr(auth_user, key, value)
     auth_user.save()
+
+    return f"edited"
 
 
 def delete_user(userID):
