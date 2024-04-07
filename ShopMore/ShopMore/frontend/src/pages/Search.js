@@ -5,10 +5,13 @@ import "../index.scss"
 import * as React from 'react';
 import { FaFireAlt, FaSearch } from "react-icons/fa";
 import Slider from "react-slider";
+import { useParams } from 'react-router-dom'
 
 
 
-const Search = () => {
+const Product = () => {
+    
+    let {pid} = useParams()
 
     const returnProductData = [
                             [1, "Table", 20, 1000, [["User0112","The prefect table with high quality."],["Bernald Meriq","Cheapest table I've seen in a while."]], [5.0, 4.5], "Made with the rare oakk wood found in India, the finest table that you..."],
@@ -70,4 +73,4 @@ const Search = () => {
     );
 }
 
-export default Search;
+export default Product;
