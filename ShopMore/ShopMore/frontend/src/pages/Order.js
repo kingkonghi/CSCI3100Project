@@ -3,7 +3,7 @@
 import "../index.scss";
 import * as React from 'react';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams} from 'react-router-dom';
 import { Container, Row, Col, ListGroup, Form, Button, InputGroup } from 'react-bootstrap';
 
 const Order = () => {
@@ -16,6 +16,15 @@ const Order = () => {
   const [discount] = useState(0);
   const [deliveryfee] = useState(50);
 
+  const [email] = useState("sleepy@gmail.com");
+  const [date] = useState("2024-03-30");
+  const [status] = useState("Completed");
+
+  const [fullname] = useState("Joe Go");
+  const [contactno] = useState("21800000");
+  const [address] = useState("Under the Bridge of the Engineering Building, CUHK");
+
+  const [paymenttype] = useState("Credit Card / Debit Card");
 
   // Calculate the total price
   const subtotalPayment = orderproduct.reduce(
@@ -27,7 +36,7 @@ const Order = () => {
     <div id="order">
       <div className="container">
         <div className="row">
-          <h4>Your Order Details ({oid}):</h4>
+          <h4>Your Order ({oid}):</h4>
           <table>
             <thead>
               <tr>
@@ -77,15 +86,50 @@ const Order = () => {
             <Row>
                 <Col>
                     <h4>Order Detail</h4>
-                    
+                    <tr>
+                        <td>Order ID: </td>
+                        <td>{oid}</td>
+                    </tr>
+                    <tr>
+                        <td>Email: </td>
+                        <td>{email}</td>
+                    </tr>
+                    <tr>
+                        <td>Order Date: </td>
+                        <td>{date}</td>
+                    </tr>
+                    <tr>
+                        <td>Status: </td>
+                        <td>{status}</td>
+                    </tr>
                 </Col>
                 <Col>
-                    
+                    <h4>Customer Detail</h4>
+                    <tr>
+                        <td>Name: </td>
+                        <td>{fullname}</td>
+                    </tr>
+                    <tr>
+                        <td>Contact Number: </td>
+                        <td>{contactno}</td>
+                    </tr>
+                    <tr>
+                        <td>Address: </td>
+                        <td>{address}</td>
+                    </tr>
                 </Col>
             </Row>
-            <Row>
-            <Col>
-                    
+            <Row style={{marginTop: "20px"}}>
+                <Col>
+                <h4>Payment Detail</h4>
+                    <tr>
+                        <td>Payment Method: </td>
+                        <td>{paymenttype}</td>
+                    </tr>
+                    <tr>
+                        <td>Payment Status: </td>
+                        <td>Paid</td>
+                    </tr>
                 </Col>
             </Row>
         </div>
