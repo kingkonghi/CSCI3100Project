@@ -3,10 +3,11 @@
 
 import "../index.scss"
 import * as React from 'react';
-import { FaFireAlt, FaSearch } from "react-icons/fa";
+import { FaStar, FaRegStar, FaFireAlt, FaSearch } from "react-icons/fa";
 import Slider from "react-slider";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
+import { FaRegStarHalfStroke } from "react-icons/fa6";
 
 
 
@@ -68,7 +69,6 @@ const Main = () => {
                 setShowHot(newHot);
             }, 3000);
         
-        console.log(showHot)
         return () => clearInterval(interval)    
     }, [showHot]);
 
@@ -82,7 +82,22 @@ const Main = () => {
                         </td>
                         <td id="productDesc">
                             <h5><FaFireAlt /> Seasonal Trend!</h5>
-                            <p className="title">{HotData[showHot][1] + " - $" + HotData[showHot][3]}<span className="star"> &#9733; &#9733; &#9733; &#9733; &#9733;</span></p>
+                            <p className="title">{HotData[showHot][1] + " - $" + HotData[showHot][3]}<span className="star"> {
+                                [0,1,2,3,4].map((element)=>{
+                                    let rating = HotData[showHot][5].reduce((a, b) => a + b) / HotData[showHot][5].length;
+                                    let ratingHolder = null
+                                    if(rating>=element+1){
+                                        ratingHolder = <FaStar/>
+                                    } else {
+                                        if(rating >= element+0.5){
+                                            ratingHolder = <FaRegStarHalfStroke />
+                                        } else {
+                                            ratingHolder = <FaRegStar />
+                                        }
+                                    }
+                                    return (ratingHolder)
+                                })
+                            }</span></p>
                             <p className="content">Our customers' feedback</p>
                             <p className="feedback">{HotData[showHot][4][0][0] + ": " + HotData[showHot][4][0][1]}</p>
                             <p className="feedback">{HotData[showHot][4][1][0] + ": " + HotData[showHot][4][1][1]}</p>
@@ -228,7 +243,22 @@ const Main = () => {
                                                 <div className="highlightedFeedback">
                                                     <p>{element[4][0][1] + " - "}</p>
                                                     <p className="additionalComment">{element[4][0][0]}</p>
-                                                    <span className="star"> &#9733; &#9733; &#9733; &#9733; &#9733;</span>
+                                                    <span className="star">{
+                                                        [0,1,2,3,4].map((element2)=>{
+                                                            let rating = element[5].reduce((a, b) => a + b) / HotData[showHot][5].length;
+                                                            let ratingHolder = null
+                                                            if(rating>=element2+1){
+                                                                ratingHolder = <FaStar/>
+                                                            } else {
+                                                                if(rating >= element2+0.5){
+                                                                    ratingHolder = <FaRegStarHalfStroke />
+                                                                } else {
+                                                                    ratingHolder = <FaRegStar />
+                                                                }
+                                                            }
+                                                            return (ratingHolder)
+                                                        })
+                                                    }</span>
                                                 </div>
                                                 <button type="button" className="directButton" onClick={()=>redirect(element[0])}>Find out more &rarr;</button>
                                             </div>
