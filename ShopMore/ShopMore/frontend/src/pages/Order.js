@@ -3,7 +3,7 @@
 import "../index.scss";
 import * as React from 'react';
 import { useState } from 'react';
-import { useParams} from 'react-router-dom';
+import { useParams, Link} from 'react-router-dom';
 import { Container, Row, Col, ListGroup, Form, Button, InputGroup } from 'react-bootstrap';
 
 const Order = () => {
@@ -143,13 +143,12 @@ export default Order;
 class TRP extends React.Component {
   render() {
     let i = this.props.i;
-    let link = '/order/' + this.props.data[i].oid;
+    let link = '/product/' + this.props.data[i].pid;
     return (
       <tr>
         <td><img height="100" src={"/photo/" + this.props.data[i].pid + ".png"} /></td>
         <td>
-          {/*<Link to={link}> {this.props.data[i].name}</Link>*/}
-          <p>{this.props.data[i].name}</p>
+          <Link to={link}> {this.props.data[i].name}</Link>
         </td>
         <td>{this.props.data[i].price}</td>
         <td>{this.props.data[i].quantity}</td>

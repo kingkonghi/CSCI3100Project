@@ -3,6 +3,7 @@
 import "../index.scss"
 import * as React from 'react';
 import {useState} from 'react';
+import { Link } from 'react-router-dom';
 
 const Favour = () => {
     const [favproduct, setFavProduct] = useState([
@@ -61,10 +62,7 @@ export default Favour;
         return (
           <tr>
             <td><img height="100" src={"/photo/"+this.props.data[i].pid+".png"} /></td>
-            <td>
-              {/*<Link to={link}> {this.props.data[i].name}</Link>*/}
-                <p>{this.props.data[i].name}</p>
-            </td>
+            <td><Link to={link}> {this.props.data[i].name}</Link></td>
             <td>{this.props.data[i].price}</td>
             <td>
               <button 
