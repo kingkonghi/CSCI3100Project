@@ -20,8 +20,8 @@ const Root = ({ nav, home }) => {
         <>
             <div>
                 {home ? content : <header>
-                    <Title login={loggedIn} nav={nav}/>
-                    {content}
+                    <Title login={loggedIn}/>
+                    {nav ? <div><Nav/>{content}</div> : content}
                 </header>}
             </div>
         </>

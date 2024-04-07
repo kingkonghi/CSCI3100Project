@@ -5,7 +5,6 @@ import "../index.scss"
 import * as React from 'react';
 import { FaFireAlt, FaSearch } from "react-icons/fa";
 import Slider from "react-slider";
-import { useNavigate } from "react-router-dom";
 
 
 
@@ -16,13 +15,8 @@ const Main = () => {
                             [2, "Washing machine", 20, 2000, [["User0445","Been using it for 10 years, perfect."],["Marina C.","Flawless."]], [5.0, 5.0], "Assist with AI production line, a washing machine for life."],
                             [3, "Lamp", 20, 100, [["ProCommentor","Nice Lamp!"],["User0002","A little decoration to my pretty room."]], [5.0, 4.5], "Brighten your room with this lamp made with masters based in Germany."]
                         ] //id, name, price, stock, reviews (array), rating (array), desc
-                    
-    let navigate = useNavigate();                     
 
-    function redirect(id){
-        navigate('/product/' + id)
-    }
-    
+
     return (
         <>
             <div id="main">
@@ -155,26 +149,46 @@ const Main = () => {
                     </div>
                     <div id="recommendProduct">
                         <p id="titleRecommendation">Recommend for you base on your purchase history and favorite item</p>
-                        <div id="productGroup"> 
-                            {
-                                ProductData.map((element, index)=>{
-                                    return (
-                                        <div className="productDesc">
-                                            <img src={"/photo/"+element[0]+".png"} alt={element[1]} />
-                                            <div className="descArea">
-                                                <p className="titleBar">{element[1]}</p>
-                                                <p>{element[6]}</p>
-                                                <div className="highlightedFeedback">
-                                                    <p>{element[4][0][1] + " - "}</p>
-                                                    <p className="additionalComment">{element[4][0][0]}</p>
-                                                    <span className="star"> &#9733; &#9733; &#9733; &#9733; &#9733;</span>
-                                                </div>
-                                                <button type="button" className="directButton" onClick={()=>redirect(element[0])}>Find out more &rarr;</button>
-                                            </div>
-                                        </div>
-                                    )
-                                })
-                            }
+                        <div id="productGroup">                      
+                            <div className="productDesc">
+                                <img src={"/photo/"+ProductData[0][0]+".png"} alt={ProductData[0][1]} />
+                                <div className="descArea">
+                                    <p className="titleBar">{ProductData[0][1]}</p>
+                                    <p>{ProductData[0][6]}</p>
+                                    <div className="highlightedFeedback">
+                                        <p>{ProductData[0][4][0][1] + " - "}</p>
+                                        <p className="additionalComment">{ProductData[0][4][0][0]}</p>
+                                        <span className="star"> &#9733; &#9733; &#9733; &#9733; &#9733;</span>
+                                    </div>
+                                    <button type="button" className="directButton">Find out more &rarr;</button>
+                                </div>
+                            </div>
+                            <div className="productDesc">
+                                <img src={"/photo/"+ProductData[1][0]+".png"} alt={ProductData[1][1]} />
+                                <div className="descArea">
+                                    <p className="titleBar">{ProductData[1][1]}</p>
+                                    <p>{ProductData[1][6]}</p>
+                                    <div className="highlightedFeedback">
+                                        <p>{ProductData[1][4][0][1] + " - "}</p>
+                                        <p className="additionalComment">{ProductData[1][4][0][0]}</p>
+                                        <span className="star"> &#9733; &#9733; &#9733; &#9733; &#9733;</span>
+                                    </div>
+                                    <button type="button" className="directButton">Find out more &rarr;</button>
+                                </div>
+                            </div>
+                            <div className="productDesc">
+                                <img src={"/photo/"+ProductData[2][0]+".png"} alt={ProductData[2][1]} />
+                                <div className="descArea">
+                                    <p className="titleBar">{ProductData[2][1]}</p>
+                                    <p>{ProductData[2][6]}</p>
+                                    <div className="highlightedFeedback">
+                                        <p>{ProductData[2][4][0][1] + " - "}</p>
+                                        <p className="additionalComment">{ProductData[2][4][0][0]}</p>
+                                        <span className="star"> &#9733; &#9733; &#9733; &#9733; &#9733;</span>
+                                    </div>
+                                    <button type="button" className="directButton">Find out more &rarr;</button>
+                                </div>
+                            </div>
                         </div> 
                     </div>
                 </div>

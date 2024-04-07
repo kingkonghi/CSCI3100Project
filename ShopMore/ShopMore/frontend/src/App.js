@@ -73,7 +73,7 @@ const router = createBrowserRouter([
         element: <Search/>
       },
       {
-        path: '/product/:pid',
+        path: '/product',
         element: <Product/>
       },
       {
