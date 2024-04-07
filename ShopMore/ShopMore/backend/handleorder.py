@@ -2,8 +2,8 @@ from .database.connection import connect
 from .models.order import *
 conn=connect()
 
-def list_order():
-        rows = Order.objects.all()
+def list_order(userid):
+        rows = Order.objects.filter(userID=userid).all()
         print(rows)
         return rows
 

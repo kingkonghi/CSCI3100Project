@@ -3,7 +3,8 @@ from .backend.models.item import Item
 from .backend.models.order import Order
 from .backend.models.cart import cart
 from .backend.models.favoritelist import FavoriteList
-from .backend.models.user import User
+from .backend.models.user import User as UserList
+from django.contrib.auth.models import User
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
@@ -22,22 +23,31 @@ class ItemAdmin(admin.ModelAdmin):
             obj.itemID = last_item.itemID + 1 if last_item else 1
         super().save_model(request, obj, form, change)
         
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+@admin.register(UserList)
+class UserListAdmin(admin.ModelAdmin):
     list_display = ['user_id', 'accountType', 'username', 'password', 'email', 'profilePhoto', 'address']
     list_filter = ['accountType']
 
     def get_changeform_initial_data(self, request):
         initial = super().get_changeform_initial_data(request)
-        last_user = User.objects.order_by('-user_id').first()
+        last_user = UserList.objects.order_by('-user_id').first()
         initial['user_id'] = last_user.user_id + 1 if last_user else 1
         return initial
 
     def save_model(self, request, obj, form, change):
-        if not obj.userID:
-            last_user = User.objects.order_by('-user_id').first()
-            obj.userID = last_user.user_id + 1 if last_user else 1
+        if not obj.user_id:
+            last_user = UserList.objects.order_by('-user_id').first()
+            obj.user_id = last_user.user_id + 1 if last_user else 1
         super().save_model(request, obj, form, change)
+
+        try: #when edit/create user in table userlist through admin, auth_user will also be edited/created 
+            user = User.objects.get(id=obj.user_id)
+        except User.DoesNotExist:
+            user = User(id=obj.user_id)
+        user.username = obj.username
+        user.set_password(obj.password)
+        user.email = obj.email
+        user.save()
             
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):

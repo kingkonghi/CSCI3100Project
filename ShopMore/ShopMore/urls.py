@@ -1,9 +1,7 @@
-from django.urls import path
+from django.urls import path, include
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
-from . import views
-from django.urls import path
 from . import views
  
 # Register your models here.
@@ -17,7 +15,7 @@ urlpatterns = [
     path('register/', views.register),
     path('Edit_info/', views.edit_info),
     path('add_to_favorite/', views.add_to_favorite),
-    path('product/', views.product),
+    path('product/', views.product, ),
     path('cart/', views.cart),
     path('order/', views.order),
     path('checkout/', views.payment_checkout, name='checkout_payment'),

@@ -1,8 +1,7 @@
 from .models.cart import *
 
-def list_cart():
-        rows = cart.objects.all()
-        print(rows)
+def list_cart(userid):
+        rows = cart.objects.filter(userID=userid).all()
         return rows
     
 def add_item_to_cart(userID, itemlist):

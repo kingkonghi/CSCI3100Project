@@ -12,7 +12,7 @@ class User(models.Model):
     address = models.CharField(max_length=100, null=True)
 
     def __repr__(self):
-        return f"User(UID={self.userID}, ACCOUNTTYPE={self.accountType}, UNAME={self.username}, UPASSWORD={self.password}, EMAILL={self.email}, PROFILEPHOT={self.profilePhoto}, ADDRESS={self.address})"
+        return f"User(UID={self.user}, ACCOUNTTYPE={self.accountType}, UNAME={self.username}, UPASSWORD={self.password}, EMAILL={self.email}, PROFILEPHOT={self.profilePhoto}, ADDRESS={self.address})"
     def __str__(self):
         return f"{self.username}"
     class Meta:

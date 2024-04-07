@@ -1,5 +1,6 @@
 from .models.user import *
-
+from .models.favoritelist import *
+from .models.cart import *
 def list_user():
     rows = User.objects.all()
     print(rows)
@@ -16,4 +17,6 @@ def edit_user(user):
     
 def delete_user(userID):
     User.objects.filter(userID=userID).delete()
+    FavoriteList.objects.filter(userID=userID).delete()
+    cart.objects.filter(userID=userID).delete()
     print("User deleted.")

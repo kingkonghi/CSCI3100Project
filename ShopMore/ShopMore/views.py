@@ -43,7 +43,7 @@ def create_payment(request):
                     "total": "10.00",  # Total amount in USD
                     "currency": "HKD",
                 },
-                "description": "Payment for Product/Service",
+                "description": request.itemDescription,
             }
         ],
     })
@@ -72,7 +72,7 @@ def payment_checkout(request):
 
 @api_view(['GET'])
 def hello(request):
-    return render(request, 'index.html')
+    return render(request, 'checkout.html')
 
 @api_view(['POST'])
 def login(request):
@@ -97,7 +97,7 @@ def edit_info(request):
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
-@csrf_exempt
+@csrf_exempt  #csrf_exempt is just for testing, if frontend can get csrf_token, can remove this
 def add_to_favorite(request):
     if request.method == 'POST':
         item_id = request.data.get('item_id')
@@ -111,23 +111,25 @@ def add_to_favorite(request):
 @api_view(['DELETE'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
-@csrf_exempt
+@csrf_exempt #csrf_exempt is just for testing, if frontend can get csrf_token, can remove this
 def delete_favorite(request, favorite_id):
     response = delete_favorite_item(favorite_id)
     return Response({'success': True, 'response': response})
     
-
+@api_view(['GET'])
 def product(request):
     row = list_item()
     return HttpResponse(row)
 
 @api_view(['GET'])
 def cart(request):
-    return HttpResponse("Cart page")
+    row = list_cart(request.user)
+    return HttpResponse(row)
 
-
+@api_view(['GET'])
 def order(request):
-    return HttpResponse("Order page")
+    row = list_order(request.userID)
+    return HttpResponse(row)
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
