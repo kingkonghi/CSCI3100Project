@@ -1,9 +1,12 @@
 from .database.connection import connect
+from django.shortcuts import get_object_or_404
 from .models.item import *
-conn = connect()
-
 def list_item():
         rows = Item.objects.all()
+        print(rows)
+        return rows
+def display_item(name):
+        rows = Item.objects.filter(itemName=name)
         print(rows)
         return rows
 
@@ -17,5 +20,6 @@ def edit_item(name,quantity):
         item1 = Item.objects.filter(itemName=name).update(itemquantity=quantity)
         return item1
 
-def remove_item(ID):
-        Item.objects.filter(itemID=ID).delete()
+def remove_item(itemID):
+        item = get_object_or_404(Item, itemID=itemID)
+        item.delete()

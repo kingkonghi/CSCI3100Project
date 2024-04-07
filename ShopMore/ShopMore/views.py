@@ -74,7 +74,11 @@ def payment_checkout(request):
 
 @api_view(['GET'])
 def hello(request):
-    return render(request, 'checkout.html')
+    rows = list_item()
+    output = ""
+    for row in rows:
+        output += f"{row.itemName} - {row.itemDescription} - {row.itemCategory} - {row.itemImage} - {row.itemPrice} - {row.itemQuantity} - {row.itemStatus} "
+    return HttpResponse(output)
 
 @api_view(['POST'])
 def login(request):
@@ -146,12 +150,12 @@ def product(request):
 
 @api_view(['GET'])
 def cart(request):
-    row = list_cart(request.user)
+    row = list_cart(request.data.get('userID'))
     return HttpResponse(row)
 
 @api_view(['GET'])
 def order(request):
-    row = list_order(request.userID)
+    row = list_order(request.data.get('userID'))
     return HttpResponse(row)
 
 @api_view(['GET'])

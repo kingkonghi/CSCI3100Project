@@ -124,6 +124,9 @@
         width: 50%;
         text-align: right;
         line-height: 400px;
+        img{
+          height: 300px;
+        }
       }
       #productDesc {
         display: inline-block;
@@ -460,10 +463,15 @@
     background-color: white;
     position: relative;
     width: 100%;
-    img{
-      height: 100%;
-      padding: 2%;
+    #imgArea{
+      width: 300px;
       border: 1px solid black;
+      img{
+        display:block;
+        margin:auto;
+        height: 300px;
+        padding: 2%;
+      }
     }
     #productDesc{
       height: 100%;
