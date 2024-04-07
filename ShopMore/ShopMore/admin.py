@@ -41,13 +41,13 @@ class UserListAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
         try: #when edit/create user in table userlist through admin, auth_user will also be edited/created 
-            user = User.objects.get(id=obj.user_id)
+            auth_user = User.objects.get(id=obj.user_id)
         except User.DoesNotExist:
-            user = User(id=obj.user_id)
-        user.username = obj.username
-        user.set_password(obj.password)
-        user.email = obj.email
-        user.save()
+            auth_user = User(id=obj.user_id)
+        auth_user.username = obj.username
+        auth_user.set_password(obj.password)
+        auth_user.email = obj.email
+        auth_user.save()
             
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
