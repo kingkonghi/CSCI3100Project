@@ -3,12 +3,13 @@
 import "../index.scss"
 import * as React from 'react';
 import { FaMinus, FaPlus, FaStar, FaRegStar, FaHeart } from "react-icons/fa";
+import { useParams } from 'react-router-dom'
 
 
 
-
-const Search = () => {
-
+const Product = () => {
+    
+    let {pid} = useParams()
     const productData = [1, "Table", 20, 1000, [["User0112","The prefect table with high quality."],["Bernald Meriq","Cheapest table I've seen in a while."]], [5.0, 4.5], "Made with the rare oakk wood found in India, the finest table that you could ever found.\nThe manufacturer is origin from England with over 700 years of enterprise and once a producer for the royal family.\n\nOrigin: London, England"] //id, name, price, stock, reviews (array), rating (array), desc
     const relatedProduct = [[3, "Lamp", "Brighten your room with this lamp made with masters based in Germany."], [2, "Washing machine", "Assist with AI production line, a washing machine for life."]]
     const userName = "User5566"
@@ -80,4 +81,4 @@ const Search = () => {
     );
 }
 
-export default Search;
+export default Product;
