@@ -714,7 +714,7 @@
       
 }
 
-#favour {
+#favour,#orderlist,#order {
   background-color: rgb(225, 255, 179);
   min-width: 600px;
   padding: 3%;
@@ -751,41 +751,6 @@
   td img {
     display: block;
     margin: 0 auto;
-  }
-}
-
-#orderlist {
-  background-color: rgb(225, 255, 179);
-  min-width: 600px;
-  padding: 3%;
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
-    background-color: #ffffff;
-    font-family: Arial, Helvetica, sans-serif;
-    margin-top: 20px; /* Add margin to the top of the table */
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2); /* Add a box shadow */
-  }
-
-  th,
-  td {
-    padding: 10px;
-    text-align: left;
-  }
-
-  thead th {
-    background-color: #303c6c;
-    color: #ffffff;
-  }
-
-  tbody tr:nth-child(even) {
-    background-color: #f2f2f2; /* Add alternating row background color */
-  }
-
-  tbody tr:hover {
-    background-color: #e0e0e0; /* Add hover effect */
   }
 }
 
