@@ -1,11 +1,11 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
 from . import views
  
 # Register your models here.
-
+__all__ = ['handler400', 'handler403', 'handler404', 'handler500', 'include', 'url']
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.hello, name="hello"),
@@ -13,7 +13,7 @@ urlpatterns = [
     path('login/', views.login),
     path('logout/', views.logout),
     path('register/', views.register),
-    path('user/', views.user),
+    path('user/<int:userID>', views.user),
     path('user/edit_info/', views.edit_info),
     path('add_to_favorite/', views.add_to_favorite),
     path('product/recommendation/', views.recommendation),

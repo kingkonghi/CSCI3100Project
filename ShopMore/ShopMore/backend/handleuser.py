@@ -3,8 +3,8 @@ from .models.favoritelist import *
 from .models.cart import *
 from django.contrib.auth.models import User
 
-def list_user_info(user):
-    user_info = UserList.objects.filter(user_id=user.id)
+def list_user_info(userID):
+    user_info = UserList.objects.filter(user_id=userID)
     return user_info
 
 def add_user(user):
