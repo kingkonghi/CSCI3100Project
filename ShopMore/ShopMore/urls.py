@@ -3,6 +3,8 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
  
 # Register your models here.
 __all__ = ['handler400', 'handler403', 'handler404', 'handler500', 'include', 'url']
@@ -13,7 +15,7 @@ urlpatterns = [
     path('login/', views.login),
     path('logout/', views.logout),
     path('register/', views.register),
-    path('user/<int:userID>', views.user),
+    path('user/', views.user),
     path('user/edit_info/', views.edit_info),
     path('add_to_favorite/', views.add_to_favorite),
     path('product/recommendation/', views.recommendation),
@@ -25,5 +27,5 @@ urlpatterns = [
     path('execute_payment/', views.execute_payment, name='execute_payment'),
     path('test_token/', views.test_token),
     path('test_view/', views.test_view),
-]
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
  

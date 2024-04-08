@@ -139,12 +139,16 @@ def add_to_favorite(request):
 def delete_favorite(request, favorite_id):
     response = delete_favorite_item(favorite_id)
     return Response({'success': True, 'response': response})
-    
-@api_view(['GET'])
-def product(request):
-    rows = display_item(request.data.get('itemName'))
-    return JsonResponse({'Result: ': rows})
 
+from .serializers import ItemSerializer
+@api_view(["POST"])
+def product(request):
+    item = get_object_or_404(Item, itemName=request.data['itemName'])
+    print(item)
+    serializer = ItemSerializer(instance=item)
+    
+    return Response({"item": serializer.data})
+#{"itemName":"Table"}
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
