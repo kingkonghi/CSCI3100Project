@@ -143,11 +143,12 @@ def delete_favorite(request, favorite_id):
 from .serializers import ItemSerializer
 @api_view(["POST"])
 def product(request):
-    item = get_object_or_404(Item, itemName=request.data['itemName'])
-    print(item)
-    serializer = ItemSerializer(instance=item)
-    
-    return Response({"item": serializer.data})
+    itemlist = []
+    for i in Item.objects.all():
+        item = get_object_or_404(Item, itemID=i.itemID)
+        serializer = ItemSerializer(instance=item)
+        itemlist.append(serializer.data)
+    return Response({"item": itemlist})
 #{"itemName":"Table"}
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
