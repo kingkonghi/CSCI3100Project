@@ -98,13 +98,12 @@ def register(request):
    response = registerfunction(request)
    return response
 
-@api_view(['GET'])
+@api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 @csrf_exempt
-def user(request,userID):
-    print(userID)
-    user_info = list_user_info(userID)
+def user(request):
+    user_info = list_user_info(request.data['userID'])
     serialized_user_info = serializers.serialize('json', user_info)
     return JsonResponse({'message': serialized_user_info})
 
