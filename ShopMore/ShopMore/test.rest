@@ -38,3 +38,19 @@ Content-Type: application/json
 Authorization: Token d5219af605fe3da8ce570d8422e11f5e8090c4e7
 
 {}
+
+###
+GET http://127.0.0.1:8000/Admin/user/display/
+Content-Type: applicatiion/json
+Authorization: Token d5219af605fe3da8ce570d8422e11f5e8090c4e7
+
+{}
+###
+
+POST http://127.0.0.1:8000/Admin/user/add/
+Content-Type: application/json
+Authorization: Token d5219af605fe3da8ce570d8422e11f5e8090c4e7
+
+{"name": "Glass Bottle", "description": "Unique Shape", "category": "2", "image": "bottle.jpg", "price": "20", "quantity": "70", "status": "1"}
+
+###
