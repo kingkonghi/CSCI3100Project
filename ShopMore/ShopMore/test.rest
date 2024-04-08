@@ -1,0 +1,40 @@
+POST http://127.0.0.1:8000/add_to_favorite/
+Content-Type: application/json
+Authorization: Token d5219af605fe3da8ce570d8422e11f5e8090c4e7
+
+{"item_id": "6"}
+
+###
+POST http://127.0.0.1:8000/register/
+Content-Type: application/json
+
+{"username": "Tony", "password": "Tonypw", "email": "Tony@gmail.com"}
+
+###
+POST http://127.0.0.1:8000/login/
+Content-Type: application/json
+
+{"username": "Tony", "password": "Tonypw"}
+
+###
+GET http://127.0.0.1:8000/test_view/
+
+###
+POST http://127.0.0.1:8000/user/
+Content-Type: application/json
+Authorization: Token d5219af605fe3da8ce570d8422e11f5e8090c4e7
+
+{}
+###
+POST http://127.0.0.1:8000/user/edit_info/
+Content-Type: application/json
+Authorization: Token d5219af605fe3da8ce570d8422e11f5e8090c4e7
+
+{"email": "TonyTony@gmail.com"}
+
+###
+POST http://127.0.0.1:8000/product/recommendation/
+Content-Type: application/json
+Authorization: Token d5219af605fe3da8ce570d8422e11f5e8090c4e7
+
+{}
