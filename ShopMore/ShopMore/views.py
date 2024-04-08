@@ -75,11 +75,7 @@ def payment_checkout(request):
 
 @api_view(['GET'])
 def hello(request):
-    rows = list_item()
-    output = ""
-    for row in rows:
-        output += f"{row.itemName} - {row.itemDescription} - {row.itemCategory} - {row.itemImage} - {row.itemPrice} - {row.itemQuantity} - {row.itemStatus} "
-    return HttpResponse(output)
+    return HttpResponse("Hello page")
 
 @api_view(['POST'])
 def login(request):
@@ -147,8 +143,8 @@ def delete_favorite(request, favorite_id):
     
 @api_view(['GET'])
 def product(request):
-    row = list_item()
-    return HttpResponse(row)
+    rows = display_item(request.data.get('itemName'))
+    return JsonResponse({'Result: ': rows})
 
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
