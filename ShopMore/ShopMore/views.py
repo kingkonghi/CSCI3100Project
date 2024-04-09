@@ -207,8 +207,13 @@ def order_delete(request,orderID):
 
 #Review
 @api_view(['GET'])
-def review(request,itemID):
-    response = list_review(itemID)
+def review(request):
+    response = list_review()
+    return Response({'message': response}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def review_specific(request,itemID):
+    response = list_review_specific(itemID)
     return Response({'message': response}, status=status.HTTP_200_OK)
 @api_view(['GET'])
 def review_add(request,itemID,userID,Review,Rating):

@@ -1,9 +1,21 @@
 from .models.review import *
 from .models.order import *
-def list_review(itemID):
-        rows = Review.objects.filter(itemID=itemID).all()
-        reviews = ''
-        return rows
+from ShopMore.serializers import ReviewSerializer
+from django.shortcuts import get_object_or_404
+def list_review():
+        reviewlist = []
+        for i in Review.objects.all():
+                item = get_object_or_404(Review, id=i.id)
+                serializer = ReviewSerializer(instance=item)
+                reviewlist.append(serializer.data)
+        return reviewlist
+def list_review_specific(itemID):
+        reviewlist = []
+        for i in Review.objects.filter(itemID=itemID).all():
+                item = get_object_or_404(Review, id=i.id)
+                serializer = ReviewSerializer(instance=item)
+                reviewlist.append(serializer.data)
+        return reviewlist
 
 def add_review(userID,itemID,Reviewadd,Rating):
         rows = Order.objects.get(userID=userID).orderItems.get(str(itemID))
