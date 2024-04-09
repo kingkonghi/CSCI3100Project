@@ -52,7 +52,10 @@ def edit_user(user, username=None, accountType=None, password=None, email=None, 
 
     auth_user = User.objects.get(id=user.user_id)
     for key, value in auth_user_data.items():
-        setattr(auth_user, key, value)
+        if key == 'password':
+            auth_user.set_password(value)
+        else:
+            setattr(auth_user, key, value)
     auth_user.save()
 
     return f"edited"
