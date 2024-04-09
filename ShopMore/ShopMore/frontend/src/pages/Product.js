@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { FaRegStarHalfStroke } from "react-icons/fa6";
-
+import axios from "axios";
 
 
 
@@ -17,6 +17,9 @@ const Product = () => {
     let navigate = useNavigate();
     const [selfRate, setSelfRate] = useState(5);
     const [selfLove, setSelfLove] = useState(true);
+    const userId = 1
+
+    const userName = "User5566"
 
     const allProductData = [ //[TBI] All product
         [1, "Table", 20, 1000, [["User0112","The prefect table with high quality."],["Bernald Meriq","Cheapest table I've seen in a while."]], [5.0, 4.5], "Made with the rare oakk wood found in India, the finest table that you could ever found.\nThe manufacturer is origin from England with over 700 years of enterprise and once a producer for the royal family.\n\nOrigin: London, England"],
@@ -35,20 +38,35 @@ const Product = () => {
         [3, "Lamp", "Brighten your room with this lamp made with masters based in Germany."], 
         [2, "Washing machine", "Assist with AI production line, a washing machine for life."]
     ]
-    const userName = "User5566"
 
     function redirect(id){
         navigate('/product/' + id)
     }
     
     function addNotification(stock){
-        if (Number(document.getElementById("priceTag").value) >stock){
+        let currNo = Number(document.getElementById("priceTag").value)
+        if (currNo >stock){
             alert("Not enough stock! Please select a valid number.");
-        } else if (Number(document.getElementById("priceTag").value) == 0){
+        } else if (currNo == 0){
             alert("Please enter a valud non-zero number.")
         } else {
-            alert("Added to shopping cart")
-        }
+            let loadPost = async () => { 
+                const response = await axios.get(
+                    'http://127.0.0.1:8000/cart/'+ userId
+                )
+                if (response.data.cart[pid] + currNo > stock){
+                    alert("Not enough stock! Please select a valid number. Note that you already put some of this product in your cart.");
+                } else{
+                    const createCart = await axios.get( 
+                        'http://127.0.0.1:8000/cart/add/'+userId+'/'+pid+'/'+currNo+'/'
+                    ); 
+                    alert(createCart.data.message)
+                    }
+                }
+    
+                loadPost(); 
+        }; 
+        
     }
 
     function increaseQ(){
