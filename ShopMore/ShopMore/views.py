@@ -18,7 +18,6 @@ from .backend.handlefavoritelist import *
 from .backend.handleuser import *
 from .backend.handlereview import *
 from .backend.handlerecommendation import *
-from .serializers import *
 import paypalrestsdk
 from django.shortcuts import render, redirect
 
@@ -184,7 +183,7 @@ def cart_edit(request,userID, itemID, quantity):
     response = edit_item(userID, itemID, quantity)
     return Response({'message': "Successfully edited item quantity to cart"}, status=status.HTTP_200_OK)
 
-@api_view(['GET'])
+@api_view(['DELETE'])
 def cart_remove(request,userID, itemID):
     response = remove_item(userID, itemID)
     return Response({'message': "Successfully deleted item from cart"}, status=status.HTTP_200_OK)
@@ -200,7 +199,7 @@ def order_add(request,userID,orderItems):
     response = add_order(userID,orderItems)
     return Response({'message': f"Successfully added order {response}"}, status=status.HTTP_201_CREATED)
     
-@api_view(['GET'])
+@api_view(['DELETE'])
 def order_delete(request,orderID):
     response = delete_order(orderID)
     return Response({'message': "Successfully deleted order"}, status=status.HTTP_200_OK)
@@ -221,9 +220,9 @@ def review_add(request,itemID,userID,Review,Rating):
     return Response({'message': response}, status=status.HTTP_200_OK)
 @api_view(['GET'])
 def review_edit(request,itemID,userID,Review,Rating):
-    response = add_review(itemID,userID,Review,Rating)
+    response = edit_review(itemID,userID,Review,Rating)
     return Response({'message': response}, status=status.HTTP_200_OK)
-@api_view(['GET'])
+@api_view(['DELETE'])
 def review_remove(request,itemID,userID):
     response = delete_review(itemID,userID)
     return Response({'message': response}, status=status.HTTP_200_OK)
