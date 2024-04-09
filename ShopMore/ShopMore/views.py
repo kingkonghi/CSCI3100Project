@@ -149,13 +149,9 @@ def product(request):
 @api_view(["GET"])
 def product_specific(request,itemID):
     item = get_object_or_404(Item, itemID=itemID)
-    print(item.itemID)
     serializer = ItemSerializer(instance=item)
-    print(serializer.data)
     return Response({"item": serializer.data})
 
-
-#{"itemName":"Table"}
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
