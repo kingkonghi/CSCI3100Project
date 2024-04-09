@@ -146,6 +146,7 @@ def product(request):
         serializer = ItemSerializer(instance=item)
         itemlist.append(serializer.data)
     return Response({"item": itemlist})
+
 @api_view(["GET"])
 def product_specific(request,itemID):
     item = get_object_or_404(Item, itemID=itemID)
@@ -167,14 +168,39 @@ def recommendation (request):
     return JsonResponse(response_data)
 
 @api_view(['GET'])
-def cart(request):
-    row = list_cart(request.data.get('userID'))
-    return HttpResponse(row)
+def cart_list(request,userID):
+    row = list_cart(userID)
+    Response({'cart': row}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
-def order(request):
-    row = list_order(request.data.get('userID'))
-    return HttpResponse(row)
+def cart_add(request,userID, itemID, quantity):
+    response = add_item_to_cart(userID, itemID, quantity)
+    Response({'message': "Successfully added item to cart"}, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+def cart_edit(request,userID, itemID, quantity):
+    response = edit_item(userID, itemID, quantity)
+    Response({'message': "Successfully edited item quantity to cart"}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def cart_remove(request,userID, itemID):
+    response = remove_item(userID, itemID)
+    return Response({'message': "Successfully deleted item from cart"}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def order(request,orderID):
+    row = list_order(orderID)
+    return Response({'message': row},status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def order_add(request,userID,orderItems):
+    response = add_order(userID,orderItems)
+    return Response({'message': "Successfully added order"}, status=status.HTTP_201_CREATED)
+    
+@api_view(['GET'])
+def order_delete(request,orderID):
+    response = delete_order(orderID)
+    return Response({'message': "Successfully deleted order"}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
