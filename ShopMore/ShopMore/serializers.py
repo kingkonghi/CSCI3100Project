@@ -4,6 +4,7 @@ from .backend.models.favoritelist import FavoriteList
 from .backend.models.item import Item
 from .backend.models.user import User as UserList
 from .backend.models.review import Review
+from .backend.models.cart import cart
 class UserSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = User
@@ -28,3 +29,8 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ['id', 'orderID', 'itemID', 'userID', 'Review', 'Rating']
+
+class CartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = cart
+        fields = ['userID', 'itemlist']

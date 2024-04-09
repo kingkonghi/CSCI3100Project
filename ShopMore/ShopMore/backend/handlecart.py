@@ -1,13 +1,15 @@
 from .models.cart import *
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from ShopMore.serializers import CartSerializer
 
-def list_cart(userid):
-        rows = cart.objects.filter(userID=userid).all()
-        out = ""
-        for i in rows:
-            out = i.itemlist
-        return out
+def list_cart(userID):
+        cartlist = []
+        for i in cart.objects.filter(userID=userID).all():
+                item = get_object_or_404(cart, userID=userID)
+                serializer = CartSerializer(instance=item)
+                cartlist.append(serializer.data)
+        return cartlist
 
 def add_item_to_cart(userID, itemID, quantity):
         try:

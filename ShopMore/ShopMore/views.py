@@ -171,18 +171,18 @@ def recommendation (request):
 #Cart
 @api_view(['GET'])
 def cart_list(request,userID):
-    row = list_cart(userID)
-    Response({'cart': row}, status=status.HTTP_200_OK)
+    response = list_cart(userID)
+    return Response({'cart': response}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def cart_add(request,userID, itemID, quantity):
     response = add_item_to_cart(userID, itemID, quantity)
-    Response({'message': "Successfully added item to cart"}, status=status.HTTP_201_CREATED)
+    return Response({'message': "Successfully added item to cart"}, status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
 def cart_edit(request,userID, itemID, quantity):
     response = edit_item(userID, itemID, quantity)
-    Response({'message': "Successfully edited item quantity to cart"}, status=status.HTTP_200_OK)
+    return Response({'message': "Successfully edited item quantity to cart"}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def cart_remove(request,userID, itemID):
