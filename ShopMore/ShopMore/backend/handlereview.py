@@ -10,8 +10,8 @@ def add_review(userID,itemID,Reviewadd,Rating):
         #review/add/<itemID>/<userID>/<Review>/<Rating>/
         if rows != None:
                 orderID = Order.objects.get(userID=userID).pk
-                id=Order.objects.count()
-                Review.objects.create(id=id+1,orderID=int(orderID),itemID=int(itemID),userID=int(userID),Review=Reviewadd,Rating=int(Rating))
+                id_count=Review.objects.count()
+                Review.objects.create(id=id_count+1,orderID=int(orderID),itemID=int(itemID),userID=int(userID),Review=Reviewadd,Rating=int(Rating))
                 return "Review added."
         else:
                 return "You have not purchased this item."
