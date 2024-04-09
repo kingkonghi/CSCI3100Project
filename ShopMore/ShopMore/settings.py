@@ -76,7 +76,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ShopMore.wsgi.application'
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = [
+     'http://localhost:3000',  # The default port for create-react-app
+]
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
