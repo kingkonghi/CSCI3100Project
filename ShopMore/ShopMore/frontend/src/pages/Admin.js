@@ -1,23 +1,30 @@
-import React, { useState } from 'react';
-import { Button, Table, Form, Container, Row, Col, Nav } from 'react-bootstrap';
-
-const initialUserData = [
-    [1, "kctang09", "12345678", "64861876", "kctang09@gmail.com"],
-    [2, "ytcheng05", "12345678", "94651564", "ytcheng05@hotmail.com"],
-    [3, "mtyeung49", "12345678", "57445433", "mtyeung49@gmail.com"]
-];
-
-const initialProductData = [
-    [1, "Table", 20, 5, "Made with the rare oak wood found in India, the finest table that you..."],
-    [2, "Washing machine", 2000, 1, "Assist with AI production line, a washing machine for life."]
-];
+import React, { useState, useEffect } from 'react';
+import { Button, Table, Form, Container, Nav } from 'react-bootstrap';
+import axios from 'axios';
 
 const Admin = () => {
-    const [view, setView] = useState('users'); // 'users' or 'products'
-    const [users, setUsers] = useState(initialUserData);
-    const [products, setProducts] = useState(initialProductData);
-    const [userForm, setUserForm] = useState({ id: 'New', username: '', password: '', phone: '', email: '' });
-    const [productForm, setProductForm] = useState({ id: 'New', name: '', price: '', stock: '', description: '' });
+    const [view, setView] = useState('users');
+    const [users, setUsers] = useState([]);
+    const [products, setProducts] = useState([]);
+    const [userForm, setUserForm] = useState({ id: 'New', username: '', password: '', phone: '', email: '', accountType: '', profilePhoto: '', address: '' });
+    const [productForm, setProductForm] = useState({ id: 'New', itemName: '', itemPrice: '', itemQuantity: '', itemDescription: '', itemCategory: '', itemImage: '', itemStatus: '' });
+
+    const token = 'Token b09782e294306013522c0610bbbe5e601e021b3b';
+
+    useEffect(() => {
+        fetchUsers();
+        fetchProducts();
+    }, []);
+
+    const fetchUsers = async () => {
+        const response = await axios.get('http://127.0.0.1:8000/Admin/user/display/', { headers: { Authorization: token } });
+        setUsers(response.data);
+    };
+
+    const fetchProducts = async () => {
+        const response = await axios.get('http://127.0.0.1:8000/Admin/item/display/', { headers: { Authorization: token } });
+        setProducts(response.data);
+    };
 
     const handleUserChange = (e) => {
         setUserForm({ ...userForm, [e.target.name]: e.target.value });
@@ -27,54 +34,59 @@ const Admin = () => {
         setProductForm({ ...productForm, [e.target.name]: e.target.value });
     };
 
-    const resetUserForm = () => {
-        setUserForm({ id: 'New', username: '', password: '', phone: '', email: '' });
-    };
+    // Reset forms
+    const resetUserForm = () => setUserForm({ id: 'New', username: '', password: '', phone: '', email: '', accountType: '', profilePhoto: '', address: '' });
+    const resetProductForm = () => setProductForm({ id: 'New', itemName: '', itemPrice: '', itemQuantity: '', itemDescription: '', itemCategory: '', itemImage: '', itemStatus: '' });
 
-    const resetProductForm = () => {
-        setProductForm({ id: 'New', name: '', price: '', stock: '', description: '' });
-    };
-
-    const submitUserForm = (e) => {
+    // Submit forms
+    const submitUserForm = async (e) => {
         e.preventDefault();
-        // backend call
-        console.log('Submitting User Form:', userForm);
+        const url = userForm.id === 'New' ? 'http://127.0.0.1:8000/Admin/user/add/' : `http://127.0.0.1:8000/Admin/user/edit/${userForm.id}/`;
+        console.log(userForm);
+        await axios.post(url, userForm, { headers: { Authorization: token } });
+        fetchUsers();
         resetUserForm();
     };
 
-    const submitProductForm = (e) => {
+    const submitProductForm = async (e) => {
         e.preventDefault();
-        // backend call
-        console.log('Submitting Product Form:', productForm);
+        const url = productForm.id === 'New' ? 'http://127.0.0.1:8000/Admin/item/add/' : `http://127.0.0.1:8000/Admin/item/edit/${productForm.id}/`;
+        await axios.post(url, productForm, { headers: { Authorization: token } });
+        fetchProducts();
         resetProductForm();
     };
 
-
-    const deleteUser = (userId) => {
-        // backend call
-        setUsers(users.filter(user => user[0] !== userId));
+    // Delete functions
+    const deleteUser = async (userId) => {
+        console.log(userId);
+        await axios.delete(`http://127.0.0.1:8000/Admin/user/delete/${userId}/`, { headers: { Authorization: token } });
+        fetchUsers();
         resetUserForm();
     };
 
-    const deleteProduct = (productId) => {
-        // backend call
-        setProducts(products.filter(product => product[0] !== productId));
+    const deleteProduct = async (productId) => {
+        console.log(productId);
+        await axios.delete(`http://127.0.0.1:8000/Admin/item/delete/${productId}/`, { headers: { Authorization: token } });
+        fetchProducts();
         resetProductForm();
     };
 
+    // Selection functions
     const selectUser = (userId) => {
-        const user = users.find(user => user[0] === userId);
-        setUserForm({ id: user[0], username: user[1], password: user[2], phone: user[3], email: user[4] });
+        const user = users.find(user => user.user_id === userId);
+        setUserForm({ ...user, id: user.user_id });
     };
 
     const selectProduct = (productId) => {
-        const product = products.find(product => product[0] === productId);
-        setProductForm({ id: product[0], name: product[1], price: product[2], stock: product[3], description: product[4] });
+        const product = products.find(product => product.itemID === productId);
+        setProductForm({ ...product, id: product.itemID });
     };
+    
 
+ 
     return (
         <Container>
-            <Nav variant="tabs" defaultActiveKey="users"  className="my-3">
+            <Nav variant="tabs" defaultActiveKey="users" className="my-3">
                 <Nav.Item>
                     <Nav.Link eventKey="users" onClick={() => setView('users')}>Users</Nav.Link>
                 </Nav.Item>
@@ -82,11 +94,12 @@ const Admin = () => {
                     <Nav.Link eventKey="products" onClick={() => setView('products')}>Products</Nav.Link>
                 </Nav.Item>
             </Nav>
+    
             {view === 'users' ? (
                 <>
                     User ID: {userForm.id}
                     <Form className="my-3">
-                        <Form.Group controlId="formUserName">
+                        <Form.Group controlId="formUsername">
                             <Form.Label>Username</Form.Label>
                             <Form.Control
                                 type="text"
@@ -108,17 +121,6 @@ const Admin = () => {
                                 required
                             />
                         </Form.Group>
-                        <Form.Group controlId="formPhone">
-                            <Form.Label>Phone</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="phone"
-                                placeholder="Phone number"
-                                value={userForm.phone}
-                                onChange={handleUserChange}
-                                required
-                            />
-                        </Form.Group>
                         <Form.Group controlId="formEmail">
                             <Form.Label>Email</Form.Label>
                             <Form.Control
@@ -130,10 +132,43 @@ const Admin = () => {
                                 required
                             />
                         </Form.Group>
+                        <Form.Group controlId="formAccountType">
+                            <Form.Label>Account Type</Form.Label>
+                            <Form.Control
+                                type="number"
+                                name="accountType"
+                                placeholder="Account Type"
+                                value={userForm.accountType}
+                                onChange={handleUserChange}
+                                required
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formProfilePhoto">
+                            <Form.Label>Profile Photo</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="profilePhoto"
+                                placeholder="Profile Photo URL"
+                                value={userForm.profilePhoto}
+                                onChange={handleUserChange}
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formAddress">
+                            <Form.Label>Address</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="address"
+                                placeholder="Address"
+                                value={userForm.address}
+                                onChange={handleUserChange}
+                                required
+                            />
+                        </Form.Group>
                         <Button variant="primary" onClick={submitUserForm}>
-                            {userForm.id == "New" ? 'Add User' : 'Update User'}
+                            {userForm.id === "New" ? 'Add User' : 'Update User'}
                         </Button>
-                        <Button variant="secondary" onClick={() => resetUserForm()}>
+                        {' '}
+                        <Button variant="secondary" onClick={resetUserForm}>
                             Reset
                         </Button>
                     </Form>
@@ -143,22 +178,26 @@ const Admin = () => {
                                 <th>ID</th>
                                 <th>Username</th>
                                 <th>Password</th>
-                                <th>Phone</th>
                                 <th>Email</th>
+                                <th>Account Type</th>
+                                <th>Profile Photo</th>
+                                <th>Address</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {users.map(user => (
-                                <tr key={user[0]}>
-                                    <td>{user[0]}</td>
-                                    <td>{user[1]}</td>
-                                    <td>{user[2]}</td>
-                                    <td>{user[3]}</td>
-                                    <td>{user[4]}</td>
+                                <tr key={user.user_id}>
+                                    <td>{user.user_id}</td>
+                                    <td>{user.username}</td>
+                                    <td>{user.password}</td>
+                                    <td>{user.email}</td>
+                                    <td>{user.accountType}</td>
+                                    <td>{user.profilePhoto}</td>
+                                    <td>{user.address}</td>
                                     <td>
-                                        <Button variant="primary" onClick={() => selectUser(user[0])}>Edit</Button>{' '}
-                                        <Button variant="danger" onClick={() => deleteUser(user[0])}>Delete</Button>
+                                        <Button variant="primary" onClick={() => selectUser(user.user_id)}>Edit</Button>{' '}
+                                        <Button variant="danger" onClick={() => deleteUser(user.user_id)}>Delete</Button>
                                     </td>
                                 </tr>
                             ))}
@@ -173,9 +212,9 @@ const Admin = () => {
                             <Form.Label>Name</Form.Label>
                             <Form.Control
                                 type="text"
-                                name="name"
+                                name="itemName"
                                 placeholder="Enter product name"
-                                value={productForm.name}
+                                value={productForm.itemName}
                                 onChange={handleProductChange}
                                 required
                             />
@@ -184,9 +223,9 @@ const Admin = () => {
                             <Form.Label>Price</Form.Label>
                             <Form.Control
                                 type="number"
-                                name="price"
+                                name="itemPrice"
                                 placeholder="Price"
-                                value={productForm.price}
+                                value={productForm.itemPrice}
                                 onChange={handleProductChange}
                                 required
                             />
@@ -195,9 +234,9 @@ const Admin = () => {
                             <Form.Label>Stock</Form.Label>
                             <Form.Control
                                 type="number"
-                                name="stock"
+                                name="itemQuantity"
                                 placeholder="Stock quantity"
-                                value={productForm.stock}
+                                value={productForm.itemQuantity}
                                 onChange={handleProductChange}
                                 required
                             />
@@ -206,17 +245,50 @@ const Admin = () => {
                             <Form.Label>Description</Form.Label>
                             <Form.Control
                                 as="textarea"
-                                name="description"
+                                name="itemDescription"
                                 placeholder="Product description"
-                                value={productForm.description}
+                                value={productForm.itemDescription}
+                                onChange={handleProductChange}
+                                required
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formProductCategory">
+                            <Form.Label>Category</Form.Label>
+                            <Form.Control
+                                type="number"
+                                name="itemCategory"
+                                placeholder="Category ID"
+                                value={productForm.itemCategory}
+                                onChange={handleProductChange}
+                                required
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formProductImage">
+                            <Form.Label>Image</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="itemImage"
+                                placeholder="Image URL"
+                                value={productForm.itemImage}
+                                onChange={handleProductChange}
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formProductStatus">
+                            <Form.Label>Status</Form.Label>
+                            <Form.Control
+                                type="number"
+                                name="itemStatus"
+                                placeholder="Status"
+                                value={productForm.itemStatus}
                                 onChange={handleProductChange}
                                 required
                             />
                         </Form.Group>
                         <Button variant="primary" onClick={submitProductForm}>
-                            {productForm.id == "New" ? 'Add Product' : 'Update Product'}
+                            {productForm.id === "New" ? 'Add Product' : 'Update Product'}
                         </Button>
-                        <Button variant="secondary" onClick={() => resetProductForm()}>
+                        {' '}
+                        <Button variant="secondary" onClick={resetProductForm}>
                             Reset
                         </Button>
                     </Form>
@@ -228,20 +300,26 @@ const Admin = () => {
                                 <th>Price</th>
                                 <th>Stock</th>
                                 <th>Description</th>
+                                <th>Category</th>
+                                <th>Image</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {products.map(product => (
-                                <tr key={product[0]}>
-                                    <td>{product[0]}</td>
-                                    <td>{product[1]}</td>
-                                    <td>{product[2]}</td>
-                                    <td>{product[3]}</td>
-                                    <td>{product[4]}</td>
+                                <tr key={product.itemID}>
+                                    <td>{product.itemID}</td>
+                                    <td>{product.itemName}</td>
+                                    <td>{product.itemPrice}</td>
+                                    <td>{product.itemQuantity}</td>
+                                    <td>{product.itemDescription}</td>
+                                    <td>{product.itemCategory}</td>
+                                    <td>{product.itemImage}</td>
+                                    <td>{product.itemStatus}</td>
                                     <td>
-                                        <Button variant="primary" onClick={() => selectProduct(product[0])}>Edit</Button>{' '}
-                                        <Button variant="danger" onClick={() => deleteProduct(product[0])}>Delete</Button>
+                                        <Button variant="primary" onClick={() => selectProduct(product.itemID)}>Edit</Button>{' '}
+                                        <Button variant="danger" onClick={() => deleteProduct(product.itemID)}>Delete</Button>
                                     </td>
                                 </tr>
                             ))}
@@ -251,6 +329,8 @@ const Admin = () => {
             )}
         </Container>
     );
+    
+    
 };
 
 export default Admin;
