@@ -1,8 +1,6 @@
-from django.http import HttpResponse
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -11,20 +9,17 @@ from rest_framework import status
 from django.core import serializers
 from django.middleware import csrf
 from django.views.decorators.csrf import csrf_exempt
-from .backend.handlefavoritelist import *
-from rest_framework import status
 from .register import registerfunction
 from .login import loginfunction
 from .backend.handleitem import *
 from .backend.handlecart import *
 from .backend.handleorder import *
+from .backend.handlefavoritelist import *
 from .backend.handleuser import *
 from .backend.handlerecommendation import *
-
+from .serializers import ItemSerializer
 import paypalrestsdk
-from django.conf import settings
 from django.shortcuts import render, redirect
-from django.urls import reverse
 
 paypalrestsdk.configure({
     "mode": "sandbox",  # Change to "live" for production
@@ -142,8 +137,8 @@ def delete_favorite(request, favorite_id):
     response = delete_favorite_item(favorite_id)
     return Response({'success': True, 'response': response})
 
-from .serializers import ItemSerializer
-@api_view(["POST"])
+
+@api_view(["GET"])
 def product(request):
     itemlist = []
     for i in Item.objects.all():
@@ -151,6 +146,15 @@ def product(request):
         serializer = ItemSerializer(instance=item)
         itemlist.append(serializer.data)
     return Response({"item": itemlist})
+@api_view(["GET"])
+def product_specific(request,itemID):
+    item = get_object_or_404(Item, itemID=itemID)
+    print(item.itemID)
+    serializer = ItemSerializer(instance=item)
+    print(serializer.data)
+    return Response({"item": serializer.data})
+
+
 #{"itemName":"Table"}
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
