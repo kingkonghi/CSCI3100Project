@@ -1,6 +1,6 @@
 from .database.connection import connect
 from .models.order import *
-import datetime
+from datetime import datetime
 import json
 
 def list_order(orderID):
@@ -11,7 +11,7 @@ def list_order(orderID):
         return out
 
 def add_order(userID, orderItems):
-        orderDate = str(datetime.datetime.now())
+        orderDate = str(datetime.today().strftime('%Y-%m-%d'))
         Order_count = Order.objects.count()
         json_object = json.loads(orderItems)
         print(json_object)
@@ -24,8 +24,4 @@ def edit_order_status(orderID, orderStatus):
         Order.objects.filter(orderID=orderID).update(orderStatus=orderStatus)
 
 def delete_order(orderID):
-        try:
-                Order.objects.filter(orderID=orderID).delete()
-                return ""
-        except Exception as e:
-                return e
+        Order.objects.filter(orderID=orderID).delete()

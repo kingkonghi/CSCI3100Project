@@ -1,20 +1,23 @@
-from .database.connection import connect
 from .models.review import *
-conn=connect()
-
+from .models.order import *
 def list_review(itemID):
         rows = Review.objects.filter(itemID=itemID).all()
-        print(rows)
+        reviews = ''
         return rows
 
-def add_order(orderID,userID,itemID,Reviewadd,Rating):
-        review1 = Review(orderID = orderID,userID=userID,itemID=itemID,Review=Reviewadd,Rating=Rating)
-        review1.save()
-        print("Review added.")
-
+def add_review(userID,itemID,Reviewadd,Rating):
+        rows = Order.objects.get(userID=userID).orderItems.get(str(itemID))
+        #review/add/<itemID>/<userID>/<Review>/<Rating>/
+        if rows != None:
+                orderID = Order.objects.get(userID=userID).pk
+                id=Order.objects.count()
+                Review.objects.create(id=id+1,orderID=int(orderID),itemID=int(itemID),userID=int(userID),Review=Reviewadd,Rating=int(Rating))
+                return "Review added."
+        else:
+                return "You have not purchased this item."
     
-def edit_review(itemID, userID,Reviewedit):
-        Review.objects.filter(itemID=itemID,userID=userID).update(Review=Reviewedit)
+def edit_review(itemID, userID,Reviewedit,Rating):
+        Review.objects.filter(itemID=itemID,userID=userID).update(Review=Reviewedit,Rating=Rating)
 
 def delete_review(itemID,userID):
         Review.objects.filter(itemID=itemID,userID=userID).delete()

@@ -3,7 +3,7 @@ class Order(models.Model):
     
     orderID = models.AutoField(primary_key=True)
     userID = models.IntegerField()
-    orderDate = models.DateTimeField()
+    orderDate = models.DateField()
     orderStatus = models.IntegerField()
     orderItems = models.JSONField()
     orderTotal = models.IntegerField()

@@ -16,6 +16,7 @@ from .backend.handlecart import *
 from .backend.handleorder import *
 from .backend.handlefavoritelist import *
 from .backend.handleuser import *
+from .backend.handlereview import *
 from .backend.handlerecommendation import *
 from .serializers import *
 import paypalrestsdk
@@ -167,6 +168,7 @@ def recommendation (request):
 
     return JsonResponse(response_data)
 
+#Cart
 @api_view(['GET'])
 def cart_list(request,userID):
     row = list_cart(userID)
@@ -187,6 +189,7 @@ def cart_remove(request,userID, itemID):
     response = remove_item(userID, itemID)
     return Response({'message': "Successfully deleted item from cart"}, status=status.HTTP_200_OK)
 
+#Order
 @api_view(['GET'])
 def order(request,orderID):
     row = list_order(orderID)
@@ -201,6 +204,24 @@ def order_add(request,userID,orderItems):
 def order_delete(request,orderID):
     response = delete_order(orderID)
     return Response({'message': "Successfully deleted order"}, status=status.HTTP_200_OK)
+
+#Review
+@api_view(['GET'])
+def review(request,itemID):
+    response = list_review(itemID)
+    return Response({'message': response}, status=status.HTTP_200_OK)
+@api_view(['GET'])
+def review_add(request,itemID,userID,Review,Rating):
+    response = add_review(userID,itemID,Review,Rating)
+    return Response({'message': response}, status=status.HTTP_200_OK)
+@api_view(['GET'])
+def review_edit(request,itemID,userID,Review,Rating):
+    response = add_review(itemID,userID,Review,Rating)
+    return Response({'message': response}, status=status.HTTP_200_OK)
+@api_view(['GET'])
+def review_remove(request,itemID,userID):
+    response = delete_review(itemID,userID)
+    return Response({'message': response}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
