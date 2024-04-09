@@ -17,7 +17,7 @@ from .backend.handleorder import *
 from .backend.handlefavoritelist import *
 from .backend.handleuser import *
 from .backend.handlerecommendation import *
-from .serializers import ItemSerializer
+from .serializers import *
 import paypalrestsdk
 from django.shortcuts import render, redirect
 
@@ -257,3 +257,59 @@ def admin_edit_item(request, pk):
 def admin_delete_item(request, pk):
     response = remove_item(pk)
     return Response({'message': response})
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+@csrf_exempt
+def admin_display_user(request):
+    users = UserList.objects.all()
+    serializer = UserListSerializer(users, many=True)
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+@csrf_exempt
+def admin_add_user(request):
+    username = request.data.get('username')
+    accountType = request.data.get('accountType')
+    password = request.data.get('password')
+    email = request.data.get('email')
+    profilePhoto = request.data.get('profilePhoto')
+    address = request.data.get('address')
+    user = UserList(
+        username = username,
+        accountType = accountType,
+        password = password,
+        email = email,
+        profilePhoto = profilePhoto,
+        address = address
+    )
+    add_user(user)
+    return Response({'message': f"User {username} added."})
+
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+@csrf_exempt
+def admin_edit_user(request, pk):
+    username = request.data.get('username')
+    accountType = request.data.get('accountType')
+    password = request.data.get('password')
+    email = request.data.get('email')
+    profilePhoto = request.data.get('profilePhoto')
+    address = request.data.get('address')
+    user = UserList(
+        user_id = pk
+    )
+    status = edit_user(user, username, accountType, password, email, profilePhoto, address)
+    return Response({'message': f"User {username} edited." if status == "edited" else "No changes made."})
+
+@api_view(['DELETE'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+@csrf_exempt
+def admin_delete_user(request, pk):
+    status = delete_user(pk)
+    return Response({'message': f"User {pk} deleted."})

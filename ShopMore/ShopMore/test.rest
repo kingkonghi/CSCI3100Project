@@ -14,7 +14,7 @@ Content-Type: application/json
 POST http://127.0.0.1:8000/login/
 Content-Type: application/json
 
-{"username": "Tony", "password": "Tonypw"}
+{"username": "admin", "password": "shopmoreadminpw"}
 
 ###
 GET http://127.0.0.1:8000/test_view/
@@ -66,3 +66,28 @@ Authorization: Token d5219af605fe3da8ce570d8422e11f5e8090c4e7
 
 {}
 ###
+GET http://127.0.0.1:8000/Admin/user/display/
+Content-Type: applicatiion/json
+Authorization: Token b09782e294306013522c0610bbbe5e601e021b3b
+
+{}
+###
+POST  http://127.0.0.1:8000/Admin/user/add/
+Content-Type: application/json
+Authorization: Token b09782e294306013522c0610bbbe5e601e021b3b
+
+{"username": "August", "accountType": "1", "password": "Augustpw", "email": "August@gmail.com", "profilePhoto": "august.jpg", "address": "cuhk uc"}
+
+###
+POST  http://127.0.0.1:8000/Admin/user/edit/9/
+Content-Type: application/json
+Authorization: Token b09782e294306013522c0610bbbe5e601e021b3b
+
+{"username": "August", "accountType": "1", "password": "Augustpw", "email": "August1@gmail.com", "profilePhoto": "august.jpg", "address": "cuhk wys"}
+
+###
+DELETE   http://127.0.0.1:8000/Admin/user/delete/9/
+Content-Type: application/json
+Authorization: Token b09782e294306013522c0610bbbe5e601e021b3b
+
+{}
