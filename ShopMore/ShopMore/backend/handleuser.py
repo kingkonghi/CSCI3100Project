@@ -8,8 +8,8 @@ def list_user_info(userID):
     return user_info
 
 def add_user(user):
-    user_count = UserList.objects.count()
-    user1 = UserList(user_id=user_count+1,username=user.username, accountType=user.accountType, password=user.password, email=user.email, profilePhoto=user.profilePhoto, address=user.address)
+    max_id = UserList.objects.order_by('-user_id').first().user_id
+    user1 = UserList(user_id=max_id+1,username=user.username, accountType=user.accountType, password=user.password, email=user.email, profilePhoto=user.profilePhoto, address=user.address)
     user1.save()
 
     try: #when edit/create user in table userlist through admin, auth_user will also be edited/created 
@@ -48,9 +48,9 @@ def edit_user(user, username=None, accountType=None, password=None, email=None, 
     if address is not None:
         user_list_data['address'] = address
 
-    UserList.objects.filter(user_id=user.id).update(**user_list_data)
+    UserList.objects.filter(user_id=user.user_id).update(**user_list_data)
 
-    auth_user = User.objects.get(id=user.id)
+    auth_user = User.objects.get(id=user.user_id)
     for key, value in auth_user_data.items():
         setattr(auth_user, key, value)
     auth_user.save()
@@ -59,7 +59,10 @@ def edit_user(user, username=None, accountType=None, password=None, email=None, 
 
 
 def delete_user(userID):
-    UserList.objects.filter(user_id=userID).delete()
+    userlist = UserList.objects.get(user_id = userID)
+    auth_user = userlist.user
+    userlist.delete()
+    auth_user.delete()
     FavoriteList.objects.filter(userid=userID).delete()
     cart.objects.filter(userID=userID).delete()
     print("User deleted.")

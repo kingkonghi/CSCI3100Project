@@ -32,5 +32,9 @@ urlpatterns = [
     path('Admin/item/add/', views.admin_add_item),
     path('Admin/item/edit/<int:pk>/', views.admin_edit_item),
     path('Admin/item/delete/<int:pk>/', views.admin_delete_item),
+    path('Admin/user/display/', views.admin_display_user),
+    path('Admin/user/add/', views.admin_add_user),
+    path('Admin/user/edit/<int:pk>/', views.admin_edit_user),
+    path('Admin/user/delete/<int:pk>/', views.admin_delete_user),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
  
