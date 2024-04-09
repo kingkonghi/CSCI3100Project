@@ -12,12 +12,13 @@ def list_order(orderID):
 
 def add_order(userID, orderItems):
         orderDate = str(datetime.today().strftime('%Y-%m-%d'))
-        Order_count = Order.objects.count()
+        Order_count = Order.objects.count()+1
         json_object = json.loads(orderItems)
         print(json_object)
-        order1 = Order(orderID = Order_count+1,userID=userID, orderDate=orderDate, orderStatus=0, orderItems=json_object, orderTotal=0)
+        
+        order1 = Order(orderID = Order_count,userID=userID, orderDate=orderDate, orderStatus=0, orderItems=json_object, orderTotal=0)
         order1.save()
-        print("Order added.")
+        return Order_count
 
     
 def edit_order_status(orderID, orderStatus):

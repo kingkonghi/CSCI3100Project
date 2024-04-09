@@ -198,7 +198,7 @@ def order(request,orderID):
 @api_view(['GET'])
 def order_add(request,userID,orderItems):
     response = add_order(userID,orderItems)
-    return Response({'message': "Successfully added order"}, status=status.HTTP_201_CREATED)
+    return Response({'message': f"Successfully added order {response}"}, status=status.HTTP_201_CREATED)
     
 @api_view(['GET'])
 def order_delete(request,orderID):
