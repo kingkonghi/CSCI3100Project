@@ -21,7 +21,7 @@ def edit_item(name,quantity):
         item1 = Item.objects.filter(itemName=name).update(itemquantity=quantity)
         return item1
 
-def remove_item(itemID):
+def delete_item(itemID):
         item = get_object_or_404(Item, itemID=itemID)
         item.delete()
         return f"removed item: {itemID}"

@@ -259,7 +259,7 @@ def admin_add_item(request):
     response = add_item(name, description, category, image, price, quantity, product_status)
     return Response({'message': response}, status=status.HTTP_201_CREATED)
 
-@api_view(['PUT'])
+@api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 @csrf_exempt
@@ -276,7 +276,7 @@ def admin_edit_item(request, pk):
 @permission_classes([IsAuthenticated])
 @csrf_exempt
 def admin_delete_item(request, pk):
-    response = remove_item(pk)
+    response = delete_item(pk)
     return Response({'message': response})
 
 @api_view(['GET'])
