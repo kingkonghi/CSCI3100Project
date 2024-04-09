@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from django.core import serializers
+from django.core import serializers as core_serializers
 from django.middleware import csrf
 from django.views.decorators.csrf import csrf_exempt
 from .register import registerfunction
@@ -18,6 +18,7 @@ from .backend.handlefavoritelist import *
 from .backend.handleuser import *
 from .backend.handlereview import *
 from .backend.handlerecommendation import *
+from .serializers import *
 import paypalrestsdk
 from django.shortcuts import render, redirect
 
@@ -97,7 +98,7 @@ def register(request):
 @csrf_exempt
 def user(request):
     user_info = list_user_info(request.data['userID'])
-    serialized_user_info = serializers.serialize('json', user_info)
+    serialized_user_info = core_serializers.serialize('json', user_info)
     return JsonResponse({'message': serialized_user_info})
 
 @api_view(['POST'])
