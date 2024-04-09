@@ -155,11 +155,11 @@ const Product = () => {
                     {
                         ["I kinda like this product!", "Looks fine to me~", "I am not into this."].map((element, index)=>{
                             if (selfRate>4 && index == 0){
-                                return <span>{element}</span>
+                                return <span id="Rating">{element}</span>
                             } else if (selfRate>1.5 && selfRate<4.5  && index == 1){
-                                return <span>{element}</span>
+                                return <span id="Rating">{element}</span>
                             } else if (selfRate<2 && index == 2) {
-                                return <span>{element}</span>
+                                return <span id="Rating">{element}</span>
                             }
                         })
                     }
@@ -167,12 +167,12 @@ const Product = () => {
                         [0,1,2,3,4].map((element)=>{
                             let ratingHolder = null
                             if(selfRate>=element+1){
-                                ratingHolder = <FaStar id={element} onClick={(e)=>changeRate(element,e)}/>
+                                ratingHolder = <FaStar id={element} onMouseOver={(e)=>changeRate(element,e)}/>
                             } else {
                                 if(selfRate == element+0.5){
-                                    ratingHolder = <FaRegStarHalfStroke id={element} onClick={(e)=>changeRate(element,e)}/>
+                                    ratingHolder = <FaRegStarHalfStroke id={element} onMouseOver={(e)=>changeRate(element,e)}/>
                                 } else {
-                                    ratingHolder = <FaRegStar id={element} onClick={(e)=>changeRate(element,e)}/>
+                                    ratingHolder = <FaRegStar id={element} onMouseOver={(e)=>changeRate(element,e)}/>
                                 }
                             }
                             return ratingHolder
