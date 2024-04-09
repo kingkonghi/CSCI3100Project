@@ -196,7 +196,7 @@ def test_view(request):
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 @csrf_exempt
-def admin_display_user(request):
+def admin_display_item(request):
     items = Item.objects.all()
     serializer = ItemSerializer(items, many=True)
     return JsonResponse(serializer.data, safe=False)
@@ -205,7 +205,7 @@ def admin_display_user(request):
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 @csrf_exempt
-def admin_add_user(request):
+def admin_add_item(request):
     name = request.data.get('name')
     description = request.data.get('description')
     category = request.data.get('category')
@@ -216,9 +216,11 @@ def admin_add_user(request):
     response = add_item(name, description, category, image, price, quantity, product_status)
     return Response({'message': response}, status=status.HTTP_201_CREATED)
 
+@api_view(['PUT'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 @csrf_exempt
-def put(self, request, pk):
+def admin_edit_item(request, pk):
     item = Item.objects.get(pk=pk)
     serializer = ItemSerializer(item, data=request.data)
     if serializer.is_valid():
@@ -226,8 +228,10 @@ def put(self, request, pk):
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['DELETE'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 @csrf_exempt
-def delete(self, request, pk):
+def admin_delete_item(request, pk):
     response = remove_item(pk)
     return Response({'message': response})
