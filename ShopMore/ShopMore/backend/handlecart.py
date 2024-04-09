@@ -17,7 +17,10 @@ def add_item_to_cart(userID, itemID, quantity):
                         cart.objects.create(userID=userID, itemlist={str(itemID): int(quantity)})
                 else:
                         cart1 = cart.objects.get(userID=userID)
-                        cart1.itemlist[str(itemID)] = int(quantity) # Add the item
+                        if str(itemID) in cart1.itemlist.keys():
+                                cart1.itemlist[str(itemID)] += int(quantity)
+                        else:
+                                cart1.itemlist[str(itemID)] = int(quantity) # Add the item
                         cart1.save()
                 return ""
         except Exception as e:

@@ -16,41 +16,47 @@ const Main = () => {
     const [message, setMessage] = useState('');
     const [rating, setRating] = useState('');
 
-    useEffect(() => { 
-        const loadPost = async () => { 
+    let tempData = []
+
+    useEffect(() => {
+        const loadProd = async () => { 
             const response = await axios.get( 
                 'http://127.0.0.1:8000/product'
             ); 
             setMessage(response.data.item)
+    
+            for (let i=0;i<message.length;i++){
+                axios.get( 
+                'http://127.0.0.1:8000/review/' + message[i].itemID
+                ).then(value =>{
+                        let temp = []
+                        temp.push(message[i].itemID)
+                        temp.push(message[i].itemName)
+                        temp.push(message[i].itemQuantity)
+                        temp.push(message[i].itemPrice)
+                        //Comment
+                        //Rating
+                        temp.push(message[i].itemDescription)
+                        tempData.push(temp)
+                    }
+                ).catch(e => {
+                    console.log(message[i].itemID)
+                    let temp2 = []
+                    temp2.push(message[i].itemID)
+                    temp2.push(message[i].itemName)
+                    temp2.push(message[i].itemQuantity)
+                    temp2.push(message[i].itemPrice)
+                    temp2.push([])
+                    temp2.push([])
+                    temp2.push(message[i].itemDescription)
+                    tempData.push(temp2)
+                })
+            }
         }; 
-  
-        loadPost(); 
-    }, []); 
-
-    useEffect(() => { 
-        const loadPost = async () => { 
-            const response = await axios.get( 
-                'http://127.0.0.1:8000/product'
-            ); 
-            setRating(response.data.item)
-        }; 
-  
-        loadPost(); 
-    }, []); 
-
-
-    let temp2 = []
-
-    for (let i=0;i<message.length;i++){
-        let temp = []
-        temp.push(message[i].itemID)
-        temp.push(message[i].itemName)
-        temp.push(message[i].itemQuantity)
-        temp.push(message[i].itemPrice)
-        //Comment
-        //Rating
-        temp.push(message[i].itemDescription)
-    }
+    
+        loadProd(); 
+        console.log(message)
+      },[]);
 
     const ProductData = [ //[TBI] Recommendation product
         [1, "Table", 20, 1000, [["User0112","The prefect table with high quality."],["Bernald Meriq","Cheapest table I've seen in a while."]], [5.0, 4.5], "Made with the rare oakk wood found in India, the finest table that you..."],
