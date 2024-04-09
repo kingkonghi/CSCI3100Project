@@ -8,10 +8,49 @@ import Slider from "react-slider";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { FaRegStarHalfStroke } from "react-icons/fa6";
-
+import axios from "axios";
 
 
 const Main = () => {
+
+    const [message, setMessage] = useState('');
+    const [rating, setRating] = useState('');
+
+    useEffect(() => { 
+        const loadPost = async () => { 
+            const response = await axios.get( 
+                'http://127.0.0.1:8000/product'
+            ); 
+            setMessage(response.data.item)
+        }; 
+  
+        loadPost(); 
+    }, []); 
+
+    useEffect(() => { 
+        const loadPost = async () => { 
+            const response = await axios.get( 
+                'http://127.0.0.1:8000/product'
+            ); 
+            setRating(response.data.item)
+        }; 
+  
+        loadPost(); 
+    }, []); 
+
+
+    let temp2 = []
+
+    for (let i=0;i<message.length;i++){
+        let temp = []
+        temp.push(message[i].itemID)
+        temp.push(message[i].itemName)
+        temp.push(message[i].itemQuantity)
+        temp.push(message[i].itemPrice)
+        //Comment
+        //Rating
+        temp.push(message[i].itemDescription)
+    }
 
     const ProductData = [ //[TBI] Recommendation product
         [1, "Table", 20, 1000, [["User0112","The prefect table with high quality."],["Bernald Meriq","Cheapest table I've seen in a while."]], [5.0, 4.5], "Made with the rare oakk wood found in India, the finest table that you..."],
