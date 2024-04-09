@@ -2,9 +2,27 @@ from django.contrib import admin
 from .backend.models.item import Item
 from .backend.models.order import Order
 from .backend.models.cart import cart
+from .backend.models.review import Review
 from .backend.models.favoritelist import FavoriteList
 from .backend.models.user import User as UserList
 from django.contrib.auth.models import User
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ['id', 'orderID', 'itemID', 'userID', 'Review', 'Rating']
+    list_filter = ['id', 'itemID', 'userID', 'Rating']
+
+    def get_changeform_initial_data(self, request):
+        initial = super().get_changeform_initial_data(request)
+        last_review = Review.objects.order_by('-id').first()
+        initial['id'] = last_review.id + 1 if last_review else 1
+        return initial
+
+    def save_model(self, request, obj, form, change):
+        if not obj.id:
+            last_review = Review.objects.order_by('-id').first()
+            obj.id = last_review.id + 1 if last_review else 1
+        super().save_model(request, obj, form, change)
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
