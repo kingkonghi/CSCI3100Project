@@ -27,5 +27,7 @@ urlpatterns = [
     path('execute_payment/', views.execute_payment, name='execute_payment'),
     path('test_token/', views.test_token),
     path('test_view/', views.test_view),
+    path('Admin/user/display/', views.admin_display_user),
+    path('Admin/user/add/', views.admin_add_user),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
  

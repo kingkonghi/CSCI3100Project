@@ -2,10 +2,16 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from .backend.models.favoritelist import FavoriteList
 from .backend.models.item import Item
+from .backend.models.user import User as UserList
 class UserSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = User
         fields = ['id', 'username', 'password', 'email']
+
+class UserListSerializer(serializers.ModelSerializer):
+    class Meta(object):
+        model = UserList
+        fields = ['user_id', 'accountType', 'username', 'password', 'email', 'profilePhoto', 'address']
 
 class FavoriteListSerializer(serializers.ModelSerializer):
     class Meta:

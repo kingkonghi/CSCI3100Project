@@ -12,9 +12,10 @@ def display_item(name):
 
 def add_item(name, description, category, image, price, quantity, status):
         item_count = Item.objects.count()
-        item1 = Item(itemID=item_count+1,itemName=name, itemDescription=description, itemcategory=category, itemimage=image, itemprice=price, itemquantity=quantity, itemstatus=status)
+        item1 = Item(itemID=item_count+1,itemName=name, itemDescription=description, itemCategory=category, itemImage=image, itemPrice=price, itemQuantity=quantity, itemStatus=status)
         item1.save()
         print("Item added.")
+        return f"Item added"
 
 def edit_item(name,quantity):
         item1 = Item.objects.filter(itemName=name).update(itemquantity=quantity)
@@ -23,3 +24,4 @@ def edit_item(name,quantity):
 def remove_item(itemID):
         item = get_object_or_404(Item, itemID=itemID)
         item.delete()
+        return f"removed item: {itemID}"

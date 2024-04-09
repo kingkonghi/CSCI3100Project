@@ -6,6 +6,8 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
 from django.core import serializers
 from django.middleware import csrf
 from django.views.decorators.csrf import csrf_exempt
@@ -143,11 +145,12 @@ def delete_favorite(request, favorite_id):
 from .serializers import ItemSerializer
 @api_view(["POST"])
 def product(request):
-    item = get_object_or_404(Item, itemName=request.data['itemName'])
-    print(item)
-    serializer = ItemSerializer(instance=item)
-    
-    return Response({"item": serializer.data})
+    itemlist = []
+    for i in Item.objects.all():
+        item = get_object_or_404(Item, itemID=i.itemID)
+        serializer = ItemSerializer(instance=item)
+        itemlist.append(serializer.data)
+    return Response({"item": itemlist})
 #{"itemName":"Table"}
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
@@ -183,3 +186,44 @@ def test_token(request):
 def test_view(request):
     csrf_token = csrf.get_token(request)
     return HttpResponse(csrf_token)
+
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+@csrf_exempt
+def admin_display_user(request):
+    items = Item.objects.all()
+    serializer = ItemSerializer(items, many=True)
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+@csrf_exempt
+def admin_add_user(request):
+    name = request.data.get('name')
+    description = request.data.get('description')
+    category = request.data.get('category')
+    image = request.data.get('image')
+    price = request.data.get('price')
+    quantity = request.data.get('quantity')
+    product_status = request.data.get('status')
+    response = add_item(name, description, category, image, price, quantity, product_status)
+    return Response({'message': response}, status=status.HTTP_201_CREATED)
+
+@permission_classes([IsAuthenticated])
+@csrf_exempt
+def put(self, request, pk):
+    item = Item.objects.get(pk=pk)
+    serializer = ItemSerializer(item, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@permission_classes([IsAuthenticated])
+@csrf_exempt
+def delete(self, request, pk):
+    response = remove_item(pk)
+    return Response({'message': response})
