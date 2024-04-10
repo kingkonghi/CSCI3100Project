@@ -41,10 +41,10 @@ def create_payment(request):
         "transactions": [
             {
                 "amount": {
-                    "total": "10.00",  # Total amount in USD
+                    "total": request.amount,  # Total amount in USD
                     "currency": "HKD",
                 },
-                "description": request.itemDescription,
+                "description": request.description,
             }
         ],
     })

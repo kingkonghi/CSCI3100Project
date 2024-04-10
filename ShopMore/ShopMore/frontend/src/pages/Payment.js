@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { Card, Container, Row, Col, ListGroup, Form, FormControl, Button, InputGroup, Spinner } from 'react-bootstrap';
 
 // Hard code data
@@ -110,6 +111,45 @@ const Payment = () => {
     const [paymentMethod, setPaymentMethod] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
+    const [cartItems, setCartItems] = useState([]);
+    const [products, setProducts] = useState([]);
+
+    const userID = localStorage.getItem('userid');
+    const authToken = 'Token b09782e294306013522c0610bbbe5e601e021b3b';
+
+    useEffect(() => {
+        const fetchCart = async () => {
+            const response = await axios.get(`http://127.0.0.1:8000/cart/${userID}/`, {
+                headers: {
+                    Authorization: authToken
+                }
+            });
+            if (response.data && response.data.cart.length > 0) {
+                setCartItems(Object.entries(response.data.cart[0].itemlist).map(([itemID, quantity]) => ({ itemID, quantity })));
+            }
+        };
+
+        const fetchProducts = async () => {
+            const response = await axios.get('http://127.0.0.1:8000/product/', {
+                headers: {
+                    Authorization: authToken
+                }
+            });
+            setProducts(response.data.item);
+        };
+
+        fetchCart();
+        fetchProducts();
+    }, [userID]);
+
+    const calculateTotal = () => {
+        const total = cartItems.reduce((acc, cartItem) => {
+            const product = products.find(p => p.itemID.toString() === cartItem.itemID);
+            return acc + (product ? product.itemPrice * cartItem.quantity : 0);
+        }, 0);
+        return total + 50; // Adding delivery fee
+    };
+
 
     const handlePaymentSubmit = (paymentDetails) => {
         setIsLoading(true);
@@ -144,7 +184,7 @@ const Payment = () => {
     if (showSuccess) {
         const orderId = "ORD123456";
         const orderCreationTime = new Date().toLocaleString();
-        const amountPaid = 340;
+        const amountPaid = calculateTotal();
         return (
             <Container className="text-center my-5">
                 <img src="/img/payment/payment_success.png" alt="Success" style={{ width: '200px', height: '200px' }} />
@@ -166,7 +206,7 @@ const Payment = () => {
         <div>
         <Container>
             <h2 className="my-3">Payment</h2>
-            <p className="my-3">Amount to be paid: ${340}</p>
+            <p className="my-3">Amount to be paid: ${calculateTotal()}</p>
             <Form className="my-3">
                 <Form.Group controlId="paymentMethodSelect">
                 <Form.Label><strong>Payment Method</strong></Form.Label>
