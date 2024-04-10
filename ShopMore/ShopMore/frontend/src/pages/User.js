@@ -51,6 +51,8 @@ const User = () => {
         address: userData.address,
         password: userData.password
       });
+
+      localStorage.setItem('phoneNo', userData.phoneNo);
     } catch (error) {
       console.log(error);
     }
@@ -97,7 +99,12 @@ const User = () => {
           );
       
           // Handle the response or perform any additional actions
-          console.log(response.data);
+          localStorage.setItem('username', formValues.username);
+          localStorage.setItem('email', formValues.email);
+          localStorage.setItem('phoneNo', formValues.phoneNo);
+          localStorage.setItem('address', formValues.address);
+          localStorage.setItem('password', formValues.password);
+          alert('Information changed.');
         } catch (error) {
           console.log(error);
         }
@@ -154,6 +161,11 @@ const User = () => {
           );
     
           // Handle the response or perform any additional actions
+          localStorage.setItem('username', formValues.username);
+          localStorage.setItem('email', formValues.email);
+          localStorage.setItem('phoneNo', formValues.phoneNo);
+          localStorage.setItem('address', formValues.address);
+          localStorage.setItem('password', formValues.password);
           alert('Password changed.');
           
         } catch (error) {
@@ -261,7 +273,7 @@ const User = () => {
                                 </p>
                               </form>
                               <div style={{ textAlign: "center" }}>
-                                <button onClick={() => close()} style={{ marginRight: '30px', marginTop: '20px' }}>Cancel</button>
+                                <button onClick={() => close()} style={{ marginRight: '30px', marginTop: '20px' }}>Close</button>
                                 <button type="submit" form="changepw">Change</button>
                               </div>
                             </div>

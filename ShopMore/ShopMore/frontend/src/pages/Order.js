@@ -16,12 +16,12 @@ const Order = () => {
   const [discount] = useState(0);
   const [deliveryfee] = useState(50);
 
-  const [email] = useState("sleepy@gmail.com");
+  const [email] = localStorage.getItem("email");
   const [date] = useState("2024-03-30");
   const [status] = useState("Completed");
 
-  const [username] = useState("Joe Go");
-  const [contactno] = useState("21800000");
+  const [username] = localStorage.getItem("username");
+  const [contactno] = localStorage.getItem("phoneNo");
   const [address] = useState("Under the Bridge of the Engineering Building, CUHK");
 
   const [paymenttype] = useState("Credit Card / Debit Card");
