@@ -98,8 +98,22 @@ def register(request):
 @csrf_exempt
 def user(request):
     user_info = list_user_info(request.data['userID'])
-    serialized_user_info = core_serializers.serialize('json', user_info)
-    return JsonResponse({'message': serialized_user_info})
+    serialized_user_info = [
+        {
+            "model": "ShopMore.user",
+            "user_id": user.pk,
+            "fields": {
+                "accountType": user.accountType,
+                "username": user.username,
+                "password": user.password,
+                "email": user.email,
+                "profilePhoto": user.profilePhoto,
+                "address": user.address,
+            }
+        }
+        for user in user_info
+    ]
+    return Response({'message': serialized_user_info})
 
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])

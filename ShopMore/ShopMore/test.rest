@@ -14,7 +14,7 @@ Content-Type: application/json
 POST http://127.0.0.1:8000/login/
 Content-Type: application/json
 
-{"username": "admin1", "password": "shopmoreadmin1pw"}
+{"username": "user1", "password": "user1pw"}
 
 ###
 GET http://127.0.0.1:8000/test_view/
@@ -22,9 +22,9 @@ GET http://127.0.0.1:8000/test_view/
 ###
 POST http://127.0.0.1:8000/user/
 Content-Type: application/json
-Authorization: Token d5219af605fe3da8ce570d8422e11f5e8090c4e7
+Authorization: Token ccc016a5bdfe22ccd8c07139ec00c1cd298311d3
 
-{}
+{"userID": "13"}
 ###
 POST http://127.0.0.1:8000/user/edit_info/
 Content-Type: application/json
