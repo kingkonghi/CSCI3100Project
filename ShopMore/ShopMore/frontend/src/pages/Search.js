@@ -153,8 +153,7 @@ const Search= () => {
                     filterPass = false
                 }
             }
-
-            if (message[i].itemPrice<=price[1] && message[i].itemPrice>=price[0] && ((name==""&&id=="")||((message[i].itemName.includes(name)&&name!="")||message[i].itemID === id)) && filterPass){
+            if (message[i].itemPrice<=price[1] && message[i].itemPrice>=price[0] && ((name==""&&id=="")||((message[i].itemName.includes(name)&&name!="")||message[i].itemID == id)) && filterPass){
                 const review = await axios.get( 
                 'http://127.0.0.1:8000/review/' + message[i].itemID
                 )
