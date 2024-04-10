@@ -190,6 +190,12 @@ const Payment = () => {
     
                     setOrderId(response.data[0]); // Set the order ID state
                     setApiCallCompleted(true); // Indicate that the API call has completed
+
+                    await axios.delete(`http://127.0.0.1:8000/cart/remove/${userID}/*/`, {
+                        headers: {
+                            Authorization: authToken
+                        }
+                    });
                     
                 } catch (error) {
                     console.error('Order creation API call failed', error);
