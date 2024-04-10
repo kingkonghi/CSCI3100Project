@@ -43,7 +43,6 @@ const Admin = () => {
     const submitUserForm = async (e) => {
         e.preventDefault();
         const url = userForm.id === 'New' ? 'http://127.0.0.1:8000/Admin/user/add/' : `http://127.0.0.1:8000/Admin/user/edit/${userForm.id}/`;
-        console.log(userForm);
         await axios.post(url, userForm, { headers: { Authorization: token } });
         fetchUsers();
         resetUserForm();
@@ -52,7 +51,17 @@ const Admin = () => {
     const submitProductForm = async (e) => {
         e.preventDefault();
         const url = productForm.id === 'New' ? 'http://127.0.0.1:8000/Admin/item/add/' : `http://127.0.0.1:8000/Admin/item/edit/${productForm.id}/`;
-        await axios.post(url, productForm, { headers: { Authorization: token } });
+        const data = {
+            "name": productForm.itemName,
+            "description": productForm.itemDescription,
+            "category": productForm.itemCategory,
+            "image": productForm.itemImage,
+            "price": productForm.itemPrice,
+            "quantity": productForm.itemQuantity,
+            "status": productForm.itemStatus
+        }
+        console.log(data);
+        await axios.post(url, data, { headers: { Authorization: token } });
         fetchProducts();
         resetProductForm();
     };
@@ -269,9 +278,9 @@ const Admin = () => {
                         <Form.Group controlId="formProductCategory">
                             <Form.Label>Category</Form.Label>
                             <Form.Control
-                                type="number"
+                                type="text"
                                 name="itemCategory"
-                                placeholder="Category ID"
+                                placeholder="Category"
                                 value={productForm.itemCategory}
                                 onChange={handleProductChange}
                                 required
