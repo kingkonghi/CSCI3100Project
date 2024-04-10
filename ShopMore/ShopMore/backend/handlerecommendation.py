@@ -17,9 +17,11 @@ def generate_recommendation(user):
     # Step 4: Retrieve item categories associated with the item IDs
     item_categories = Item.objects.filter(itemID__in=item_ids).values_list('itemCategory', flat=True)
 
+    extracted_categories = [category.split(',')[0] for category in item_categories]
+
     # Step 5: Retrieve items with the same item category as the extracted categories
     recommended_items = Item.objects.filter(
-        Q(itemCategory__in=item_categories) & ~Q(itemID__in=item_ids)
+        Q(itemCategory__in=extracted_categories) & ~Q(itemID__in=item_ids)
     )
 
     return recommended_items

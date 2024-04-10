@@ -7,6 +7,7 @@ class Order(models.Model):
     orderStatus = models.IntegerField()
     orderItems = models.JSONField()
     orderTotal = models.IntegerField()
+    address = models.CharField(max_length=100)
 
     def __repr__(self):
         return f"order(orderID={self.orderID}, userID={self.userID}, orderDate={self.orderDate}, orderStatus={self.orderStatus}, orderTotal={self.orderTotal}, orderItems={self.orderItems})"

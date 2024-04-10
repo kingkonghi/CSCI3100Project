@@ -69,7 +69,7 @@ class UserListAdmin(admin.ModelAdmin):
             
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['orderID', 'userID', 'orderDate', 'orderStatus', 'orderItems', 'orderTotal']
+    list_display = ['orderID', 'userID', 'orderDate', 'orderStatus', 'orderItems', 'orderTotal', 'address']
     list_filter = ['orderStatus']
 
     def get_changeform_initial_data(self, request):
