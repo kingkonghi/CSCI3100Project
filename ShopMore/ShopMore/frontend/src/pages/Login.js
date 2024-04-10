@@ -31,7 +31,6 @@ const Login = () => {
   
       try {
         const { data } = await api.post('register/', { username, password, email });
-        localStorage.setItem('token', data.token);
         alert('Registration successful');
         toggleForm('login')
       } catch (error) {
@@ -49,6 +48,10 @@ const Login = () => {
       try {
         const { data } = await api.post('login/', { username, password });
         localStorage.setItem('token', data.token);
+        localStorage.setItem('userid', data.user.id);
+        localStorage.setItem('username', data.user.username);
+        localStorage.setItem('password', data.user.password);
+        localStorage.setItem('email', data.user.email);
         alert('Login successful');
         // Redirect after successful login based on user ID
         if (username === "admin1") {
