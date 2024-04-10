@@ -130,6 +130,8 @@ const Payment = () => {
     const [paymentMethod, setPaymentMethod] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
+    const [orderId, setOrderId] = useState('');
+    const [apiCallCompleted, setApiCallCompleted] = useState(false);
     const [cartItems, setCartItems] = useState([]);
     const [products, setProducts] = useState([]);
 
@@ -163,6 +165,38 @@ const Payment = () => {
         let status = query.get("status");
         setShowSuccess(status);
     }, [userID]);
+
+    useEffect(() => {
+        if (showSuccess) {
+            // Convert cartItems to the required string format for the API call
+            let orderItemsStr = cartItems.map(item => `"${item.itemID}":${item.quantity}`).join(',');
+            orderItemsStr = "{" + orderItemsStr + "}";
+            console.log(orderItemsStr);
+    
+            // Calculate total amount again for clarity, though it could be reused from `amount`
+            const totalAmount = calculateTotal();
+    
+            const createOrder = async () => {
+                try {
+                    // Here we assume userID is available in this scope as before
+                    const response = await axios.get(`http://127.0.0.1:8000/order/add/${userID}/${orderItemsStr}/${totalAmount}/`, {
+                        headers: {
+                            Authorization: authToken
+                        }
+                    });
+    
+                    setOrderId(response.data[0]); // Set the order ID state
+                    setApiCallCompleted(true); // Indicate that the API call has completed
+                    
+                } catch (error) {
+                    console.error('Order creation API call failed', error);
+                    setShowSuccess(false); // Optionally revert the success state if the order creation fails
+                }
+            };
+    
+            createOrder();
+        }
+    }, [showSuccess]);
 
     const calculateTotal = () => {
         const total = cartItems.reduce((acc, cartItem) => {
@@ -204,8 +238,8 @@ const Payment = () => {
         );
     }
 
-    if (showSuccess) {
-        const orderId = "ORD123456";
+    if (showSuccess && apiCallCompleted) {
+        const orderIdStr = `ORD${orderId.toString().padStart(4, '0')}`;
         const orderCreationTime = new Date().toLocaleString();
         return (
             <Container className="text-center my-5">
@@ -213,7 +247,7 @@ const Payment = () => {
                 <h2>Payment Success!</h2>
                 <p>Your order has been successfully placed.</p>
                 <div className="my-3">
-                    <strong>Order ID:</strong> {orderId}<br/>
+                    <strong>Order ID:</strong> {orderIdStr}<br/>
                     <strong>Order Time:</strong> {orderCreationTime}<br/>
                     <strong>Amount Paid:</strong> ${amount}
                 </div>
