@@ -52,7 +52,7 @@ const Search= () => {
         let hotInd = false
 
         if (tempName.slice(0, 1) == "\"" && tempName.charAt(tempName.length-1) == "\""){
-            name = tempName.slice(1,tempName.length)
+            name = tempName.slice(1,tempName.length-1)
             console.log(tempName)
         } else {
             id = tempName
@@ -153,6 +153,7 @@ const Search= () => {
                     filterPass = false
                 }
             }
+            console.log(name)
             if (message[i].itemPrice<=price[1] && message[i].itemPrice>=price[0] && ((name==""&&id=="")||((message[i].itemName.includes(name)&&name!="")||message[i].itemID == id)) && filterPass){
                 const review = await axios.get( 
                 'http://127.0.0.1:8000/review/' + message[i].itemID
