@@ -120,8 +120,9 @@ const Product = () => {
         setRender(true)
     }
 
-     /*const favoriteEdit = async () => {
+     function favoriteEdit(){
         if(accountType==1||accountType==0){
+            let loadPost = async() => {
             const favStatus = await axios.get( 
                 'http://127.0.0.1:8000/display_favorite/',{
                         headers: {
@@ -134,6 +135,9 @@ const Product = () => {
             for(let i=0; i<favStatus.data.length;i++){
                 favId.push(favStatus.data[i].itemid)
             }
+            console.log(favId)
+            setSelfLove(!selfLove)
+            console.log(selfLove)
             if(favId.includes(productData[0]) && selfLove){
                 alert('Some error occurs, setting item in favorite list for now, try later.')
                 setSelfLove(!selfLove)
@@ -142,7 +146,7 @@ const Product = () => {
                 setSelfLove(!selfLove)
             } else if (favId.includes(productData[0]) && !selfLove){
                 const favStatus = await axios.delete( 
-                    'http://127.0.0.1:8000/delete_favorite/'+productData[0]+'/',{
+                    'http://127.0.0.1:8000/delete_favorite/'+ pid +'/',{
                             headers: {
                             'Content-Type': 'application/json',
                             'Authorization': 'Token ' + authToken
@@ -161,11 +165,13 @@ const Product = () => {
                         }
                     )
             }
+        }
+        loadPost()
         } else {
             alert("You have to login to add item to favorite list!")
             setSelfLove(false)
         }
-     }*/
+     }
 
     useEffect(() => {
         loadProd(); 
@@ -177,12 +183,10 @@ const Product = () => {
         }
     },[message2]);
 
-    /*useEffect(() => {
-        favoriteEdit();
-    },[selfLove]);*/
-
     function redirect(id){
+        console.log(id)
         navigate('/product/' + id)
+        navigate(0)
     }
     
     function addNotification(stock){
@@ -252,7 +256,7 @@ const Product = () => {
                                 <img src={"/photo/"+productData[7]} alt={productData[1]} />
                             </td>
                             <td id="productDesc">
-                                <p className="titleBar">{productData[1] + " "}<p id="like">{selfLove? <span><FaHeart onClick={()=>setSelfLove(!selfLove)}/> You have liked this product!</span>:<span><FaRegHeart onClick={()=>setSelfLove(!selfLove)}/> This product is not in your favorite list yet...</span>}</p></p>
+                                <p className="titleBar">{productData[1] + " "}<p id="like">{selfLove? <span><FaHeart onClick={()=>favoriteEdit()}/> You have liked this product!</span>:<span><FaRegHeart onClick={()=>favoriteEdit()}/> This product is not in your favorite list yet...</span>}</p></p>
                                 <pre>{productData[6] + "\n\n*Remaining stock(s): " + productData[2] +"\n\n*Price: $" + productData[3]}</pre>
                                 <div id="toOrder">
                                     <p>Quantity: </p>
