@@ -10,22 +10,48 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const Nav = () => {
     const navigate = useNavigate();
+    const accountType = localStorage.getItem('accountType');
 
     function search(){
         const navSearch = document.getElementById("navSearch")
         navigate("/search/" + navSearch.value + "&&0-5000")
     }
 
-    //display root element
+    const renderLinksBasedOnAccountType = () => {
+        // Not logged in, accountType is null
+        if(accountType === null) {
+            return (
+                <p><Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>Home Page</Link></p>
+            );
+        // Admin user, accountType is 1
+        } else if(accountType === "1") {
+            return (
+                <>
+                    <p><Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>Home Page</Link></p>
+                    <p><Link to="/cart" style={{ textDecoration: 'none', color: 'inherit' }}>My Shopping Cart</Link></p>
+                    <p><Link to="/favourite" style={{ textDecoration: 'none', color: 'inherit' }}>My Favorite Product</Link></p>
+                    <p><Link to="/orderlist" style={{ textDecoration: 'none', color: 'inherit' }}>My Order</Link></p>
+                    <p><Link to="/admin" style={{ textDecoration: 'none', color: 'inherit' }}>Admin CRUD</Link></p>
+                </>
+            );
+        // Regular user, accountType is 0
+        } else {
+            return (
+                <>
+                    <p><Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>Home Page</Link></p>
+                    <p><Link to="/cart" style={{ textDecoration: 'none', color: 'inherit' }}>My Shopping Cart</Link></p>
+                    <p><Link to="/favourite" style={{ textDecoration: 'none', color: 'inherit' }}>My Favorite Product</Link></p>
+                    <p><Link to="/orderlist" style={{ textDecoration: 'none', color: 'inherit' }}>My Order</Link></p>
+                </>
+            );
+        }
+    };
+
+    // Display root element with conditional links
     return (
         <>
             <div id="navBar">
-                <p><Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>Home Page</Link></p>
-                <p><Link to="/cart" style={{ textDecoration: 'none', color: 'inherit' }}>My Shopping Cart</Link></p>
-                <p><Link to="/favourite" style={{ textDecoration: 'none', color: 'inherit' }}>My Favorite Product</Link></p>
-                <p><Link to="/orderlist" style={{ textDecoration: 'none', color: 'inherit' }}>My Order</Link></p>
-                <p><Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>Login (temp)</Link></p>
-                <p><Link to="/admin" style={{ textDecoration: 'none', color: 'inherit' }}>Admin CRUD</Link></p>
+                {renderLinksBasedOnAccountType()}
                 <div id="searchBar">
                     <input id="navSearch" type="text" placeholder="Search product..."/>
                     <FaSearch onClick={() => search()} />
