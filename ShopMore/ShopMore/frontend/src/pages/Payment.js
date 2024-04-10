@@ -139,31 +139,34 @@ const Payment = () => {
     let query = useQuery();
 
     useEffect(() => {
-        const fetchCart = async () => {
-            const response = await axios.get(`http://127.0.0.1:8000/cart/${userID}/`, {
+        const fetchCart = () => {
+            return axios.get(`http://127.0.0.1:8000/cart/${userID}/`, {
                 headers: {
                     Authorization: authToken
                 }
+            }).then(response => {
+                if (response.data && response.data.cart.length > 0) {
+                    setCartItems(Object.entries(response.data.cart[0].itemlist).map(([itemID, quantity]) => ({ itemID, quantity })));
+                }
             });
-            if (response.data && response.data.cart.length > 0) {
-                setCartItems(Object.entries(response.data.cart[0].itemlist).map(([itemID, quantity]) => ({ itemID, quantity })));
-            }
         };
-
-        const fetchProducts = async () => {
-            const response = await axios.get('http://127.0.0.1:8000/product/', {
+    
+        const fetchProducts = () => {
+            return axios.get('http://127.0.0.1:8000/product/', {
                 headers: {
                     Authorization: authToken
                 }
+            }).then(response => {
+                setProducts(response.data.item);
             });
-            setProducts(response.data.item);
         };
-
-        fetchCart();
-        fetchProducts();
-        
-        let status = query.get("status");
-        setShowSuccess(status);
+    
+        Promise.all([fetchCart(), fetchProducts()]).then(() => {
+            let status = query.get("status");
+            setShowSuccess(status);
+        }).catch(error => {
+            console.error("Error fetching cart or products:", error);
+        });
     }, [userID]);
 
     useEffect(() => {
