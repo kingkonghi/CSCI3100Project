@@ -211,7 +211,10 @@ def cart_edit(request,userID, itemID, quantity):
 
 @api_view(['DELETE'])
 def cart_remove(request,userID, itemID):
-    response = remove_item(userID, itemID)
+    if itemID == "*":
+        response = remove_all_items(userID)
+    else:
+        response = remove_item(userID, itemID)
     return Response({'message': "Successfully deleted item from cart"}, status=status.HTTP_200_OK)
 
 #Order
