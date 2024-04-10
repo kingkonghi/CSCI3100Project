@@ -20,6 +20,7 @@ const Favour = () => {
       try {
         const response = await axios.get(url, { headers });
         const favoriteList = response.data;
+        console.log(favoriteList)
         setFavProduct(favoriteList);
       } catch (error) {
         console.error('Error:', error);
@@ -63,15 +64,15 @@ const Favour = () => {
 export default Favour;
 
 const deleteFavorite = async (itemID) => {
-  const url = `http://example.com/api/delete_favorite/${itemID}`;  // Replace with your API endpoint
+  const url = `http://127.0.0.1:8000/delete_favorite/${itemID}`;  
   const headers = {
     'Content-Type': 'application/json',
-    // Add any additional headers if required
+    'Authorization': 'Token ' + localStorage.getItem("token")
   };
 
   try {
     const response = await axios.delete(url, { headers });
-    console.log(response.data);  // Handle the response as needed
+    alert("Product removed.")
   } catch (error) {
     console.error('Error:', error);
   }
