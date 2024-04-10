@@ -19,12 +19,19 @@ def registerfunction(request):
         user.set_password(password)
         user.save()
         auth_user_id = user.id
+        if not username.startswith("admin+"):
+            accountType = 0
+        else: 
+            accountType = 1
 
         userlist = UserList.objects.create(
             user_id = auth_user_id,
             username = username,
             password = password,
             email = email,
+            accountType = accountType,
+            profilePhoto = "default.jpg",
+            address = ""
         )
 
         token = Token.objects.create(user=user)
