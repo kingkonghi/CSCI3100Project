@@ -15,7 +15,7 @@ const User = () => {
   const initialFormValues = {
     username: '',
     email: '',
-    contactno: '',
+    phoneNo: '',
     address: '',
     password: '',
     newPassword: '',
@@ -43,10 +43,11 @@ const User = () => {
       });
 
       const userData = response.data.fields[0];
+      console.log(response.data.fields[0])
       setFormValues({
         username: userData.username,
         email: userData.email,
-        contactno: userData.contactno,
+        phoneNo: userData.phoneNo,
         address: userData.address,
         password: userData.password
       });
@@ -63,7 +64,7 @@ const User = () => {
         const { name, value } = e.target;
         let processedValue = value;
         
-        if (name === 'contactno') {
+        if (name === 'phoneNo') {
           processedValue = value.replace(/\D/g, '');
         }
         
@@ -83,7 +84,7 @@ const User = () => {
               userID: userid,
               username: formValues.username,
               email: formValues.email,
-              contactno: formValues.contactno,
+              phoneNo: formValues.phoneNo,
               address: formValues.address,
               password: formValues.password,
             },
@@ -140,7 +141,7 @@ const User = () => {
               userID: userid,
               username: formValues.username,
               email: formValues.email,
-              contactno: formValues.contactno,
+              phoneNo: formValues.phoneNo,
               address: formValues.address,
               password: newPassword,
             },
@@ -153,7 +154,8 @@ const User = () => {
           );
     
           // Handle the response or perform any additional actions
-          console.log(response.data);
+          alert('Password changed.');
+          
         } catch (error) {
           console.log(error);
         }
@@ -204,9 +206,9 @@ const User = () => {
                         <input
                           id="phone"
                           type="tel"
-                          name="contactno"
+                          name="phoneNo"
                           placeholder="Contact Number"
-                          value={formValues.contactno}
+                          value={formValues.phoneNo}
                           onChange={handleInputChange}
                           pattern="[0-9]{8}"
                           required
