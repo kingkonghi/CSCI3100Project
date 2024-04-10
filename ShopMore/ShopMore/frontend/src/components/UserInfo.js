@@ -18,6 +18,7 @@ const UserInfo = () => {
     localStorage.removeItem('password');
     localStorage.removeItem('email');
     localStorage.removeItem('address');
+    localStorage.removeItem('accountType');
     alert('Logout successful');
     // Redirect after successful logout
     navigate('/login');

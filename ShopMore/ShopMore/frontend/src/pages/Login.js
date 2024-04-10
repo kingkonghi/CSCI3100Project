@@ -47,14 +47,24 @@ const Login = () => {
   
       try {
         const { data } = await api.post('login/', { username, password });
+        console.log(data);
         localStorage.setItem('token', data.token);
         localStorage.setItem('userid', data.user.id);
         localStorage.setItem('username', data.user.username);
         localStorage.setItem('password', data.user.password);
         localStorage.setItem('email', data.user.email);
         alert('Login successful');
-        // Redirect after successful login based on user ID
-        if (username === "admin1") {
+
+        const response = await axios.post('http://127.0.0.1:8000/user/', {userID: data.user.id}, {
+            headers: {
+                Authorization: "Token b09782e294306013522c0610bbbe5e601e021b3b"
+            }
+        });
+        const accountType = response.data.fields[0].accountType;
+        localStorage.setItem('accountType', accountType);
+
+        // Redirect after successful login based on userType
+        if (accountType == 1) {
           navigate('/admin');
         } else {
           navigate('/home');
