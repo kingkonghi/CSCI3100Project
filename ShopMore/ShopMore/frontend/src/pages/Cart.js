@@ -2,54 +2,82 @@ import "../index.scss";
 import React, { useState, useEffect } from 'react';
 import { Card, Container, Row, Col, ListGroup, Form, Button, InputGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-
-// Hard code data
-const CartData = [
-    [1, "Table", 20, 2, "Made with the rare oak wood found in India, the finest table that you..."],
-    [2, "Washing machine", 2000, 1, "Assist with AI production line, a washing machine for life."]
-];
-
-const SavedAddress = [
-    "19 ABC Road, Kwun Tong",
-    "15/F, Tai Fai Building, Wan Chai"
-];
+import axios from 'axios';
 
 const Cart = () => {
-    const [cartItems, setCartItems] = useState(CartData);
-    const [selectedAddress, setSelectedAddress] = useState(SavedAddress[0]);
+    const [cartItems, setCartItems] = useState([]);
+    const [products, setProducts] = useState([]);
+    const [userAddress, setUserAddress] = useState('');
     const navigate = useNavigate();
+    const userID = localStorage.getItem('userid');
+    const authToken = 'Token b09782e294306013522c0610bbbe5e601e021b3b';
 
     useEffect(() => {
-        if (SavedAddress.length > 0 && !selectedAddress) {
-            setSelectedAddress(SavedAddress[0]);
+        fetchCart();
+        fetchProducts();
+        fetchUserDetails();
+    }, []);
+
+    const fetchCart = async () => {
+        const response = await axios.get(`http://127.0.0.1:8000/cart/${userID}/`, {
+            headers: {
+                Authorization: authToken
+            }
+        });
+        if (response.data && response.data.cart.length > 0) {
+            setCartItems(Object.entries(response.data.cart[0].itemlist).map(([itemID, quantity]) => ({ itemID, quantity })));
         }
-    }, [selectedAddress]);
+    };
+
+    const fetchProducts = async () => {
+        const response = await axios.get('http://127.0.0.1:8000/product/', {
+            headers: {
+                Authorization: authToken
+            }
+        });
+        setProducts(response.data.item);
+    };
+
+    const fetchUserDetails = async () => {
+        const response = await axios.post('http://127.0.0.1:8000/user/', {userID: userID}, {
+            headers: {
+                Authorization: authToken
+            }
+        });
+        if (response.data.fields.length > 0) {
+            setUserAddress(response.data.fields[0].address);
+        }
+    };
 
     const calculateTotal = () => {
-        return cartItems.reduce((acc, item) => acc + (item[2] * item[3]), 0);
+        return cartItems.reduce((acc, cartItem) => {
+            const product = products.find(p => p.itemID.toString() === cartItem.itemID);
+            return acc + (product ? product.itemPrice * cartItem.quantity : 0);
+        }, 0);
     };
 
-    const updateQuantity = (index, quantity) => {
-        let updatedQuantity = quantity;
-        if (quantity === '' || quantity < 1 || isNaN(quantity)) {
-            updatedQuantity = 1;
-        }
-        const updatedCartItems = [...cartItems];
-        updatedCartItems[index][3] = updatedQuantity;
-        setCartItems(updatedCartItems);
+    const updateQuantity = async (itemID, quantity) => {
+        await axios.get(`http://127.0.0.1:8000/cart/edit/${userID}/${itemID}/${quantity}/`, {
+            headers: {
+                Authorization: authToken
+            }
+        });
+        fetchCart();
     };
 
-    const removeItem = (index) => {
-        const updatedCartItems = cartItems.filter((item, i) => i !== index);
-        setCartItems(updatedCartItems);
+    const removeItem = async (itemID) => {
+        await axios.get(`http://127.0.0.1:8000/cart/remove/${userID}/${itemID}/`, {
+            headers: {
+                Authorization: authToken
+            }
+        });
+        fetchCart();
     };
 
     const handleAddressChange = (e) => {
         const value = e.target.value;
-        if (value === "add-new") {
-            navigate('/add-address');
-        } else {
-            setSelectedAddress(value);
+        if (value === "edit-address") {
+            navigate('/user');
         }
     };
 
@@ -61,25 +89,35 @@ const Cart = () => {
             <Row>
                 <Col>
                     <ListGroup>
-                        {cartItems.map((item, index) => (
-                            <ListGroup.Item key={index}>
-                                <strong>{item[1]}</strong> (${item[2]})
-                                <p>{item[4]}</p>
-                                <img height="100" src={"/photo/"+item[0]+".png"} alt={item[1]} />
-                                <InputGroup className="mb-3">
-                                    <InputGroup.Text>Qty</InputGroup.Text>
-                                    <Form.Control
-                                        type="number"
-                                        min="1"
-                                        value={item[3]}
-                                        onChange={(e) => updateQuantity(index, parseInt(e.target.value))}
-                                    />
-                                    <Button variant="outline-danger" onClick={() => removeItem(index)}>
-                                        Remove
-                                    </Button>
-                                </InputGroup>
-                            </ListGroup.Item>
-                        ))}
+                        {cartItems.map((cartItem, index) => {
+                            const product = products.find(p => p.itemID.toString() === cartItem.itemID);
+                            if (!product) return null;
+                            return (
+                                <ListGroup.Item key={index}>
+                                    <strong>{product.itemName}</strong> (${product.itemPrice})
+                                    <p>{product.itemDescription}</p>
+                                    <img height="100" src={"/photo/"+product.itemImage} alt={product.itemName} />
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text>Qty</InputGroup.Text>
+                                        <Form.Control
+                                            type="number"
+                                            min="1"
+                                            max={product.itemQuantity}
+                                            value={cartItem.quantity}
+                                            onChange={(e) => {
+                                                const newQuantity = parseInt(e.target.value);
+                                                if (newQuantity > 0 && newQuantity <= product.itemQuantity) {
+                                                    updateQuantity(cartItem.itemID, newQuantity);
+                                                }
+                                            }}
+                                        />
+                                        <Button variant="outline-danger" onClick={() => removeItem(cartItem.itemID)}>
+                                            Remove
+                                        </Button>
+                                    </InputGroup>
+                                </ListGroup.Item>
+                            );
+                        })}
                     </ListGroup>
                 </Col>
                 <Col>
@@ -117,13 +155,11 @@ const Cart = () => {
                         <Form.Group className="mb-3" controlId="formAddressSelect">
                             <Form.Label>Select Address</Form.Label>
                             <Form.Select
-                                value={selectedAddress}
+                                value={userAddress}
                                 onChange={handleAddressChange}
                             >
-                                {SavedAddress.map((address, index) => (
-                                    <option key={index} value={address}>{address}</option>
-                                ))}
-                                <option value="add-new">Add New Address...</option>
+                                <option value={userAddress}>{userAddress}</option>
+                                <option value="edit-address">Edit Address...</option>
                             </Form.Select>
                         </Form.Group>
                         <Button variant="primary" type="submit" onClick={() => {navigate('/payment')}}>
