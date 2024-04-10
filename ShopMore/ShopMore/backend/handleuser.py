@@ -9,7 +9,7 @@ def list_user_info(userID):
 
 def add_user(user):
     max_id = UserList.objects.order_by('-user_id').first().user_id
-    user1 = UserList(user_id=max_id+1,username=user.username, accountType=user.accountType, password=user.password, email=user.email, profilePhoto=user.profilePhoto, address=user.address)
+    user1 = UserList(user_id=max_id+1,username=user.username, accountType=user.accountType, password=user.password, email=user.email, profilePhoto=user.profilePhoto, address=user.address, phoneNo=user.phoneNo)
     user1.save()
 
     try: #when edit/create user in table userlist through admin, auth_user will also be edited/created 
@@ -23,7 +23,7 @@ def add_user(user):
     print(f"User {user.username} added.")
 
 
-def edit_user(user, username=None, accountType=None, password=None, email=None, profilePhoto=None, address=None):
+def edit_user(user, username=None, accountType=None, password=None, email=None, profilePhoto=None, address=None, phoneNo=None):
     user_list_data = {}
     auth_user_data = {}
 
@@ -47,10 +47,14 @@ def edit_user(user, username=None, accountType=None, password=None, email=None, 
 
     if address is not None:
         user_list_data['address'] = address
+    
+    if phoneNo is not None:
+        user_list_data['phoneNo'] = phoneNo
 
-    UserList.objects.filter(user_id=user.user_id).update(**user_list_data)
 
-    auth_user = User.objects.get(id=user.user_id)
+    UserList.objects.filter(user_id=user.id).update(**user_list_data)
+
+    auth_user = User.objects.get(id=user.id)
     for key, value in auth_user_data.items():
         if key == 'password':
             auth_user.set_password(value)

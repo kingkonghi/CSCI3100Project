@@ -106,6 +106,7 @@ def user(request):
             "email": user.email,
             "profilePhoto": user.profilePhoto,
             "address": user.address,
+            "phoneNo": user.phoneNo
         }
         for user in user_info
     ]
@@ -122,8 +123,9 @@ def edit_info(request):
     email = request.data.get('email')
     profilePhoto = request.data.get('profilePhoto')
     address = request.data.get('address')
+    phoneNo = request.data.get('phoneNo')
 
-    response = edit_user(request.user, username=username, accountType=accountType, password=password, email=email, profilePhoto=profilePhoto, address=address)
+    response = edit_user(request.user, username=username, accountType=accountType, password=password, email=email, profilePhoto=profilePhoto, address=address, phoneNo=phoneNo)
 
     return JsonResponse({'message': response})
 @api_view(['POST'])
@@ -314,13 +316,15 @@ def admin_add_user(request):
     email = request.data.get('email')
     profilePhoto = request.data.get('profilePhoto')
     address = request.data.get('address')
+    phoneNo = request.data.get('phoneNo')
     user = UserList(
         username = username,
         accountType = accountType,
         password = password,
         email = email,
         profilePhoto = profilePhoto,
-        address = address
+        address = address,
+        phoneNo = phoneNo
     )
     add_user(user)
     return Response({'message': f"User {username} added."})
@@ -336,10 +340,11 @@ def admin_edit_user(request, pk):
     email = request.data.get('email')
     profilePhoto = request.data.get('profilePhoto')
     address = request.data.get('address')
-    user = UserList(
-        user_id = pk
+    phoneNo = request.data.get('phoneNo')
+    user = User(
+        id = pk
     )
-    status = edit_user(user, username, accountType, password, email, profilePhoto, address)
+    status = edit_user(user, username, accountType, password, email, profilePhoto, address, phoneNo)
     return Response({'message': f"User {username} edited." if status == "edited" else "No changes made."})
 
 @api_view(['DELETE'])

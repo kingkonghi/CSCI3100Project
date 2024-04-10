@@ -31,7 +31,8 @@ def registerfunction(request):
             email = email,
             accountType = accountType,
             profilePhoto = "default.jpg",
-            address = ""
+            address = "",
+            phoneNo = ""
         )
 
         token = Token.objects.create(user=user)

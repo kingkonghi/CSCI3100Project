@@ -43,7 +43,7 @@ class ItemAdmin(admin.ModelAdmin):
         
 @admin.register(UserList)
 class UserListAdmin(admin.ModelAdmin):
-    list_display = ['user_id', 'accountType', 'username', 'password', 'email', 'profilePhoto', 'address']
+    list_display = ['user_id', 'accountType', 'username', 'password', 'email', 'profilePhoto', 'address', 'phoneNo']
     list_filter = ['accountType']
 
     def get_changeform_initial_data(self, request):
