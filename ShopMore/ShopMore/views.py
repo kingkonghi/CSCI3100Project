@@ -137,14 +137,13 @@ def edit_info(request):
 @permission_classes([IsAuthenticated])
 @csrf_exempt  #csrf_exempt is just for testing, if frontend can get csrf_token, can remove this
 def add_to_favorite(request):
-    if request.method == 'POST':
-        item_id = request.data.get('item_id')
-        user_id = request.user.id
+    data = json.loads(request.body)
+    item_id = data['item_id']
+    user_id = request.user.id
 
-        response = add_favorite(user_id, item_id)
-
-        return Response({'success': True, 'response': response})
-    return Response({'success': False})
+    response = add_favorite(user_id, item_id)
+    return Response({'success': True, 'response': response})
+    
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
@@ -154,14 +153,6 @@ def display_favorite(request):
     user_id = request.user.id
     favorite_list = get_favorite_list(user_id)
     return JsonResponse(favorite_list, safe=False)
-
-@api_view(['POST'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
-@csrf_exempt  #csrf_exempt is just for testing, if frontend can get csrf_token, can remove this
-def add_to_favorite(request):
-    response = delete_favorite(request.data.item_id)
-    return Response({'success': True, 'response': response})
 
 
 

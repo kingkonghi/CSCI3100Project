@@ -84,7 +84,22 @@ class OrderAdmin(admin.ModelAdmin):
             obj.orderID = last_order.orderID + 1 if last_order else 1
         super().save_model(request, obj, form, change)
 
-admin.site.register(FavoriteList)
+@admin.register(FavoriteList)
+class FavoriteListAdmin(admin.ModelAdmin):
+    list_display = ['favouriteID', 'userid', 'itemid']
+    list_filter = ['userid', 'itemid']
+
+    def get_changeform_initial_data(self, request):
+        initial = super().get_changeform_initial_data(request)
+        last_favorite = FavoriteList.objects.order_by('-favouriteID').first()
+        initial['favouriteID'] = last_favorite.favouriteID + 1 if last_favorite else 1
+        return initial
+
+    def save_model(self, request, obj, form, change):
+        if not obj.favouriteID:
+            last_favorite = FavoriteList.objects.order_by('-favouriteID').first()
+            obj.favouriteID = last_favorite.favouriteID + 1 if last_favorite else 1
+        super().save_model(request, obj, form, change)
 
 @admin.register(cart)
 class CartAdmin(admin.ModelAdmin):
