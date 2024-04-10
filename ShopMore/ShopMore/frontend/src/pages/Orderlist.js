@@ -79,7 +79,7 @@ class TRO extends React.Component {
     const link = '/order/' + order.orderID;
     return (
       <tr>
-        <td>{order.orderID}</td>
+        <td>{`ORD${order.orderID.toString().padStart(4, '0')}`}</td>
         <td>{order.orderDate}</td>
         <td>{order.orderTotal}</td>
         <td>{order.orderStatus === 0 ? 'Packing' : 'Delivered'}</td>
