@@ -50,9 +50,15 @@ const Favour = () => {
               </tr>
             </thead>
             <tbody>
-              {favproduct.map((file, index) => (
-                <TRF i={index} key={index} data={favproduct} updateFavProduct={updateFavProduct}/>
-              ))}
+              {favproduct.length > 0 ? ( // Add conditional check before mapping over orderlist
+                favproduct.map((file, index) => (
+                  <TRF i={index} key={index} data={favproduct} updateFavProduct={updateFavProduct}/>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5">No favourite products found.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
