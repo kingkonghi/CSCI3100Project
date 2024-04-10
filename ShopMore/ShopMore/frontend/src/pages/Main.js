@@ -20,12 +20,13 @@ const Main = () => {
     const [lPrice, setLPrice] = useState(0);
     const [hPrice, setHPrice] = useState(5000);
     const [ProductData, setProductData] = useState([])
-    const [HotData1, setHotData] = useState([])
+    const [HotData, setHotData] = useState([])
     const [render, setRender] = useState(false)
     const [signal2, set2] = useState(false)
     const [signal3, set3] = useState(false)
-    const authToken = localStorage.getItem('token')
+    const authToken = 'b09782e294306013522c0610bbbe5e601e021b3b'
     const userid = localStorage.getItem('userid')
+    const accountType = localStorage.getItem('accountType')
 
     let navigate = useNavigate();
 
@@ -40,27 +41,38 @@ const Main = () => {
 
     const loadProd2 = async () => {
 
-        let temp2 = []
+        let tempProd = []
+        let tempHot = []
+        let tempNotHot = []
 
-        for (let i=0;i<Math.min(10,message.length);i++){
-            const review = await axios.get( 
-            'http://127.0.0.1:8000/review/' + message[i].itemID
-            )
+        const review = await axios.get( 
+        'http://127.0.0.1:8000/review/'
+        )
+
+        let tempReview = {}
+        for (let i=0;i<review.data.message.length;i++){
+            if (review.data.message[i].itemID in tempReview){
+                tempReview[review.data.message[i].itemID][0].push([review.data.message[i].userID,review.data.message[i].Review])
+                tempReview[review.data.message[i].itemID][1].push(review.data.message[i].Rating)
+            } else {
+                tempReview[review.data.message[i].itemID] = [[],[]]
+                tempReview[review.data.message[i].itemID][0].push([review.data.message[i].userID,review.data.message[i].Review])
+                tempReview[review.data.message[i].itemID][1].push(review.data.message[i].Rating)
+            }
+        }
+        
+        for (let i=0;i<message.length;i++){
             let temp = []
             temp.push(message[i].itemID)
             temp.push(message[i].itemName)
             temp.push(message[i].itemQuantity)
             temp.push(message[i].itemPrice)
-            if (review.data.message.length==0){
+            if (!(message[i].itemID in tempReview)){
                 temp.push([["N/A", "no one have commented yet"]])
                 temp.push([0])
             } else {
-                temp.push([])
-                temp.push([])
-                for (let j=0; j<review.data.message.length; j++){
-                    temp[4].push([review.data.message[j].userID,review.data.message[j].Review])
-                    temp[5].push([review.data.message[j].Rating])
-                }                
+                temp.push(tempReview[message[i].itemID][0])
+                temp.push(tempReview[message[i].itemID][1])             
             }
             if (message[i].itemDescription.length >= 90){
                 temp.push(message[i].itemDescription.slice(0,90) + "...")
@@ -68,32 +80,60 @@ const Main = () => {
                 temp.push(message[i].itemDescription)
             }
             temp.push(message[i].itemImage)
-            temp2.push(temp)
-            setProductData(temp2) //id, name, price, stock, reviews (array), rating (array), desc
-            if(i===Math.min(9,message.length-1)){
-                set3(true)
+            temp.push(message[i].itemCategory)
+            if (message[i].itemCategory.includes("Hot Sales")){
+                tempHot.push(temp)
+            } else {
+                tempNotHot.push(temp)
+            }
+            tempProd.push(temp)
+            if (tempHot.length===5){
+                setProductData(tempProd)
+                setHotData(tempHot)
+                break;
+            }
+            if(i===message.length-1){
+                setProductData(tempProd)
+                let lack = 5 - tempHot.length
+                for (let y=0;y<lack;y++){
+                    tempHot.push(tempNotHot[y])
+                }
+                setHotData(tempHot)
+                set3(true)    
+                /*setHotData([ //[TBI] Recommendation product
+                    [1, "Table", 20, 1000, [["User0112","The prefect table with high quality."],["Bernald Meriq","Cheapest table I've seen in a while."]], [5.0, 4.5], "Made with the rare oakk wood found in India, the finest table that you..."],
+                    [2, "Washing machine", 20, 2000, [["User0445","Been using it for 10 years, perfect."],["Marina C.","Flawless."]], [5.0, 5.0], "Assist with AI production line, a washing machine for life."],
+                    [3, "Lamp", 20, 100, [["ProCommentor","Nice Lamp!"],["User0002","A little decoration to my pretty room."]], [5.0, 4.5], "Brighten your room with this lamp made with masters based in Germany."]
+                ]) //id, name, price, stock, reviews (array), rating (array), desc*/
             }
         }
         console.log("review fetched")
     }
 
     const loadProd3 = async () => {
-        const fetchRecommendation = await axios.post( 
-        'http://127.0.0.1:8000/product/recommendation/',{
-            userID: userid
-          }, {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Token ' + authToken
-            }
-          }
-        )
+        const fetchRecommendation = null
         let tempRecommend = []
         let tempRecommendID = []
-        for (let k=0;k<fetchRecommendation.data["recommended items"].length;k++){
-            tempRecommendID.push(fetchRecommendation.data["recommended items"][k].itemID)
+        try{
+            fetchRecommendation = await axios.post( 
+            'http://127.0.0.1:8000/product/recommendation/',{
+                    userID: userid
+                }, {
+                    headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + authToken
+                    }
+                }
+            )
+            for (let k=0;k<fetchRecommendation.data["recommended items"].length;k++){
+                tempRecommendID.push(fetchRecommendation.data["recommended items"][k].itemID)
+            }
         }
-        console.log(tempRecommendID)
+        catch (err) {//non-user case
+            console.log(accountType)
+            tempRecommend = HotData
+            tempRecommendID = [0,0,0,0,0,0]
+        }
         if (tempRecommendID.length<5){ //At least 5 products 
             let lack = 5 - tempRecommendID.length
             for (let x=0; x<ProductData.length; x++){
@@ -129,18 +169,12 @@ const Main = () => {
 
       useEffect(() => {
           const interval = setInterval(() => {
-                  let newHot = showHot == 2? 0:showHot+1
+                  let newHot = showHot == 4? 0:showHot+1
                   setShowHot(newHot);
               }, 3000);
           
           return () => clearInterval(interval)    
       }, [showHot]);
-
-    const HotData = [ //[TBI] Hot product
-        [1, "Table", 20, 1000, [["User0112","The prefect table with high quality."],["Bernald Meriq","Cheapest table I've seen in a while."]], [5.0, 4.5], "Made with the rare oakk wood found in India, the finest table that you..."],
-        [2, "Washing machine", 20, 2000, [["User0445","Been using it for 10 years, perfect."],["Marina C.","Flawless."]], [5.0, 5.0], "Assist with AI production line, a washing machine for life."],
-        [3, "Lamp", 20, 100, [["ProCommentor","Nice Lamp!"],["User0002","A little decoration to my pretty room."]], [5.0, 4.5], "Brighten your room with this lamp made with masters based in Germany."]
-    ] //id, name, price, stock, reviews (array), rating (array), desc
     
     function redirect(id){
         navigate('/product/' + id)
@@ -180,13 +214,13 @@ const Main = () => {
                 <table id="hotProduct">
                     <tr>
                         <td id="img">
-                            <img src={"/photo/"+HotData[showHot][0]+".png"} alt={HotData[showHot][1]} />
+                            <img src={"/photo/"+HotData[showHot][7]} alt={HotData[showHot][1]} />
                         </td>
                         <td id="productDesc">
                             <h5><FaFireAlt /> Seasonal Trend!</h5>
                             <p className="title">{HotData[showHot][1] + " - $" + HotData[showHot][3]}<span className="star"> {
                                 [0,1,2,3,4].map((element)=>{
-                                    let rating = HotData[showHot][5].reduce((a, b) => a + b) / HotData[showHot][5].length;
+                                    let rating = HotData[showHot][5].reduce((a, b) => a + b) / Math.max(0.001,HotData[showHot][5].length);
                                     let ratingHolder = null
                                     if(rating>=element+1){
                                         ratingHolder = <FaStar/>
@@ -202,7 +236,6 @@ const Main = () => {
                             }</span></p>
                             <p className="content">Our customers' feedback</p>
                             <p className="feedback">{HotData[showHot][4][0][0] + ": " + HotData[showHot][4][0][1]}</p>
-                            <p className="feedback">{HotData[showHot][4][1][0] + ": " + HotData[showHot][4][1][1]}</p>
                             <p id="displayBlock">
                                 {
                                     [0,1,2,3,4].map((element, index)=>{
@@ -222,7 +255,7 @@ const Main = () => {
                 <div id="lowerHalf">
                     <div id="searchArea">
                         <div id="searchGroup">
-                            <input id="searchBoxMain"type="text" placeholder="Search..."/>
+                            <input id="searchBoxMain"type="text" placeholder="quote for name or id"/>
                             <FaSearch onClick={()=>redirectSearch(document.getElementById('searchBoxMain').value)}/>
                         </div>
                         <div id="filter">
