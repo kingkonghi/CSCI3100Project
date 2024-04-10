@@ -7,8 +7,8 @@ import { Link } from 'react-router-dom';
 
 const Favour = () => {
     const [favproduct, setFavProduct] = useState([
-      { pid: 1, name: "Table", price: 20 },
-      { pid: 2, name: "Washing machine", price: 2000 }
+      { pid: 1, name: "lamp", price: 20 },
+      { pid: 2, name: "table", price: 2000 }
     ]);
   
     const updateFavProduct = (updatedFavProduct) => {
@@ -61,7 +61,7 @@ export default Favour;
         let link = '/product/' + this.props.data[i].pid;
         return (
           <tr>
-            <td><img height="100" src={"/photo/"+this.props.data[i].pid+".png"} /></td>
+            <td><img height="100" src={"/photo/"+this.props.data[i].pid+"_"+this.props.data[i].name+".png"} /></td>
             <td><Link to={link}> {this.props.data[i].name}</Link></td>
             <td>{this.props.data[i].price}</td>
             <td>

@@ -10,8 +10,8 @@ const Order = () => {
   let { oid } = useParams();
 
   const [orderproduct, setOrderProduct] = useState([
-    { pid: 1, name: "Table", price: 20, quantity: 2 },
-    { pid: 2, name: "Washing machine", price: 2000, quantity: 1 }
+    { pid: 1, name: "lamp", price: 20, quantity: 2 },
+    { pid: 2, name: "table", price: 2000, quantity: 1 }
   ]);
   const [discount] = useState(0);
   const [deliveryfee] = useState(50);
@@ -20,7 +20,7 @@ const Order = () => {
   const [date] = useState("2024-03-30");
   const [status] = useState("Completed");
 
-  const [fullname] = useState("Joe Go");
+  const [username] = useState("Joe Go");
   const [contactno] = useState("21800000");
   const [address] = useState("Under the Bridge of the Engineering Building, CUHK");
 
@@ -107,7 +107,7 @@ const Order = () => {
                     <h4>Customer Detail</h4>
                     <tr>
                         <td>Name: </td>
-                        <td>{fullname}</td>
+                        <td>{username}</td>
                     </tr>
                     <tr>
                         <td>Contact Number: </td>
@@ -146,7 +146,7 @@ class TRP extends React.Component {
     let link = '/product/' + this.props.data[i].pid;
     return (
       <tr>
-        <td><img height="100" src={"/photo/" + this.props.data[i].pid + ".png"} /></td>
+        <td><img height="100" src={"/photo/" + this.props.data[i].pid+"_"+this.props.data[i].name + ".png"} /></td>
         <td>
           <Link to={link}> {this.props.data[i].name}</Link>
         </td>

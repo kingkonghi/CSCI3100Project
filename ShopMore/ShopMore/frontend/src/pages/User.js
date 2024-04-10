@@ -2,34 +2,59 @@
 // Student ID : 1155157376, 1155141896, 1155149600, 1155158054, 1155176122
 import "../index.scss"
 import * as React from 'react';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import { Card, Container, Row, Col, ListGroup, Form, FormControl, Button, InputGroup, Spinner } from 'react-bootstrap';
+import axios from 'axios';
 
+const api = axios.create({
+  baseURL: 'http://127.0.0.1:8000/',
+});
 
 const User = () => {
-    const [formValues, setFormValues] = useState({
-      username: 'givemelenggradepls',
-      fullname: 'Joe Go',
-      email: 'sleepy@gmail.com',
-      contactno: '',
-      address: '',
-      password: '',
-    });
-
-    const [paymentMethod, setPaymentMethod] = useState('');
-
-    const renderPaymentInterface = () => {
-      switch (paymentMethod) {
-          case 'Card':
-              return <CardPayment />;
-          case 'PayPal':
-              return <PayPalPayment />;
-          default:
-              return <></>;
-      }
+  const initialFormValues = {
+    username: '',
+    email: '',
+    contactno: '',
+    address: '',
+    password: '',
   };
+
+  const [formValues, setFormValues] = useState(initialFormValues);
+  const [paymentMethod, setPaymentMethod] = useState('');
+  
+  const fetchUserData = async () => {
+    try {
+      const token = 'Token '+ localStorage.getItem('token');
+      const userid = localStorage.getItem('userid');
+
+      const response = await api.post('user/', {
+        userID: userid
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      });
+
+      const userData = response.data.fields[0];
+      setFormValues(prevValues => ({
+        ...prevValues,
+        username: userData.username,
+        email: userData.email,
+        contactno: userData.contactno,
+        address: userData.address,
+        password: userData.password
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
   
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -41,12 +66,11 @@ const User = () => {
         
         setFormValues((prevValues) => ({ ...prevValues, [name]: processedValue }));
       };
-  
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      // Perform form submission logic here
-      console.log(formValues);
-    };
+
+      const handleSubmit = async (event) => {
+        event.preventDefault();
+        
+      };
   
     return (
       <>
@@ -62,13 +86,13 @@ const User = () => {
             <div className="editinfo">
                 <form id="general" onSubmit={handleSubmit}>
                     <p id="row">
-                        <label for="name" class="cell label">Full Name</label>
+                        <label for="name" class="cell label">User Name</label>
                         <input 
                             id="name" 
                             type="text" 
-                            name="fullname" 
-                            placeholder="Full Name" 
-                            value={formValues.fullname} 
+                            name="username" 
+                            placeholder="User Name" 
+                            value={formValues.username} 
                             onChange={handleInputChange}
                             required
                         />
@@ -77,41 +101,41 @@ const User = () => {
                     <p id="row">
                         <label for="email" class="cell label">Email</label>
                         <input
-                            id="email"
-                            type="email"
-                            name="email"
-                            placeholder="Email"
-                            value={formValues.email}
-                            onChange={handleInputChange}
-                            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
-                            required
+                          id="email"
+                          type="email"
+                          name="email"
+                          placeholder="Email"
+                          value={formValues.email}
+                          onChange={handleInputChange}
+                          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
+                          required
                         />
                     </p>
                     <br/>
                     <p id="row">
                         <label for="phone" class="cell label">Contact Number (+852)</label>
                         <input
-                            id="phone"
-                            type="tel"
-                            name="contactno"
-                            placeholder="Contact Number"
-                            value={formValues.contactno}
-                            onChange={handleInputChange}
-                            pattern="[0-9]{8}"
-                            required
+                          id="phone"
+                          type="tel"
+                          name="contactno"
+                          placeholder="Contact Number"
+                          value={formValues.contactno}
+                          onChange={handleInputChange}
+                          pattern="[0-9]{8}"
+                          required
                         />
                     </p>
                     <br/>
                     <p id="row">
                         <label for="address" class="cell label">Address</label>
                         <input
-                            id="address"
-                            type="text"
-                            name="address"
-                            placeholder="Address"
-                            value={formValues.address}
-                            onChange={handleInputChange}
-                            required
+                          id="address"
+                          type="text"
+                          name="address"
+                          placeholder="Address"
+                          value={formValues.address}
+                          onChange={handleInputChange}
+                          required
                         />
                     </p>
                     <br/>
@@ -156,22 +180,9 @@ const User = () => {
                         )}
                       </Popup>
                     </p>
-
-                    <br/>
-                    <Form className="my-3">
-                        <Form.Group controlId="paymentMethodSelect">
-                        <Form.Label><strong>Default Payment Method</strong></Form.Label>
-                        <Form.Select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
-                            <option value="">Choose...</option>
-                            <option value="Card">Credit Card / Debit Card</option>
-                            <option value="PayPal">PayPal</option>
-                        </Form.Select>
-                        </Form.Group>
-                    </Form>
-                    {renderPaymentInterface()}
                     <br />
                     <p id="ButtonContainer">
-                        <input type="submit" value="Cancel"/>
+                        <input type="reset" value="Cancel"/>
                         <input type="submit" value="Save Changes" />
                     </p>
                 </form>
