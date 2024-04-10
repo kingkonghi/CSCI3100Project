@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
 class UserListSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = UserList
-        fields = ['user_id', 'accountType', 'username', 'password', 'email', 'profilePhoto', 'address']
+        fields = ['user_id', 'accountType', 'username', 'password', 'email', 'profilePhoto', 'address', 'phoneNo']
 
 class FavoriteListSerializer(serializers.ModelSerializer):
     class Meta:
