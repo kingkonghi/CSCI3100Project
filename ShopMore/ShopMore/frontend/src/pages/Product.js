@@ -15,29 +15,171 @@ const Product = () => {
 
     let {pid} = useParams()
     let navigate = useNavigate();
+    const [message, setMessage] = useState('');
+    const [message2, setMessage2] = useState('');
     const [selfRate, setSelfRate] = useState(5);
     const [selfLove, setSelfLove] = useState(true);
-    const userId = 1
+    const [productData, setProductData] = useState([])
+    const [relatedProduct, setRelatedProduct] = useState([])
+    const [render, setRender] = useState(false)
+    const [signal2, set2] = useState(false)
+    const authToken = 'b09782e294306013522c0610bbbe5e601e021b3b'
+    const userId = localStorage.getItem('userid')
+    const userName = localStorage.getItem('username')
+    const accountType = localStorage.getItem('accountType')
 
-    const userName = "User5566"
+    const loadProd = async () => { 
+        const response = await axios.get( 
+            'http://127.0.0.1:8000/product/' + pid 
+        ); 
+        setMessage(response.data.item)
+        console.log("single product fetch")
+        const responseAll = await axios.get( 
+            'http://127.0.0.1:8000/product'
+        ); 
+        setMessage2(responseAll.data.item)
+        set2(true)
+        console.log("product fetch")
+    }; 
 
-    const allProductData = [ //[TBI] All product
-        [1, "Table", 20, 1000, [["User0112","The prefect table with high quality."],["Bernald Meriq","Cheapest table I've seen in a while."]], [5.0, 4.5], "Made with the rare oakk wood found in India, the finest table that you could ever found.\nThe manufacturer is origin from England with over 700 years of enterprise and once a producer for the royal family.\n\nOrigin: London, England"],
-        [2, "Washing machine", 20, 2000, [["User0445","Been using it for 10 years, perfect."],["Marina C.","Flawless."]], [5.0, 5.0], "Assist with AI production line, a washing machine for life."],
-        [3, "Lamp", 20, 100, [["ProCommentor","Nice Lamp!"],["User0002","A little decoration to my pretty room."]], [5.0, 4.5], "Brighten your room with this lamp made with masters based in Germany."]
-    ] //id, name, price, stock, reviews (array), rating (array), desc
+    const loadProd2 = async () => {
 
-    let productData = []
-    for (let i=0; i<allProductData.length; i++){
-        if (allProductData[i][0]==pid){
-            productData.push(allProductData[i])
+        const review = await axios.get( 
+        'http://127.0.0.1:8000/review/' + pid
+        )
+        let temp = []
+        temp.push(message.itemID)
+        temp.push(message.itemName)
+        temp.push(message.itemQuantity)
+        temp.push(message.itemPrice)
+        if (review.data.message.length==0){
+            temp.push([["N/A", "no one have commented yet"]])
+            temp.push([0])
+        } else {
+            temp.push([])
+            temp.push([])
+            for (let j=0; j<review.data.message.length; j++){
+                temp[4].push([review.data.message[j].userID,review.data.message[j].Review])
+                temp[5].push([review.data.message[j].Rating])
+            }                
         }
+        temp.push(message.itemDescription)
+        temp.push(message.itemImage)
+        temp.push(message.itemCategory)
+        setProductData(temp)
+
+        let relatedItem = []
+
+        let relatedCount = 0
+
+        let unRelatedItem = []
+
+        let unrelatedCount = 0
+
+        let filter = message.itemCategory.split(",")
+    
+        for (let i=0;i<message2.length;i++){
+            if (message2[i].itemID == message.itemID){
+                continue
+            }
+            const review = await axios.get( 
+            'http://127.0.0.1:8000/review/' + message2[i].itemID
+            )
+            let temp = []
+            let relateInd = false
+            temp.push(message2[i].itemID)
+            temp.push(message2[i].itemName)
+            temp.push(message2[i].itemDescription)
+            temp.push(message2[i].itemImage)
+            for(let i=0;i<filter.length;i++){
+                if(message2[i].itemCategory.split(",").includes(filter[i]) && relatedCount<4 && message.itemQuantity>0){
+                    relatedItem.push(temp)
+                    relateInd = true
+                    relatedCount++
+                    break
+                }
+            }
+            if (!relateInd && unrelatedCount<4 && message.itemQuantity>0){
+                unRelatedItem.push(temp)
+                unrelatedCount++
+            }
+            if(relatedCount==4){
+                break
+            }
+        }
+        let temp2 = []
+        if(relatedCount==4){
+            temp2 = relatedItem
+        } else if (unRelatedItem.length + relatedItem.length<4) {
+            temp2 = relatedItem.concat(unRelatedItem)
+        } else {
+            temp2 = relatedItem.concat(unRelatedItem.slice(0,4-relatedCount))
+        }
+        setRelatedProduct(temp2)
+        console.log("search fetched")
+        setRender(true)
     }
-    productData = productData[0]
-    const relatedProduct = [ //[TBI] Related product
-        [3, "Lamp", "Brighten your room with this lamp made with masters based in Germany."], 
-        [2, "Washing machine", "Assist with AI production line, a washing machine for life."]
-    ]
+
+     /*const favoriteEdit = async () => {
+        if(accountType==1||accountType==0){
+            const favStatus = await axios.get( 
+                'http://127.0.0.1:8000/display_favorite/',{
+                        headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + authToken
+                        }
+                    }
+                )
+            let favId = []
+            for(let i=0; i<favStatus.data.length;i++){
+                favId.push(favStatus.data[i].itemid)
+            }
+            if(favId.includes(productData[0]) && selfLove){
+                alert('Some error occurs, setting item in favorite list for now, try later.')
+                setSelfLove(!selfLove)
+            } else if (!favId.includes(productData[0]) && !selfLove){
+                alert('Some error occurs, setting item not in favorite list for now, try later.')
+                setSelfLove(!selfLove)
+            } else if (favId.includes(productData[0]) && !selfLove){
+                const favStatus = await axios.delete( 
+                    'http://127.0.0.1:8000/delete_favorite/'+productData[0]+'/',{
+                            headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Token ' + authToken
+                            }
+                        }
+                    )
+            } else if (!favId.includes(productData[0]) && selfLove){
+                const favStatus = await axios.post( 
+                    'http://127.0.0.1:8000/add_to_favorite/',{
+                        item_id: productData[0]
+                    }, {
+                            headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Token ' + authToken
+                            }
+                        }
+                    )
+            }
+        } else {
+            alert("You have to login to add item to favorite list!")
+            setSelfLove(false)
+        }
+     }*/
+
+    useEffect(() => {
+        loadProd(); 
+    },[]);
+
+    useEffect(() => {
+        if(signal2){
+            loadProd2();
+        }
+    },[message2]);
+
+    /*useEffect(() => {
+        favoriteEdit();
+    },[selfLove]);*/
 
     function redirect(id){
         navigate('/product/' + id)
@@ -45,27 +187,32 @@ const Product = () => {
     
     function addNotification(stock){
         let currNo = Number(document.getElementById("priceTag").value)
-        if (currNo >stock){
-            alert("Not enough stock! Please select a valid number.");
-        } else if (currNo == 0){
-            alert("Please enter a valud non-zero number.")
+        if (accountType != 0 && accountType != 1){
+            alert("You are not logged in! Log in to enjoy the service.")
         } else {
-            let loadPost = async () => { 
-                const response = await axios.get(
-                    'http://127.0.0.1:8000/cart/'+ userId
-                )
-                if (response.data.cart[pid] + currNo > stock){
-                    alert("Not enough stock! Please select a valid number. Note that you already put some of this product in your cart.");
-                } else{
-                    const createCart = await axios.get( 
-                        'http://127.0.0.1:8000/cart/add/'+userId+'/'+pid+'/'+currNo+'/'
-                    ); 
-                    alert(createCart.data.message)
+            if (currNo >stock){
+                alert("Not enough stock! Please select a valid number.");
+            } else if (currNo == 0){
+                alert("Please enter a valud non-zero number.")
+            } else {
+                let loadPost = async () => { 
+                    const response = await axios.get(
+                        'http://127.0.0.1:8000/cart/'+ userId
+                    )
+                    if (response.data.cart[pid] + currNo > stock){
+                        alert("Not enough stock! Please select a valid number. Note that you already put some of this product in your cart.");
+                    } else{
+                        const createCart = await axios.get( 
+                            'http://127.0.0.1:8000/cart/add/'+userId+'/'+pid+'/'+currNo+'/'
+                        ); 
+                        alert(createCart.data.message)
+                        }
                     }
-                }
-    
-                loadPost(); 
-        }; 
+        
+                    loadPost(); 
+            }; 
+
+        }
         
     }
 
@@ -97,110 +244,114 @@ const Product = () => {
 
     return (
         <>
-            <div id="product">
-                <table id="productSession">
-                    <tr>
-                        <td id="imgArea">
-                            <img src={"/photo/"+productData[0]+".png"} alt={productData[1]} />
-                        </td>
-                        <td id="productDesc">
-                            <p className="titleBar">{productData[1] + " "}<p id="like">{selfLove? <span><FaHeart onClick={()=>setSelfLove(!selfLove)}/> You have liked this product!</span>:<span><FaRegHeart onClick={()=>setSelfLove(!selfLove)}/> This product is not in your favorite list yet...</span>}</p></p>
-                            <pre>{productData[6] + "\n\n*Remaining stock(s): " + productData[2] +"\n\n*Price: $" + productData[3]}</pre>
-                            <div id="toOrder">
-                                <p>Quantity: </p>
-                                <FaMinus onClick={()=>decreaseQ()}/><input type="number" id="priceTag" placeholder={0} /><FaPlus onClick={()=>increaseQ()}/>
-                                <button type="button" className="directButton" onClick={()=>addNotification(productData[2])}>Add to shopping cart &rarr;</button>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-                <hr/>
-                <div id="otherProductSession">
-                    <p>You might also found these products interesting...</p>
-                    <table>
+            {render?
+                <div id="product">
+                    <table id="productSession">
                         <tr>
-                            {
-                                relatedProduct.map((element, index)=>{
-                                    return (
-                                        <span>
-                                            <td className="productCard">
-                                                <img src={"/photo/" + element[0]+".png"} alt={element[1]} /> 
-                                                <hr/>
-                                                <p className="cardTitle">{element[1]}</p>
-                                                <p className="cardInfo">{element[2]}</p>
-                                                <button type="button" onClick={()=>redirect(element[0])}>Check it out now!</button>
-                                            </td>
-                                            <td className="placeholder"></td>
-                                        </span>
-                                    )
-                                })
-                            }
+                            <td id="imgArea">
+                                <img src={"/photo/"+productData[7]} alt={productData[1]} />
+                            </td>
+                            <td id="productDesc">
+                                <p className="titleBar">{productData[1] + " "}<p id="like">{selfLove? <span><FaHeart onClick={()=>setSelfLove(!selfLove)}/> You have liked this product!</span>:<span><FaRegHeart onClick={()=>setSelfLove(!selfLove)}/> This product is not in your favorite list yet...</span>}</p></p>
+                                <pre>{productData[6] + "\n\n*Remaining stock(s): " + productData[2] +"\n\n*Price: $" + productData[3]}</pre>
+                                <div id="toOrder">
+                                    <p>Quantity: </p>
+                                    <FaMinus onClick={()=>decreaseQ()}/><input type="number" id="priceTag" placeholder={0} /><FaPlus onClick={()=>increaseQ()}/>
+                                    <button type="button" className="directButton" onClick={()=>addNotification(productData[2])}>Add to shopping cart &rarr;</button>
+                                </div>
+                            </td>
                         </tr>
                     </table>
-                </div>
-                <hr/>
-                <div id="commentSession">
-                    {
-                        productData[4].map((element, index)=>{
-                            let rating = productData[5][index]
-                            let ratingHolders = [0,1,2,3,4].map((element)=>{
-                                let ratingHolder = null
-                                if(rating>=element+1){
-                                    ratingHolder = <FaStar/>
-                                } else {
-                                    if(rating == element+0.5){
-                                        ratingHolder = <FaRegStarHalfStroke />
+                    <hr/>
+                    <div id="otherProductSession">
+                        <p>You might also found these products interesting...</p>
+                        <table>
+                            <tr>
+                                {
+                                    relatedProduct.map((element, index)=>{
+                                        return (
+                                            <span>
+                                                <td className="productCard">
+                                                    <img src={"/photo/" + element[3]} alt={element[1]} /> 
+                                                    <hr/>
+                                                    <p className="cardTitle">{element[1]}</p>
+                                                    <p className="cardInfo">{element[2]}</p>
+                                                    <button type="button" onClick={()=>redirect(element[0])}>Check it out now!</button>
+                                                </td>
+                                                <td className="placeholder"></td>
+                                            </span>
+                                        )
+                                    })
+                                }
+                            </tr>
+                        </table>
+                    </div>
+                    <hr/>
+                    <div id="commentSession">
+                        {
+                            productData[4].map((element, index)=>{
+                                let rating = productData[5][index]
+                                let ratingHolders = [0,1,2,3,4].map((element)=>{
+                                    let ratingHolder = null
+                                    if(rating>=element+1){
+                                        ratingHolder = <FaStar/>
                                     } else {
-                                        ratingHolder = <FaRegStar />
+                                        if(rating == element+0.5){
+                                            ratingHolder = <FaRegStarHalfStroke />
+                                        } else {
+                                            ratingHolder = <FaRegStar />
+                                        }
+                                    }
+                                    return (ratingHolder)
+                                })
+                                return (
+                                    <div className="comments">
+                                        <p className="userName">{element[0] + ":"}</p> 
+                                        <span className="star">{ratingHolders}</span>
+                                        <p className="userComment">{element[1]}</p>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                    <hr/>
+                    <div id="ratingSession">
+                        {accountType==1||accountType==0? <p>{userName} + ", we need your comment!"</p>:<p>Log in to comment!</p>}
+                        {accountType==1||accountType==0? 
+                        <p id="rate">
+                        {
+                            ["I kinda like this product!", "Looks fine to me~", "I am not into this."].map((element, index)=>{
+                                if (selfRate>4 && index == 0){
+                                    return <span id="Rating">{element}</span>
+                                } else if (selfRate>1.5 && selfRate<4.5  && index == 1){
+                                    return <span id="Rating">{element}</span>
+                                } else if (selfRate<2 && index == 2) {
+                                    return <span id="Rating">{element}</span>
+                                }
+                            })
+                        }
+                        { 
+                            [0,1,2,3,4].map((element)=>{
+                                let ratingHolder = null
+                                if(selfRate>=element+1){
+                                    ratingHolder = <FaStar id={element} onMouseOver={(e)=>changeRate(element,e)}/>
+                                } else {
+                                    if(selfRate == element+0.5){
+                                        ratingHolder = <FaRegStarHalfStroke id={element} onMouseOver={(e)=>changeRate(element,e)}/>
+                                    } else {
+                                        ratingHolder = <FaRegStar id={element} onMouseOver={(e)=>changeRate(element,e)}/>
                                     }
                                 }
-                                return (ratingHolder)
+                                return ratingHolder
                             })
-                            return (
-                                <div className="comments">
-                                    <p className="userName">{element[0] + ":"}</p> 
-                                    <span className="star">{ratingHolders}</span>
-                                    <p className="userComment">{element[1]}</p>
-                                </div>
-                            )
-                        })
-                    }
-                </div>
-                <hr/>
-                <div id="ratingSession">
-                    <p>{userName + ", we need your comment!"}</p>
-                    <p id="rate">
-                    {
-                        ["I kinda like this product!", "Looks fine to me~", "I am not into this."].map((element, index)=>{
-                            if (selfRate>4 && index == 0){
-                                return <span id="Rating">{element}</span>
-                            } else if (selfRate>1.5 && selfRate<4.5  && index == 1){
-                                return <span id="Rating">{element}</span>
-                            } else if (selfRate<2 && index == 2) {
-                                return <span id="Rating">{element}</span>
-                            }
-                        })
-                    }
-                    { 
-                        [0,1,2,3,4].map((element)=>{
-                            let ratingHolder = null
-                            if(selfRate>=element+1){
-                                ratingHolder = <FaStar id={element} onMouseOver={(e)=>changeRate(element,e)}/>
-                            } else {
-                                if(selfRate == element+0.5){
-                                    ratingHolder = <FaRegStarHalfStroke id={element} onMouseOver={(e)=>changeRate(element,e)}/>
-                                } else {
-                                    ratingHolder = <FaRegStar id={element} onMouseOver={(e)=>changeRate(element,e)}/>
-                                }
-                            }
-                            return ratingHolder
-                        })
-                    }
-                    </p>
-                    <textarea id="userComment" placeholder="Write down your thought..."></textarea>
-                    <button type="button" onClick={()=>sendingMessage()}>Send!</button>
-                </div>
-            </div>
+                        }
+                        </p>:<p></p>}
+                        {accountType==1||accountType==0?
+                        <div><textarea id="userComment" placeholder="Write down your thought..."></textarea>
+                        <button type="button" onClick={()=>sendingMessage()}>Send!</button></div>:<div></div>}
+                    </div>
+                </div>:<div>Rendering...</div>
+            }
         </>
     );
 }
