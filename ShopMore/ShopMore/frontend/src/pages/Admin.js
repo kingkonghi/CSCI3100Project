@@ -6,7 +6,7 @@ const Admin = () => {
     const [view, setView] = useState('users');
     const [users, setUsers] = useState([]);
     const [products, setProducts] = useState([]);
-    const [userForm, setUserForm] = useState({ id: 'New', username: '', password: '', phone: '', email: '', accountType: '', profilePhoto: '', address: '' });
+    const [userForm, setUserForm] = useState({ id: 'New', username: '', password: '', phoneNo: '', email: '', accountType: '', profilePhoto: '', address: '' });
     const [productForm, setProductForm] = useState({ id: 'New', itemName: '', itemPrice: '', itemQuantity: '', itemDescription: '', itemCategory: '', itemImage: '', itemStatus: '' });
 
     const token = 'Token b09782e294306013522c0610bbbe5e601e021b3b';
@@ -18,6 +18,7 @@ const Admin = () => {
 
     const fetchUsers = async () => {
         const response = await axios.get('http://127.0.0.1:8000/Admin/user/display/', { headers: { Authorization: token } });
+        console.log(response.data);
         setUsers(response.data);
     };
 
@@ -35,7 +36,7 @@ const Admin = () => {
     };
 
     // Reset forms
-    const resetUserForm = () => setUserForm({ id: 'New', username: '', password: '', phone: '', email: '', accountType: '', profilePhoto: '', address: '' });
+    const resetUserForm = () => setUserForm({ id: 'New', username: '', password: '', phoneNo: '', email: '', accountType: '', profilePhoto: '', address: '' });
     const resetProductForm = () => setProductForm({ id: 'New', itemName: '', itemPrice: '', itemQuantity: '', itemDescription: '', itemCategory: '', itemImage: '', itemStatus: '' });
 
     // Submit forms
@@ -121,6 +122,17 @@ const Admin = () => {
                                 required
                             />
                         </Form.Group>
+                        <Form.Group controlId="formPhoneNo">
+                            <Form.Label>Phone No.</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="phoneNo"
+                                placeholder="Phone No."
+                                value={userForm.phoneNo}
+                                onChange={handleUserChange}
+                                required
+                            />
+                        </Form.Group>
                         <Form.Group controlId="formEmail">
                             <Form.Label>Email</Form.Label>
                             <Form.Control
@@ -178,6 +190,7 @@ const Admin = () => {
                                 <th>ID</th>
                                 <th>Username</th>
                                 <th>Password</th>
+                                <th>Phone</th>
                                 <th>Email</th>
                                 <th>Account Type</th>
                                 <th>Profile Photo</th>
@@ -191,6 +204,7 @@ const Admin = () => {
                                     <td>{user.user_id}</td>
                                     <td>{user.username}</td>
                                     <td>{user.password}</td>
+                                    <td>{user.phoneNo}</td>
                                     <td>{user.email}</td>
                                     <td>{user.accountType}</td>
                                     <td>{user.profilePhoto}</td>
