@@ -43,6 +43,19 @@ const Product = () => {
     }; 
 
     const loadProd2 = async () => {
+        const favStatus = await axios.get( 
+            'http://127.0.0.1:8000/display_favorite/',{
+                    headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + authToken
+                    }
+                }
+            )
+        let favId = []
+        for(let i=0; i<favStatus.data.length;i++){
+            favId.push(parseInt(favStatus.data[i].itemid))
+        }
+        setSelfLove(favId.includes(pid))
 
         const review = await axios.get( 
         'http://127.0.0.1:8000/review/' + pid
@@ -133,10 +146,13 @@ const Product = () => {
                 )
             let favId = []
             for(let i=0; i<favStatus.data.length;i++){
-                favId.push(favStatus.data[i].itemid)
+                favId.push(parseInt(favStatus.data[i].itemid))
             }
-            console.log(favId)
+            console.log(selfLove)
             setSelfLove(!selfLove)
+            console.log(favId)
+            console.log(productData[0])
+            console.log(favId.includes(productData[0]))
             console.log(selfLove)
             if(favId.includes(productData[0]) && selfLove){
                 alert('Some error occurs, setting item in favorite list for now, try later.')
@@ -242,6 +258,14 @@ const Product = () => {
 
     function sendingMessage(){
         let message = document.getElementById("userComment")
+        let loadPost = async () => { 
+            console.log('http://127.0.0.1:8000/review/add/' + pid + '/' + userId + '/' + message.value + '/' + selfRate +'/')
+            const response = await axios.get(
+                'http://127.0.0.1:8000/review/add/' + pid + '/' + userId + '/' + message.value + '/' + selfRate +'/'
+            )
+            console.log(response)
+        }
+        loadPost(); 
         message.value = ""
         alert("Comment sent!")
     }
