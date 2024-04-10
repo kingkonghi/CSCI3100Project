@@ -8,13 +8,13 @@ Authorization: Token d5219af605fe3da8ce570d8422e11f5e8090c4e7
 POST http://127.0.0.1:8000/register/
 Content-Type: application/json
 
-{"username": "Tony", "password": "Tonypw", "email": "Tony@gmail.com"}
+{"username": "user1", "password": "user1pw", "email": "user1@gmail.com"}
 
 ###
 POST http://127.0.0.1:8000/login/
 Content-Type: application/json
 
-{"username": "John123", "password": "John123pw"}
+{"username": "admin1", "password": "shopmoreadmin1pw"}
 
 ###
 GET http://127.0.0.1:8000/test_view/
