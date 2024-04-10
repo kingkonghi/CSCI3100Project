@@ -48,5 +48,5 @@ def remove_item(userID,itemID):
         
 def remove_all_items(userID):
         if cart.objects.filter(userID=userID).exists():
-                cart_items = cart.objects.filter(user=userID)
+                cart_items = cart.objects.filter(userID=userID)
                 cart_items.delete()

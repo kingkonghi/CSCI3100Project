@@ -27,7 +27,7 @@ Content-Type: application/json
 POST http://127.0.0.1:8000/login/
 Content-Type: application/json
 
-{"username": "John123", "password": "John123pw"}
+{"username": "user1", "password": "user1pw"}
 
 ###
 GET http://127.0.0.1:8000/test_view/
@@ -102,5 +102,11 @@ Authorization: Token b09782e294306013522c0610bbbe5e601e021b3b
 DELETE   http://127.0.0.1:8000/Admin/user/delete/9/
 Content-Type: application/json
 Authorization: Token b09782e294306013522c0610bbbe5e601e021b3b
+
+{}
+###
+DELETE http://127.0.0.1:8000/cart/remove/13/*/
+Content-Type: application/json
+Authorization: Token ccc016a5bdfe22ccd8c07139ec00c1cd298311d3
 
 {}
