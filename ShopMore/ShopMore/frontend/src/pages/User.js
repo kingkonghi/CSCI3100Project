@@ -5,7 +5,6 @@ import * as React from 'react';
 import {useState, useEffect} from 'react';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
-import { Card, Container, Row, Col, ListGroup, Form, FormControl, Button, InputGroup, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 
 const api = axios.create({
@@ -19,11 +18,16 @@ const User = () => {
     contactno: '',
     address: '',
     password: '',
+    newPassword: '',
+    confirmPassword: ''
   };
 
   const [formValues, setFormValues] = useState(initialFormValues);
-  const [paymentMethod, setPaymentMethod] = useState('');
   
+  const handleFormReset = () => {
+    fetchUserData();
+  };
+
   const fetchUserData = async () => {
     try {
       const token = 'Token '+ localStorage.getItem('token');
@@ -39,14 +43,13 @@ const User = () => {
       });
 
       const userData = response.data.fields[0];
-      setFormValues(prevValues => ({
-        ...prevValues,
+      setFormValues({
         username: userData.username,
         email: userData.email,
         contactno: userData.contactno,
         address: userData.address,
         password: userData.password
-      }));
+      });
     } catch (error) {
       console.log(error);
     }
@@ -69,7 +72,91 @@ const User = () => {
 
       const handleSubmit = async (event) => {
         event.preventDefault();
-        
+      
+        try {
+          const token = 'Token ' + localStorage.getItem('token');
+          const userid = localStorage.getItem('userid');
+      
+          const response = await api.post(
+            'user/edit_info/',
+            {
+              userID: userid,
+              username: formValues.username,
+              email: formValues.email,
+              contactno: formValues.contactno,
+              address: formValues.address,
+              password: formValues.password,
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: token,
+              },
+            }
+          );
+      
+          // Handle the response or perform any additional actions
+          console.log(response.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      const handlePopupSubmit = (event) => {
+        event.preventDefault();
+    
+        const { oldPassword, newPassword, confirmPassword } = event.target.elements;
+    
+        if (oldPassword.value !== formValues.password) {
+          alert('Original password is incorrect.');
+          return;
+        }
+    
+        if (newPassword.value !== confirmPassword.value) {
+          alert('New password and confirm password do not match.');
+          return;
+        }
+    
+        // Update the password in the state
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          password: newPassword.value,
+          newPassword: '',
+          confirmPassword: '',
+        }));
+    
+        // Send a request to update the password in the database
+        updatePassword(newPassword.value);
+      };
+    
+      const updatePassword = async (newPassword) => {
+        try {
+          const token = 'Token ' + localStorage.getItem('token');
+          const userid = localStorage.getItem('userid');
+    
+          const response = await api.post(
+            'user/edit_info/',
+            {
+              userID: userid,
+              username: formValues.username,
+              email: formValues.email,
+              contactno: formValues.contactno,
+              address: formValues.address,
+              password: newPassword,
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: token,
+              },
+            }
+          );
+    
+          // Handle the response or perform any additional actions
+          console.log(response.data);
+        } catch (error) {
+          console.log(error);
+        }
       };
   
     return (
@@ -84,7 +171,7 @@ const User = () => {
 
             <h3>Edit User Information</h3>
             <div className="editinfo">
-                <form id="general" onSubmit={handleSubmit}>
+                <form id="general" onSubmit={handleSubmit} onReset={handleFormReset}>
                     <p id="row">
                         <label for="name" class="cell label">User Name</label>
                         <input 
@@ -152,7 +239,7 @@ const User = () => {
                           <div className="changepw">
                             <div className='content' style={{ maxWidth: '400px', margin: '0 auto' }}>
                               <h3 style={{ marginBottom: '20px', textAlign: 'center' }}>Set New Password</h3>
-                              <form id="changepw" style={{ display: 'table' }}>
+                              <form id="changepw" style={{ display: 'table' }} onSubmit={handlePopupSubmit}>
                                 <p style={{ display: 'table-row' }}>
                                   <label htmlFor="oldPassword" className="cell label" 
                                   style={{ display: 'table-cell', paddingRight: '20px' }}>Original Password</label>
@@ -192,84 +279,5 @@ const User = () => {
       </>
     );
   };
-
-  const CardPayment = () => {
-    const [cardDetails, setCardDetails] = useState({
-        cardNumber: '',
-        cardHolderName: '',
-        expiryMonth: '',
-        expiryYear: '',
-        cvv: '',
-    });
-
-    const handleChange = (e) => {
-        setCardDetails({ ...cardDetails, [e.target.name]: e.target.value });
-    };
-    
-    return (
-          <div className="default-card">
-                    
-                    <Form.Group className="mb-3">
-                        <Form.Label>Card Number</Form.Label>
-                        <Form.Control
-                        type="text"
-                        name="cardNumber"
-                        placeholder="Card Number"
-                        value={cardDetails.cardNumber}
-                        onChange={handleChange}
-                        required
-                        />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>Cardholder Name</Form.Label>
-                        <Form.Control
-                        type="text"
-                        name="cardHolderName"
-                        placeholder="Cardholder name"
-                        value={cardDetails.cardHolderName}
-                        onChange={handleChange}
-                        required
-                        />
-                    </Form.Group>
-
-                    <Form.Label>Expiry Date</Form.Label>
-                    <InputGroup className="mb-3">
-                        <FormControl
-                        placeholder="MM"
-                        name="expiryMonth"
-                        value={cardDetails.expiryMonth}
-                        onChange={handleChange}
-                        style={{ maxWidth: '70px' }}
-                        required
-                        />
-                        <FormControl
-                        placeholder="YY"
-                        name="expiryYear"
-                        value={cardDetails.expiryYear}
-                        onChange={handleChange}
-                        style={{ maxWidth: '70px' }}
-                        required
-                        />
-                        <FormControl
-                        placeholder="CVV"
-                        name="cvv"
-                        value={cardDetails.cvv}
-                        onChange={handleChange}
-                        style={{ maxWidth: '70px' }}
-                        required
-                        />
-                    </InputGroup>
-          </div>
-    );
-};
-
-const PayPalPayment = () => {
-  return (
-      <div>
-      <p>Default PayPal Payment</p>
-      </div>
-  );
-};
 
 export default User;
