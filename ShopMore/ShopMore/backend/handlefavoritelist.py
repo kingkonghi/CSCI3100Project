@@ -13,10 +13,20 @@ def add_favorite(user_id, item_id):
 def delete_favorite_item(favorite_item):
     favorite_item = get_object_or_404(FavoriteList, favouriteID = favorite_item)
     favorite_item.delete()
-    return f"delete favorite item {favorite_item.favouriteID} with item id : {favorite_item.itemid} from user {favorite_item.userid} successfully"
+    return f"delete favorite item  {favorite_item.itemid} from user {favorite_item.userid} successfully"
 
 def get_favorite_list(user_id):
     favorite_items = FavoriteList.objects.filter(userid = user_id)
-    serialized_items = FavoriteListSerializer(favorite_items, many = True)
-    return serialized_items.data
+    serialized_items = []
+    for index, item in enumerate(favorite_items):
+        item_data = Item.objects.get(itemID=item.itemid)
+        serialized_item = {
+            'userid': item.userid,
+            'itemid': item.itemid,
+            'itemName': item_data.itemName,
+            'itemPrice': item_data.itemPrice,
+            'itemImage': item_data.itemImage
+        }
+        serialized_items.append(serialized_item)
+    return serialized_items
     
