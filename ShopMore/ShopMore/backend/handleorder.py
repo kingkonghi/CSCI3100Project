@@ -1,15 +1,15 @@
-from .database.connection import connect
+
 from .models.order import *
 from .models.user import User as UserList
+from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
 import json
+from ShopMore.serializers import OrderSerializer
 
-def list_order(orderID):
-        rows = Order.objects.filter(orderID=orderID).all()
-        out = ""
-        for i in rows:
-            out = i.orderItems
-        return out
+def list_order(userID):
+        orderlist =  Order.objects.filter(userID=userID).all()
+        orderlist_s = OrderSerializer(instance=orderlist, many=True)
+        return orderlist_s.data
 
 def add_order(userID, orderItems, total):
         orderDate = str(datetime.today().strftime('%Y-%m-%d'))

@@ -223,9 +223,9 @@ def cart_remove(request,userID, itemID):
 
 #Order
 @api_view(['GET'])
-def order(request,orderID):
-    row = list_order(orderID)
-    return Response({'message': row},status=status.HTTP_200_OK)
+def order(request,userID):
+    response = list_order(userID)
+    return Response({'message': response},status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def order_add(request,userID,orderItems,total):
