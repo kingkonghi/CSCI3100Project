@@ -4,7 +4,7 @@ import "../index.scss";
 import * as React from 'react';
 import { useState } from 'react';
 import { useParams, Link} from 'react-router-dom';
-import { Container, Row, Col, ListGroup, Form, Button, InputGroup } from 'react-bootstrap';
+import { Row, Col} from 'react-bootstrap';
 
 const Order = () => {
   let { oid } = useParams();
@@ -16,15 +16,13 @@ const Order = () => {
   const [discount] = useState(0);
   const [deliveryfee] = useState(50);
 
-  const [email] = localStorage.getItem("email");
-  const [date] = useState("2024-03-30");
-  const [status] = useState("Completed");
+  const [email] = useState(localStorage.getItem("email"));
+  const [date] = useState("2024-03-30"); //order
+  const [status] = useState("Completed"); //order
 
-  const [username] = localStorage.getItem("username");
-  const [contactno] = localStorage.getItem("phoneNo");
-  const [address] = useState("Under the Bridge of the Engineering Building, CUHK");
-
-  const [paymenttype] = useState("Credit Card / Debit Card");
+  const [username] = useState(localStorage.getItem("username"));
+  const [contactno] = useState(localStorage.getItem("phoneNo"));
+  const [address] = useState(localStorage.getItem("address"));
 
   // Calculate the total price
   const subtotalPayment = orderproduct.reduce(
@@ -122,10 +120,6 @@ const Order = () => {
             <Row style={{marginTop: "20px"}}>
                 <Col>
                 <h4>Payment Detail</h4>
-                    <tr>
-                        <td>Payment Method: </td>
-                        <td>{paymenttype}</td>
-                    </tr>
                     <tr>
                         <td>Payment Status: </td>
                         <td>Paid</td>

@@ -20,7 +20,6 @@ const Favour = () => {
       try {
         const response = await axios.get(url, { headers });
         const favoriteList = response.data;
-        console.log(favoriteList)
         setFavProduct(favoriteList);
       } catch (error) {
         console.error('Error:', error);
@@ -63,22 +62,38 @@ const Favour = () => {
 
 export default Favour;
 
+const deleteFavorite = async (itemID) => {
+  const url = `http://example.com/api/delete_favorite/${itemID}`;  // Replace with your API endpoint
+  const headers = {
+    'Content-Type': 'application/json',
+    // Add any additional headers if required
+  };
+
+  try {
+    const response = await axios.delete(url, { headers });
+    console.log(response.data);  // Handle the response as needed
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
 class TRF extends React.Component {
-  deleteRow = () => {
+  deleteRow = (itemID) => {
     const { i, data, updateFavProduct } = this.props;
     const updatedFp = [...data];
     updatedFp.splice(i, 1);
     updateFavProduct(updatedFp);
+    deleteFavorite(itemID);
   };
 
-  addToCart = async (userID, itemID) => {
-    const url = `http://127.0.0.1:8000/cart/add/${userID}/${itemID}/1`;
+  addToCart = async (userID, itemID, quantity) => {
+    const url = `http://127.0.0.1:8000/cart/add/${userID}/${itemID}/${quantity}`;
     const headers = {
       'Content-Type': 'application/json',
     };
 
     try {
-      const response = await axios.post(url, null, { headers });
+      const response = await axios.get(url, { headers });
       console.log(response.data);
     } catch (error) {
       console.error('Error:', error);
@@ -87,29 +102,29 @@ class TRF extends React.Component {
 
   render() {
     const i = this.props.i;
-    const link = '/product/' + this.props.data[i].pid;
-    const userid = localStorage.getItem("userid"); // Replace with the actual user ID
-    const itemID = this.props.data[i].pid; // Assuming the product ID is used as the item ID
+    const link = '/product/' + this.props.data[i].itemid;
+    const userid = localStorage.getItem("userid");
+    const itemID = this.props.data[i].itemid;
 
     return (
       <tr>
-        <td><img height="100" src={`/photo/${this.props.data[i].pid}_${this.props.data[i].name}.png`} /></td>
-        <td><Link to={link}>{this.props.data[i].name}</Link></td>
-        <td>{this.props.data[i].price}</td>
+        <td><img height="100" src={`/photo/${this.props.data[i].itemImage}`} /></td>
+        <td><Link to={link}>{this.props.data[i].itemName}</Link></td>
+        <td>{this.props.data[i].itemPrice}</td>
         <td>
-          <button 
+          <button
             type="button"
             className="btn btn-link cart-plus"
-            onClick={() => this.addToCart(userid, itemID)}
+            onClick={() => this.addToCart(userid, itemID, 1)}
           >
             <i className="bi bi-cart-plus-fill" style={{ color: 'green' }}></i>
           </button>
         </td>
         <td>
-          <button 
+          <button
             type="button"
             className="btn btn-link x-circle"
-            onClick={this.deleteRow}
+            onClick={() => this.deleteRow(itemID)}
           >
             <i className="bi bi-x-circle-fill" style={{ color: 'red' }}></i>
           </button>
