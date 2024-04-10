@@ -145,6 +145,16 @@ def add_to_favorite(request):
         return Response({'success': True, 'response': response})
     return Response({'success': False})
 
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+@csrf_exempt 
+def display_favorite(request):
+    user_id = request.user.id
+    favorite_list = get_favorite_list(user_id)
+    return JsonResponse(favorite_list, safe=False)
+    
+
 @api_view(['DELETE'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
