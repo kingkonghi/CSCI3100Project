@@ -45,3 +45,8 @@ def remove_item(userID,itemID):
                 return ""
         except Exception as e:
                 return e
+        
+def remove_all_items(userID):
+        if cart.objects.filter(userID=userID).exists():
+                cart_items = cart.objects.filter(user=userID)
+                cart_items.delete()

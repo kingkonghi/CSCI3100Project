@@ -131,6 +131,7 @@ def edit_info(request):
     response = edit_user(request.user, username=username, accountType=accountType, password=password, email=email, profilePhoto=profilePhoto, address=address, phoneNo=phoneNo)
 
     return JsonResponse({'message': response})
+
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -153,13 +154,25 @@ def display_favorite(request):
     user_id = request.user.id
     favorite_list = get_favorite_list(user_id)
     return JsonResponse(favorite_list, safe=False)
-    
+
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+@csrf_exempt  #csrf_exempt is just for testing, if frontend can get csrf_token, can remove this
+def add_to_favorite(request):
+    response = delete_favorite(request.data.item_id)
+    return Response({'success': True, 'response': response})
+
+
 
 @api_view(['DELETE'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 @csrf_exempt #csrf_exempt is just for testing, if frontend can get csrf_token, can remove this
-def delete_favorite(request, favorite_id):
+def delete_favorite(request, itemID):
+    user_id = request.user.id
+    favorite = get_object_or_404(FavoriteList, userid=user_id, itemid=itemID)
+    favorite_id = favorite.favouriteID
     response = delete_favorite_item(favorite_id)
     return Response({'success': True, 'response': response})
 
@@ -211,7 +224,10 @@ def cart_edit(request,userID, itemID, quantity):
 
 @api_view(['DELETE'])
 def cart_remove(request,userID, itemID):
-    response = remove_item(userID, itemID)
+    if itemID == "*":
+        response = remove_all_items(userID)
+    else:
+        response = remove_item(userID, itemID)
     return Response({'message': "Successfully deleted item from cart"}, status=status.HTTP_200_OK)
 
 #Order
