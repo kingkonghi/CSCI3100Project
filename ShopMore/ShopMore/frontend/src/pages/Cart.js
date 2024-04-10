@@ -1,6 +1,6 @@
 import "../index.scss";
 import React, { useState, useEffect } from 'react';
-import { Card, Container, Row, Col, ListGroup, Form, Button, InputGroup } from 'react-bootstrap';
+import { Card, Container, Row, Col, ListGroup, Form, Button, InputGroup, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -8,6 +8,7 @@ const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
     const [products, setProducts] = useState([]);
     const [userAddress, setUserAddress] = useState('');
+    const [quantityErrors, setQuantityErrors] = useState({ itemID: null, message: '' });
     const navigate = useNavigate();
     const userID = localStorage.getItem('userid');
     const authToken = 'Token b09782e294306013522c0610bbbe5e601e021b3b';
@@ -17,6 +18,62 @@ const Cart = () => {
         fetchProducts();
         fetchUserDetails();
     }, []);
+
+    const debounce = (fn, delay) => {
+        let timeoutId;
+        return function(...args) {
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+            timeoutId = setTimeout(() => {
+                fn(...args);
+            }, delay);
+        };
+    };
+
+    const updateQuantity = async (itemID, quantity) => {
+        await axios.get(`http://127.0.0.1:8000/cart/edit/${userID}/${itemID}/${quantity}/`, {
+            headers: {
+                Authorization: authToken
+            }
+        }).then(() => fetchCart());
+    };
+
+    const debouncedUpdateQuantity = debounce(updateQuantity, 500);
+
+    const handleQuantityChange = (itemID, quantity, availableQuantity) => {
+        if (quantity > availableQuantity) {
+            // Immediately show an error and revert the quantity after 3 seconds
+            setQuantityErrors(errors => ({ ...errors, [itemID]: 'Quantity exceeds available stock' }));
+            setTimeout(() => {
+                setQuantityErrors(errors => {
+                    const newErrors = { ...errors };
+                    delete newErrors[itemID];
+                    return newErrors;
+                });
+                // Revert the UI quantity
+                setCartItems(currentItems =>
+                    currentItems.map(item =>
+                        item.itemID === itemID ? { ...item, quantity: item.quantity } : item
+                    )
+                );
+            }, 3000);
+        } else {
+            setQuantityErrors(errors => {
+                const newErrors = { ...errors };
+                delete newErrors[itemID];
+                return newErrors;
+            });
+            // Update the quantity in the local state and debounce the backend update
+            setCartItems(currentItems =>
+                currentItems.map(item =>
+                    item.itemID === itemID ? { ...item, quantity: quantity } : item
+                )
+            );
+            debouncedUpdateQuantity(itemID, quantity);
+        }
+    };
+
 
     const fetchCart = async () => {
         const response = await axios.get(`http://127.0.0.1:8000/cart/${userID}/`, {
@@ -56,17 +113,8 @@ const Cart = () => {
         }, 0);
     };
 
-    const updateQuantity = async (itemID, quantity) => {
-        await axios.get(`http://127.0.0.1:8000/cart/edit/${userID}/${itemID}/${quantity}/`, {
-            headers: {
-                Authorization: authToken
-            }
-        });
-        fetchCart();
-    };
-
     const removeItem = async (itemID) => {
-        await axios.get(`http://127.0.0.1:8000/cart/remove/${userID}/${itemID}/`, {
+        await axios.delete(`http://127.0.0.1:8000/cart/remove/${userID}/${itemID}/`, {
             headers: {
                 Authorization: authToken
             }
@@ -102,19 +150,19 @@ const Cart = () => {
                                         <Form.Control
                                             type="number"
                                             min="1"
-                                            max={product.itemQuantity}
                                             value={cartItem.quantity}
                                             onChange={(e) => {
-                                                const newQuantity = parseInt(e.target.value);
-                                                if (newQuantity > 0 && newQuantity <= product.itemQuantity) {
-                                                    updateQuantity(cartItem.itemID, newQuantity);
-                                                }
+                                                const newQuantity = parseInt(e.target.value, 10);
+                                                handleQuantityChange(cartItem.itemID, newQuantity, product.itemQuantity);
                                             }}
                                         />
                                         <Button variant="outline-danger" onClick={() => removeItem(cartItem.itemID)}>
                                             Remove
                                         </Button>
                                     </InputGroup>
+                                    {quantityErrors[cartItem.itemID] && (
+                                        <Alert variant="danger">{quantityErrors[cartItem.itemID]}</Alert>
+                                    )}
                                 </ListGroup.Item>
                             );
                         })}
