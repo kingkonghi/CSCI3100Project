@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { Card, Container, Row, Col, ListGroup, Form, FormControl, Button, InputGroup, Spinner } from 'react-bootstrap';
 
-// Hard code data
-const CartData = [
-    [1, "Table", 20, 2, "Made with the rare oak wood found in India, the finest table that you..."],
-    [2, "Washing machine", 2000, 1, "Assist with AI production line, a washing machine for life."]
-];
+const authToken = 'Token b09782e294306013522c0610bbbe5e601e021b3b';
+
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 
 const CardPayment = ({ onSubmit }) => {
     const [cardDetails, setCardDetails] = useState({
@@ -98,13 +98,32 @@ const CardPayment = ({ onSubmit }) => {
     );
 };
 
-const PayPalPayment = () => {
+const PayPalPayment = ({ onSubmit , total}) => {
+    const navigate = useNavigate();
+    const handlePayPalPayment = async () => {
+        const paymentDetails = {
+            amount: total,
+            description: "Payment for items in cart",
+        };
+        axios.post('http://127.0.0.1:8000/create_payment/', paymentDetails, {
+            headers: { Authorization: authToken },
+        }).then(response => {
+            // Redirect to PayPal using the URL provided by your backend
+            window.location.href = response.data.redirectUrl;
+        }).catch(error => {
+            console.error("Error during PayPal payment creation:", error);
+            // Handle error
+        });
+    };
+
     return (
         <div>
-        <h4>PayPal Payment</h4>
+            <h4>PayPal Payment</h4>
+            <Button onClick={handlePayPalPayment}>Pay with PayPal</Button>
         </div>
     );
 };
+
 
 const Payment = () => {
     const navigate = useNavigate();
@@ -115,7 +134,7 @@ const Payment = () => {
     const [products, setProducts] = useState([]);
 
     const userID = localStorage.getItem('userid');
-    const authToken = 'Token b09782e294306013522c0610bbbe5e601e021b3b';
+    let query = useQuery();
 
     useEffect(() => {
         const fetchCart = async () => {
@@ -140,6 +159,9 @@ const Payment = () => {
 
         fetchCart();
         fetchProducts();
+        
+        let status = query.get("status");
+        setShowSuccess(status);
     }, [userID]);
 
     const calculateTotal = () => {
@@ -150,6 +172,7 @@ const Payment = () => {
         return total + 50; // Adding delivery fee
     };
 
+    const amount = calculateTotal();
 
     const handlePaymentSubmit = (paymentDetails) => {
         setIsLoading(true);
@@ -166,7 +189,7 @@ const Payment = () => {
             case 'Card':
                 return <CardPayment onSubmit={handlePaymentSubmit} />;
             case 'PayPal':
-                return <PayPalPayment />;
+                return <PayPalPayment onSubmit={handlePaymentSubmit} total={amount} />;
             default:
                 return <p>Please select a payment method</p>;
         }
@@ -184,7 +207,6 @@ const Payment = () => {
     if (showSuccess) {
         const orderId = "ORD123456";
         const orderCreationTime = new Date().toLocaleString();
-        const amountPaid = calculateTotal();
         return (
             <Container className="text-center my-5">
                 <img src="/img/payment/payment_success.png" alt="Success" style={{ width: '200px', height: '200px' }} />
@@ -193,7 +215,7 @@ const Payment = () => {
                 <div className="my-3">
                     <strong>Order ID:</strong> {orderId}<br/>
                     <strong>Order Time:</strong> {orderCreationTime}<br/>
-                    <strong>Amount Paid:</strong> ${amountPaid}
+                    <strong>Amount Paid:</strong> ${amount}
                 </div>
                 <Button variant="primary" onClick={() => navigate('/orderlist')}>
                     Proceed to My Orders
@@ -206,7 +228,7 @@ const Payment = () => {
         <div>
         <Container>
             <h2 className="my-3">Payment</h2>
-            <p className="my-3">Amount to be paid: ${calculateTotal()}</p>
+            <p className="my-3">Amount to be paid: ${amount}</p>
             <Form className="my-3">
                 <Form.Group controlId="paymentMethodSelect">
                 <Form.Label><strong>Payment Method</strong></Form.Label>

@@ -28,7 +28,10 @@ paypalrestsdk.configure({
     "client_secret": 'EPUqMwS7TahZ0KvqalVuNnRFQUYNJtHdSs82mOkufIqh4TMScqikRkfscDp62xjQ69kH-sjv9WQc28Dj',
 })
 
+@csrf_exempt
 def create_payment(request):
+    data = json.loads(request.body)
+
     payment = paypalrestsdk.Payment({
         "intent": "sale",
         "payer": {
@@ -41,18 +44,18 @@ def create_payment(request):
         "transactions": [
             {
                 "amount": {
-                    "total": request.amount,  # Total amount in USD
+                    "total": data.get('amount'),
                     "currency": "HKD",
                 },
-                "description": request.description,
+                "description": data.get('description'),
             }
         ],
     })
 
     if payment.create():
-        return redirect(payment.links[1].href)  # Redirect to PayPal for payment
+        return JsonResponse({'redirectUrl': payment.links[1].href})  # Redirect to PayPal for payment
     else:
-        return render(request, 'payment_failed.html')
+        return JsonResponse({'error': 'Failed to create PayPal payment'}, status=500)
     
 def execute_payment(request):
     payment_id = request.GET.get('paymentId')
@@ -61,7 +64,7 @@ def execute_payment(request):
     payment = paypalrestsdk.Payment.find(payment_id)
 
     if payment.execute({"payer_id": payer_id}):
-        return render(request, 'payment_success.html')
+        return redirect(f'http://localhost:3000/payment?status=success')
     else:
         return render(request, 'payment_failed.html')
     
