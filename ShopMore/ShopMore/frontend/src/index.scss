@@ -182,9 +182,11 @@
       column-gap: 10px;
       grid-template-columns: 300px auto;
       height: auto;
+      min-height: 500px;
       #searchArea {
         display: inline-grid;
         border: 1px solid black;
+        position: relative;
         #searchGroup{
           margin: 3%;
           margin-bottom: 5%;
@@ -196,9 +198,10 @@
           }
         }
         #filter{
-          margin-left: 4%;
-          margin-right: 4%;
+          margin-left: 6%;
           font-style: italic;
+          position: absolute;
+          top: 55px;
           #filterTitle1{
             position: relative;
           }
@@ -288,7 +291,7 @@
             }
             p{
               position: relative;
-              font-size: 12px;
+              font-size: 11px;
               display: inline;
               margin-left: 5px;
               text-align: center;
