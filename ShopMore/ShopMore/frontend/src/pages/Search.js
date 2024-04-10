@@ -170,7 +170,16 @@ const Search= () => {
                     temp.push([])
                     temp.push([])
                     for (let j=0; j<review.data.message.length; j++){
-                        temp[4].push([review.data.message[j].userID,review.data.message[j].Review])
+                        let username = ""
+                        const response = await axios.post('http://127.0.0.1:8000/user/', {userID: review.data.message[j].userID}, {
+                            headers: {
+                                Authorization: 'Token ' + authToken
+                            }
+                        });
+                        if (response.data.fields.length > 0) {
+                            username = response.data.fields[0].username;
+                        }
+                        temp[4].push([username,review.data.message[j].Review])
                         temp[5].push([review.data.message[j].Rating])
                     }                
                 }

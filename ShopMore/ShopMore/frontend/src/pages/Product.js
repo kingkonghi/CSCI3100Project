@@ -72,7 +72,16 @@ const Product = () => {
             temp.push([])
             temp.push([])
             for (let j=0; j<review.data.message.length; j++){
-                temp[4].push([review.data.message[j].userID,review.data.message[j].Review])
+                let username = ""
+                const response = await axios.post('http://127.0.0.1:8000/user/', {userID: review.data.message[j].userID}, {
+                    headers: {
+                        Authorization: 'Token ' + authToken
+                    }
+                });
+                if (response.data.fields.length > 0) {
+                    username = response.data.fields[0].username;
+                }
+                temp[4].push([username,review.data.message[j].Review])
                 temp[5].push([review.data.message[j].Rating])
             }                
         }
@@ -258,16 +267,26 @@ const Product = () => {
 
     function sendingMessage(){
         let message = document.getElementById("userComment")
+        let sendStr =  message.value
         let loadPost = async () => { 
-            console.log('http://127.0.0.1:8000/review/add/' + pid + '/' + userId + '/' + message.value + '/' + selfRate +'/')
-            const response = await axios.get(
-                'http://127.0.0.1:8000/review/add/' + pid + '/' + userId + '/' + message.value + '/' + selfRate +'/'
-            )
-            console.log(response)
+            const response = null
+            try{
+                const response = await axios.get(
+                    'http://127.0.0.1:8000/review/add/' + pid + '/' + userId + '/' + sendStr + '/' + selfRate + '/',{
+                        headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + authToken
+                        }
+                    }
+                )
+                alert("Comment sent!")
+            }
+            catch(err){
+                alert("You can only give comment after ordering it!")
+            }
+            message.value = ""
         }
         loadPost(); 
-        message.value = ""
-        alert("Comment sent!")
     }
 
     return (
@@ -344,7 +363,7 @@ const Product = () => {
                     </div>
                     <hr/>
                     <div id="ratingSession">
-                        {accountType==1||accountType==0? <p>{userName} + ", we need your comment!"</p>:<p>Log in to comment!</p>}
+                        {accountType==1||accountType==0? <p>{userName}, we need your comment!</p>:<p>Log in to comment!</p>}
                         {accountType==1||accountType==0? 
                         <p id="rate">
                         {

@@ -52,14 +52,34 @@ const Main = () => {
         let tempReview = {}
         for (let i=0;i<review.data.message.length;i++){
             if (review.data.message[i].itemID in tempReview){
-                tempReview[review.data.message[i].itemID][0].push([review.data.message[i].userID,review.data.message[i].Review])
+                let username = ""
+                const response = await axios.post('http://127.0.0.1:8000/user/', {userID: review.data.message[i].userID}, {
+                    headers: {
+                        Authorization: 'Token ' + authToken
+                    }
+                });
+                if (response.data.fields.length > 0) {
+                    username = response.data.fields[0].username;
+                }
+                tempReview[review.data.message[i].itemID][0].push([username,review.data.message[i].Review])
                 tempReview[review.data.message[i].itemID][1].push(review.data.message[i].Rating)
             } else {
                 tempReview[review.data.message[i].itemID] = [[],[]]
-                tempReview[review.data.message[i].itemID][0].push([review.data.message[i].userID,review.data.message[i].Review])
+                let username = ""
+                const response = await axios.post('http://127.0.0.1:8000/user/', {userID: review.data.message[i].userID}, {
+                    headers: {
+                        Authorization: 'Token ' + authToken
+                    }
+                });
+                if (response.data.fields.length > 0) {
+                    username = response.data.fields[0].username;
+                }
+                tempReview[review.data.message[i].itemID][0].push([username,review.data.message[i].Review])
                 tempReview[review.data.message[i].itemID][1].push(review.data.message[i].Rating)
             }
         }
+
+        console.log(review)
         
         for (let i=0;i<message.length;i++){
             let temp = []
@@ -74,16 +94,25 @@ const Main = () => {
                 temp.push(tempReview[message[i].itemID][0])
                 temp.push(tempReview[message[i].itemID][1])             
             }
-            if (message[i].itemDescription.length >= 90){
-                temp.push(message[i].itemDescription.slice(0,90) + "...")
-            } else {
+            try{
+                if (message[i].itemDescription.length >= 90){
+                    temp.push(message[i].itemDescription.slice(0,90) + "...")
+                } else {
+                    temp.push(message[i].itemDescription)
+                }
+
+            }catch{
                 temp.push(message[i].itemDescription)
             }
             temp.push(message[i].itemImage)
             temp.push(message[i].itemCategory)
-            if (message[i].itemCategory.includes("Hot Sales")){
-                tempHot.push(temp)
-            } else {
+            try{
+                if (message[i].itemCategory.includes("Hot Sales")){
+                    tempHot.push(temp)
+                } else {
+                    tempNotHot.push(temp)
+                }
+            }catch{
                 tempNotHot.push(temp)
             }
             tempProd.push(temp)
