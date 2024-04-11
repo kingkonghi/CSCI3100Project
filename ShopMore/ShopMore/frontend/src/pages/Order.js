@@ -16,8 +16,8 @@ const Order = () => {
   const [deliveryfee] = useState(50);
 
   const [email] = useState(localStorage.getItem("email"));
-  const [date] = useState("2024-03-30"); //order
-  const [status] = useState("Completed"); //order
+  const [date] = useState("2024-04-11"); //order
+  const [status] = useState("Delivered"); //order
 
   const [username] = useState(localStorage.getItem("username"));
   const [contactno] = useState(localStorage.getItem("phoneNo"));
