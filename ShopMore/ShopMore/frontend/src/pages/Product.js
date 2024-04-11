@@ -23,7 +23,7 @@ const Product = () => {
     const [relatedProduct, setRelatedProduct] = useState([])
     const [render, setRender] = useState(false)
     const [signal2, set2] = useState(false)
-    const authToken = 'b09782e294306013522c0610bbbe5e601e021b3b'
+    const authToken = localStorage.getItem('token')
     const userId = localStorage.getItem('userid')
     const userName = localStorage.getItem('username')
     const accountType = localStorage.getItem('accountType')
