@@ -10,8 +10,8 @@ const Order = () => {
   let { oid } = useParams();
 
   const [orderproduct, setOrderProduct] = useState([
-    { pid: 1, name: "lamp", price: 20, quantity: 2 },
-    { pid: 2, name: "table", price: 2000, quantity: 1 }
+    { pid: 1, name: "lamp", price: 200, quantity: 2 },
+    { pid: 2, name: "table", price: 300, quantity: 1 }
   ]);
   const [discount] = useState(0);
   const [deliveryfee] = useState(50);
