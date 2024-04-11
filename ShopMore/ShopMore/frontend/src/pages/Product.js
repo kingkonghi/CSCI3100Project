@@ -55,7 +55,7 @@ const Product = () => {
         for(let i=0; i<favStatus.data.length;i++){
             favId.push(parseInt(favStatus.data[i].itemid))
         }
-        setSelfLove(favId.includes(pid))
+        setSelfLove(favId.includes(parseInt(pid)))
 
         const review = await axios.get( 
         'http://127.0.0.1:8000/review/' + pid
@@ -145,58 +145,58 @@ const Product = () => {
      function favoriteEdit(){
         if(accountType==1||accountType==0){
             let loadPost = async() => {
-            const favStatus = await axios.get( 
-                'http://127.0.0.1:8000/display_favorite/',{
-                        headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Token ' + authToken
-                        }
-                    }
-                )
-            let favId = []
-            for(let i=0; i<favStatus.data.length;i++){
-                favId.push(parseInt(favStatus.data[i].itemid))
-            }
-            console.log(selfLove)
-            setSelfLove(!selfLove)
-            console.log(favId)
-            console.log(productData[0])
-            console.log(favId.includes(productData[0]))
-            console.log(selfLove)
-            if(favId.includes(productData[0]) && selfLove){
-                alert('Some error occurs, setting item in favorite list for now, try later.')
-                setSelfLove(!selfLove)
-            } else if (!favId.includes(productData[0]) && !selfLove){
-                alert('Some error occurs, setting item not in favorite list for now, try later.')
-                setSelfLove(!selfLove)
-            } else if (favId.includes(productData[0]) && !selfLove){
-                const favStatus = await axios.delete( 
-                    'http://127.0.0.1:8000/delete_favorite/'+ pid +'/',{
+                const favStatus = await axios.get( 
+                    'http://127.0.0.1:8000/display_favorite/',{
                             headers: {
                             'Content-Type': 'application/json',
                             'Authorization': 'Token ' + authToken
                             }
                         }
                     )
-            } else if (!favId.includes(productData[0]) && selfLove){
-                const favStatus = await axios.post( 
-                    'http://127.0.0.1:8000/add_to_favorite/',{
-                        item_id: productData[0]
-                    }, {
-                            headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Token ' + authToken
+                let favId = []
+                for(let i=0; i<favStatus.data.length;i++){
+                    favId.push(parseInt(favStatus.data[i].itemid))
+                }
+                console.log(favId)
+                console.log(productData[0])
+                console.log(favId.includes(productData[0]))
+                console.log(selfLove)
+                if(favId.includes(productData[0]) && !selfLove){
+                    alert('Some error occurs, setting item in favorite list for now, try later.')
+                    setSelfLove(true)
+                } else if (!favId.includes(productData[0]) && selfLove){
+                    alert('Some error occurs, setting item not in favorite list for now, try later.')
+                    setSelfLove(false)
+                } else if (favId.includes(productData[0]) && selfLove){
+                    const favStatus = await axios.delete( 
+                        'http://127.0.0.1:8000/delete_favorite/'+ pid +'/',{
+                                headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Token ' + authToken
+                                }
                             }
-                        }
-                    )
+                        )
+                    setSelfLove(false)
+                } else if (!favId.includes(productData[0]) && !selfLove){
+                    const favStatus = await axios.post( 
+                        'http://127.0.0.1:8000/add_to_favorite/',{
+                            item_id: productData[0]
+                        }, {
+                                headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Token ' + authToken
+                                }
+                            }
+                        )
+                    setSelfLove(true)
+                }
+            }
+            loadPost()
+            } else {
+                alert("You have to login to add item to favorite list!")
+                setSelfLove(false)
             }
         }
-        loadPost()
-        } else {
-            alert("You have to login to add item to favorite list!")
-            setSelfLove(false)
-        }
-     }
 
     useEffect(() => {
         loadProd(); 
