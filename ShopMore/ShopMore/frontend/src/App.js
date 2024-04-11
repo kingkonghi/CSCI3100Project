@@ -35,7 +35,7 @@ const router = createBrowserRouter([
   {
     //insert paths (no nav bar, no title bar)
     path: '',
-    element: <Root nav={false} home={true} />,
+    element: <Root nav={true} home={false} />,
     children: [
       {
         path: '/',
