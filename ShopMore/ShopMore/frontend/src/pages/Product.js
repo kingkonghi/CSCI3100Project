@@ -43,19 +43,23 @@ const Product = () => {
     }; 
 
     const loadProd2 = async () => {
-        const favStatus = await axios.get( 
-            'http://127.0.0.1:8000/display_favorite/',{
-                    headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Token ' + authToken
+        try{
+            const favStatus = await axios.get( 
+                'http://127.0.0.1:8000/display_favorite/',{
+                        headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + authToken
+                        }
                     }
-                }
-            )
-        let favId = []
-        for(let i=0; i<favStatus.data.length;i++){
-            favId.push(parseInt(favStatus.data[i].itemid))
+                )
+            let favId = []
+            for(let i=0; i<favStatus.data.length;i++){
+                favId.push(parseInt(favStatus.data[i].itemid))
+            }
+            setSelfLove(favId.includes(parseInt(pid)))
+        } catch{
+            setSelfLove(false)
         }
-        setSelfLove(favId.includes(parseInt(pid)))
 
         const review = await axios.get( 
         'http://127.0.0.1:8000/review/' + pid
@@ -282,7 +286,7 @@ const Product = () => {
                 alert("Comment sent!")
             }
             catch(err){
-                alert("You can only give comment after ordering it!")
+                alert("You have to login to give comment!")
             }
             message.value = ""
         }
