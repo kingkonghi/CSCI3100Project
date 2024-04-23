@@ -2,14 +2,16 @@
 // Student ID : 1155157376, 1155141896, 1155149600, 1155158054, 1155176122
 import "../index.scss"
 import * as React from 'react';
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const Favour = () => {
+  // State to store the favorite products
   const [favproduct, setFavProduct] = useState([]);
 
   useEffect(() => {
+    // Fetch favorite product list when the component mounts
     const fetchFavoriteList = async () => {
       const url = 'http://127.0.0.1:8000/display_favorite/';
       const headers = {
@@ -18,9 +20,9 @@ const Favour = () => {
       };
 
       try {
+        // Fetch favorite products from the server
         const response = await axios.get(url, { headers });
         const favoriteList = response.data;
-        console.log(favoriteList)
         setFavProduct(favoriteList);
       } catch (error) {
         console.error('Error:', error);
@@ -30,6 +32,7 @@ const Favour = () => {
     fetchFavoriteList();
   }, []);
 
+  // Function to update the favorite products
   const updateFavProduct = (updatedFavProduct) => {
     setFavProduct(updatedFavProduct);
   };
@@ -50,7 +53,7 @@ const Favour = () => {
               </tr>
             </thead>
             <tbody>
-              {favproduct.length > 0 ? ( // Add conditional check before mapping over orderlist
+              {favproduct.length > 0 ? ( // Add conditional check before mapping over favoriteList
                 favproduct.map((file, index) => (
                   <TRF i={index} key={index} data={favproduct} updateFavProduct={updateFavProduct}/>
                 ))
@@ -69,6 +72,7 @@ const Favour = () => {
 
 export default Favour;
 
+// Function to delete a favorite product
 const deleteFavorite = async (itemID) => {
   const url = `http://127.0.0.1:8000/delete_favorite/${itemID}`;  
   const headers = {
@@ -84,7 +88,9 @@ const deleteFavorite = async (itemID) => {
   }
 };
 
+// Dynamic Favourite List Table row
 class TRF extends React.Component {
+  // Function to delete a row (favorite product)
   deleteRow = (itemID) => {
     const { i, data, updateFavProduct } = this.props;
     const updatedFp = [...data];
@@ -93,6 +99,7 @@ class TRF extends React.Component {
     deleteFavorite(itemID);
   };
 
+  // Function to add a product to the cart
   addToCart = async (userID, itemID, quantity) => {
     const url = `http://127.0.0.1:8000/cart/add/${userID}/${itemID}/${quantity}`;
     const headers = {
@@ -133,7 +140,7 @@ class TRF extends React.Component {
             className="btn btn-link x-circle"
             onClick={() => this.deleteRow(itemID)}
           >
-            <i className="bi bi-x-circle-fill" style={{ color: 'red' }}></i>
+            <i className="bibi-x-circle-fill" style={{ color: 'red' }}></i>
           </button>
         </td>
       </tr>

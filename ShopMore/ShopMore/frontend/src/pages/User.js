@@ -2,16 +2,19 @@
 // Student ID : 1155157376, 1155141896, 1155149600, 1155158054, 1155176122
 import "../index.scss"
 import * as React from 'react';
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import axios from 'axios';
 
+// Create api to connect to the server
 const api = axios.create({
   baseURL: 'http://127.0.0.1:8000/',
 });
 
 const User = () => {
+
+  // Set the intial form value to be empty
   const initialFormValues = {
     username: '',
     email: '',
@@ -22,15 +25,18 @@ const User = () => {
     confirmPassword: ''
   };
 
+  // Use state to record the form value
   const [formValues, setFormValues] = useState(initialFormValues);
-  
+
+  // Reset the form values to initial state
   const handleFormReset = () => {
     fetchUserData();
   };
 
+  // Fetch user data from the server
   const fetchUserData = async () => {
     try {
-      const token = 'Token '+ localStorage.getItem('token');
+      const token = 'Token ' + localStorage.getItem('token');
       const userid = localStorage.getItem('userid');
 
       const response = await api.post('user/', {
@@ -43,7 +49,7 @@ const User = () => {
       });
 
       const userData = response.data.fields[0];
-      console.log(response.data.fields[0])
+      console.log(response.data.fields[0]);
       setFormValues({
         username: userData.username,
         email: userData.email,
@@ -61,117 +67,121 @@ const User = () => {
   useEffect(() => {
     fetchUserData();
   }, []);
-  
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        let processedValue = value;
-        
-        if (name === 'phoneNo') {
-          processedValue = value.replace(/\D/g, '');
-        }
-        
-        setFormValues((prevValues) => ({ ...prevValues, [name]: processedValue }));
-      };
 
-      const handleSubmit = async (event) => {
-        event.preventDefault();
-      
-        try {
-          const token = 'Token ' + localStorage.getItem('token');
-          const userid = localStorage.getItem('userid');
-      
-          const response = await api.post(
-            'user/edit_info/',
-            {
-              userID: userid,
-              username: formValues.username,
-              email: formValues.email,
-              phoneNo: formValues.phoneNo,
-              address: formValues.address,
-              password: formValues.password,
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: token,
-              },
-            }
-          );
-      
-          // Handle the response or perform any additional actions
-          localStorage.setItem('username', formValues.username);
-          localStorage.setItem('email', formValues.email);
-          localStorage.setItem('phoneNo', formValues.phoneNo);
-          localStorage.setItem('address', formValues.address);
-          localStorage.setItem('password', formValues.password);
-          alert('Information changed.');
-        } catch (error) {
-          console.log(error);
-        }
-      };
+  // Handle input changes and update form values
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    let processedValue = value;
 
-      const handlePopupSubmit = (event) => {
-        event.preventDefault();
-    
-        const { oldPassword, newPassword, confirmPassword } = event.target.elements;
-    
-        if (oldPassword.value !== formValues.password) {
-          alert('Original password is incorrect.');
-          return;
+    if (name === 'phoneNo') {
+      processedValue = value.replace(/\D/g, '');
+    }
+
+    setFormValues((prevValues) => ({ ...prevValues, [name]: processedValue }));
+  };
+
+  // Handle form submission
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const token = 'Token ' + localStorage.getItem('token');
+      const userid = localStorage.getItem('userid');
+
+      const response = await api.post(
+        'user/edit_info/',
+        {
+          userID: userid,
+          username: formValues.username,
+          email: formValues.email,
+          phoneNo: formValues.phoneNo,
+          address: formValues.address,
+          password: formValues.password,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token,
+          },
         }
-    
-        if (newPassword.value !== confirmPassword.value) {
-          alert('New password and confirm password do not match.');
-          return;
+      );
+
+      // Handle the response by updating the user's info in localStorage
+      localStorage.setItem('username', formValues.username);
+      localStorage.setItem('email', formValues.email);
+      localStorage.setItem('phoneNo', formValues.phoneNo);
+      localStorage.setItem('address', formValues.address);
+      localStorage.setItem('password', formValues.password);
+      alert('Information changed.');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Handle popup form submission for changing password
+  const handlePopupSubmit = (event) => {
+    event.preventDefault();
+
+    const { oldPassword, newPassword, confirmPassword } = event.target.elements;
+
+    if (oldPassword.value !== formValues.password) {
+      alert('Original password is incorrect.');
+      return;
+    }
+
+    if (newPassword.value !== confirmPassword.value) {
+      alert('New password and confirm password do not match.');
+      return;
+    }
+
+    // Update the password in the state
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      password: newPassword.value,
+      newPassword: '',
+      confirmPassword: '',
+    }));
+
+    // Send a request to update the password in the database
+    updatePassword(newPassword.value);
+  };
+
+  // Function to update the password in the database
+  const updatePassword = async (newPassword) => {
+    try {
+      const token = 'Token ' + localStorage.getItem('token');
+      const userid = localStorage.getItem('userid');
+
+      const response = await api.post(
+        'user/edit_info/',
+        {
+          userID: userid,
+          username: formValues.username,
+          email: formValues.email,
+          phoneNo: formValues.phoneNo,
+          address: formValues.address,
+          password: newPassword,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token,
+          },
         }
-    
-        // Update the password in the state
-        setFormValues((prevValues) => ({
-          ...prevValues,
-          password: newPassword.value,
-          newPassword: '',
-          confirmPassword: '',
-        }));
-    
-        // Send a request to update the password in the database
-        updatePassword(newPassword.value);
-      };
-    
-      const updatePassword = async (newPassword) => {
-        try {
-          const token = 'Token ' + localStorage.getItem('token');
-          const userid = localStorage.getItem('userid');
-    
-          const response = await api.post(
-            'user/edit_info/',
-            {
-              userID: userid,
-              username: formValues.username,
-              email: formValues.email,
-              phoneNo: formValues.phoneNo,
-              address: formValues.address,
-              password: newPassword,
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: token,
-              },
-            }
-          );
-    
-          // Handle the response or perform any additional actions
-          localStorage.setItem('username', formValues.username);
-          localStorage.setItem('email', formValues.email);
-          localStorage.setItem('phoneNo', formValues.phoneNo);
-          localStorage.setItem('address', formValues.address);
-          localStorage.setItem('password', formValues.password);
-          alert('Password changed.');
-          
-        } catch (error) {
-          console.log(error);
-        }
-      };
+      );
+
+      // Handle the response by updating the user's info in localStorage
+      localStorage.setItem('username', formValues.username);
+      localStorage.setItem('email', formValues.email);
+      localStorage.setItem('phoneNo', formValues.phoneNo);
+      localStorage.setItem('address', formValues.address);
+      localStorage.setItem('password', formValues.password);
+      alert('Password changed.');
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
   
     return (
       <>

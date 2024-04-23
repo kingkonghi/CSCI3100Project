@@ -4,31 +4,37 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+// Create api with server link
 const api = axios.create({
     baseURL: 'http://127.0.0.1:8000/',
   });
 
 const Login = () => {
+    // State to determine whether user want to sign up or login
     const [activeForm, setActiveForm] = useState('login');
     const navigate = useNavigate();
   
+    // Function  to toggle the form
     const toggleForm = (formType) => {
       setActiveForm(formType);
     };
-  
+
     const handleSignUp = async (event) => {
       event.preventDefault();
+      // Get the user input from the form
       const formData = new FormData(event.target);
       const username = formData.get('signupUsername');
       const email = formData.get('signupEmail');
       const password = formData.get('signupPassword');
       const confirmPassword = formData.get('signupconPassword');
   
+      // Check the new password equal to confirmed Password
       if (password !== confirmPassword) {
         alert("Passwords don't match");
         return;
       }
   
+      // Record the new account into server
       try {
         const { data } = await api.post('register/', { username, password, email });
         alert('Registration successful');
@@ -41,10 +47,12 @@ const Login = () => {
   
     const handleLogin = async (event) => {
       event.preventDefault();
+      // Get the user input from the form
       const formData = new FormData(event.target);
       const username = formData.get('loginUsername');
       const password = formData.get('loginPassword');
   
+      // Use the username and password to get user's detail and store to localStorage
       try {
         const { data } = await api.post('login/', { username, password });
         console.log(data);

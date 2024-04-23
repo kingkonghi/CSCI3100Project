@@ -7,21 +7,21 @@ import { useParams, Link} from 'react-router-dom';
 import { Row, Col} from 'react-bootstrap';
 
 const Order = () => {
-  let { oid } = useParams();
+  let { oid } = useParams(); // Get the `oid` from the URL parameters
 
   const [orderproduct, setOrderProduct] = useState([
-    { pid: 1, name: "lamp", price: 200, quantity: 2 },
+    { pid: 1, name: "lamp", price: 200, quantity: 2 }, // Sample product data
   ]);
-  const [discount] = useState(0);
-  const [deliveryfee] = useState(50);
+  const [discount] = useState(0); // Set discount as 0
+  const [deliveryfee] = useState(50); // Set delivery fee as 50
 
-  const [email] = useState(localStorage.getItem("email"));
-  const [date] = useState("2024-04-11"); //order
-  const [status] = useState("Delivered"); //order
+  const [email] = useState(localStorage.getItem("email")); // Get email from localStorage
+  const [date] = useState("2024-04-11"); // Set order date
+  const [status] = useState("Delivered"); // Set order status
 
-  const [username] = useState(localStorage.getItem("username"));
-  const [contactno] = useState(localStorage.getItem("phoneNo"));
-  const [address] = useState(localStorage.getItem("address"));
+  const [username] = useState(localStorage.getItem("username")); // Get username from localStorage
+  const [contactno] = useState(localStorage.getItem("phoneNo")); // Get contact number from localStorage
+  const [address] = useState(localStorage.getItem("address")); // Get address from localStorage
 
   // Calculate the total price
   const subtotalPayment = orderproduct.reduce(
@@ -50,89 +50,90 @@ const Order = () => {
               ))}
             </tbody>
             <tfoot>
-                <tr>
+              <tr>
                 <td colSpan="4" align="right" style={{ textAlign: "right", paddingRight: "50px" }}>
-                Item Subtotal:
+                  Item Subtotal:
                 </td>
                 <td>{subtotalPayment}</td>
               </tr>
               <tr>
                 <td colSpan="4" align="right" style={{ textAlign: "right", paddingRight: "50px" }}>
-                Discount:
+                  Discount:
                 </td>
                 <td>{discount}</td>
               </tr>
               <tr>
                 <td colSpan="4" align="right" style={{ textAlign: "right", paddingRight: "50px" }}>
-                Delivery Fee:
+                  Delivery Fee:
                 </td>
                 <td>{deliveryfee}</td>
               </tr>
               <tr>
                 <td colSpan="4" align="right" style={{ textAlign: "right", fontWeight: "bold", paddingRight: "50px" }}>
-                Total Payment:
+                  Total Payment:
                 </td>
-                <td>{subtotalPayment-discount+deliveryfee}</td>
+                <td>{subtotalPayment - discount + deliveryfee}</td>
               </tr>
             </tfoot>
           </table>
         </div>
       </div>
-      <div className="container" style={{marginTop: "20px"}}>
+      <div className="container" style={{ marginTop: "20px" }}>
         <div className="row">
-            <Row>
-                <Col>
-                    <h4>Order Detail</h4>
-                    <tr>
-                        <td>Order ID: </td>
-                        <td>{oid}</td>
-                    </tr>
-                    <tr>
-                        <td>Email: </td>
-                        <td>{email}</td>
-                    </tr>
-                    <tr>
-                        <td>Order Date: </td>
-                        <td>{date}</td>
-                    </tr>
-                    <tr>
-                        <td>Status: </td>
-                        <td>{status}</td>
-                    </tr>
-                </Col>
-                <Col>
-                    <h4>Customer Detail</h4>
-                    <tr>
-                        <td>Name: </td>
-                        <td>{username}</td>
-                    </tr>
-                    <tr>
-                        <td>Contact Number: </td>
-                        <td>{contactno}</td>
-                    </tr>
-                    <tr>
-                        <td>Address: </td>
-                        <td>{address}</td>
-                    </tr>
-                </Col>
-            </Row>
-            <Row style={{marginTop: "20px"}}>
-                <Col>
-                <h4>Payment Detail</h4>
-                    <tr>
-                        <td>Payment Status: </td>
-                        <td>Paid</td>
-                    </tr>
-                </Col>
-            </Row>
+          <Row>
+            <Col>
+              <h4>Order Detail</h4>
+              <tr>
+                <td>Order ID: </td>
+                <td>{oid}</td>
+              </tr>
+              <tr>
+                <td>Email: </td>
+                <td>{email}</td>
+              </tr>
+              <tr>
+                <td>Order Date: </td>
+                <td>{date}</td>
+              </tr>
+              <tr>
+                <td>Status: </td>
+                <td>{status}</td>
+              </tr>
+            </Col>
+            <Col>
+              <h4>Customer Detail</h4>
+              <tr>
+                <td>Name: </td>
+                <td>{username}</td>
+              </tr>
+              <tr>
+                <td>Contact Number: </td>
+                <td>{contactno}</td>
+              </tr>
+              <tr>
+                <td>Address: </td>
+                <td>{address}</td>
+              </tr>
+            </Col>
+          </Row>
+          <Row style={{ marginTop: "20px" }}>
+            <Col>
+              <h4>Payment Detail</h4>
+              <tr>
+                <td>Payment Status: </td>
+                <td>Paid</td>
+              </tr>
+            </Col>
+          </Row>
         </div>
-      </div>   
+      </div>
     </div>
   );
 };
 
 export default Order;
 
+// Dynamic Product Table row
 class TRP extends React.Component {
   render() {
     let i = this.props.i;

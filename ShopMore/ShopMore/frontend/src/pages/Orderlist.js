@@ -2,13 +2,14 @@
 // Student ID : 1155157376, 1155141896, 1155149600, 1155158054, 1155176122
 import "../index.scss"
 import * as React from 'react';
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const Orderlist = () => {
-  const [orderlist, setOrderlist] = useState([]);
+  const [orderlist, setOrderlist] = useState([]); // State for storing the order list
 
   useEffect(() => {
+    // Function to fetch the order list from the server
     const getOrder = async (userID) => {
       try {
         const url = `http://127.0.0.1:8000/order/${userID}`;
@@ -23,7 +24,7 @@ const Orderlist = () => {
         if (response.ok) {
           const data = await response.json();
           console.log(data.message);
-          setOrderlist(data.message); 
+          setOrderlist(data.message); // Update the order list state with the fetched data
         } else {
           console.error('Error:', response.status);
         }
@@ -33,11 +34,11 @@ const Orderlist = () => {
     };
 
     const userID = localStorage.getItem("userid");
-    getOrder(userID);
+    getOrder(userID); // Fetch the order list when the component mounts
   }, []);
 
   const updateOrder = (updatedOrder) => {
-    setOrderlist(updatedOrder);
+    setOrderlist(updatedOrder); // Function to update the order list state
   };
 
   return (
@@ -73,9 +74,10 @@ const Orderlist = () => {
   );
 };
 
+// Class for Dynamic Orderlist Table row
 class TRO extends React.Component {
   render() {
-    const { order } = this.props; // Remove the index from the object destructuring
+    const { order } = this.props; // Destructure the `order` prop
     const link = '/order/' + order.orderID;
     return (
       <tr>
