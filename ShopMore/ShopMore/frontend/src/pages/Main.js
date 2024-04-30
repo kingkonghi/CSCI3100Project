@@ -24,36 +24,36 @@ const Main = () => {
     const [render, setRender] = useState(false)
     const [signal2, set2] = useState(false)
     const [signal3, set3] = useState(false)
-    const authToken = 'b09782e294306013522c0610bbbe5e601e021b3b'
-    const userid = localStorage.getItem('userid')
-    const accountType = localStorage.getItem('accountType')
+    const authToken = 'b09782e294306013522c0610bbbe5e601e021b3b' //Admin token to get access
+    const userid = localStorage.getItem('userid') //Get user id 
+    const accountType = localStorage.getItem('accountType') //Get user type
 
     let navigate = useNavigate();
 
-    const loadProd = async () => { 
+    const loadProd = async () => { //Fetch step 1: Get raw product information
         const response = await axios.get( 
             'http://127.0.0.1:8000/product'
         ); 
         setMessage(response.data.item)
         set2(true)
         console.log("product fetch")
-    }; 
+    };  
 
-    const loadProd2 = async () => {
+    const loadProd2 = async () => { //Fetch step 2: Get other attribute and consolidation, such as review, campaign, hot sale
 
         let tempProd = []
         let tempHot = []
         let tempNotHot = []
 
-        const review = await axios.get( 
+        const review = await axios.get( //Call backend to get review
         'http://127.0.0.1:8000/review/'
         )
 
         let tempReview = {}
         for (let i=0;i<review.data.message.length;i++){
-            if (review.data.message[i].itemID in tempReview){
+            if (review.data.message[i].itemID in tempReview){ //If the product review/rating is already recorded
                 let username = ""
-                const response = await axios.post('http://127.0.0.1:8000/user/', {userID: review.data.message[i].userID}, {
+                const response = await axios.post('http://127.0.0.1:8000/user/', {userID: review.data.message[i].userID}, { //Call backend to get username from user id
                     headers: {
                         Authorization: 'Token ' + authToken
                     }
@@ -61,12 +61,12 @@ const Main = () => {
                 if (response.data.fields.length > 0) {
                     username = response.data.fields[0].username;
                 }
-                tempReview[review.data.message[i].itemID][0].push([username,review.data.message[i].Review])
-                tempReview[review.data.message[i].itemID][1].push(review.data.message[i].Rating)
+                tempReview[review.data.message[i].itemID][0].push([username,review.data.message[i].Review]) //Insert review by name
+                tempReview[review.data.message[i].itemID][1].push(review.data.message[i].Rating) //Insert rating
             } else {
-                tempReview[review.data.message[i].itemID] = [[],[]]
+                tempReview[review.data.message[i].itemID] = [[],[]] //Initialize the product review/rating array structure
                 let username = ""
-                const response = await axios.post('http://127.0.0.1:8000/user/', {userID: review.data.message[i].userID}, {
+                const response = await axios.post('http://127.0.0.1:8000/user/', {userID: review.data.message[i].userID}, { //Call backend to get username from user id
                     headers: {
                         Authorization: 'Token ' + authToken
                     }
@@ -74,27 +74,27 @@ const Main = () => {
                 if (response.data.fields.length > 0) {
                     username = response.data.fields[0].username;
                 }
-                tempReview[review.data.message[i].itemID][0].push([username,review.data.message[i].Review])
-                tempReview[review.data.message[i].itemID][1].push(review.data.message[i].Rating)
+                tempReview[review.data.message[i].itemID][0].push([username,review.data.message[i].Review]) //Insert review by name
+                tempReview[review.data.message[i].itemID][1].push(review.data.message[i].Rating) //Insert rating
             }
         }
 
         console.log(review)
         
-        for (let i=0;i<message.length;i++){
+        for (let i=0;i<message.length;i++){ //Get neccessary attributes only for each item
             let temp = []
             temp.push(message[i].itemID)
             temp.push(message[i].itemName)
             temp.push(message[i].itemQuantity)
             temp.push(message[i].itemPrice)
-            if (!(message[i].itemID in tempReview)){
+            if (!(message[i].itemID in tempReview)){ //If there is no review for the product, add a temporary "review" stating no one has placed review
                 temp.push([["N/A", "no one have commented yet"]])
                 temp.push([0])
             } else {
                 temp.push(tempReview[message[i].itemID][0])
                 temp.push(tempReview[message[i].itemID][1])             
             }
-            try{
+            try{ //Shorten the item description as this is not the product page
                 if (message[i].itemDescription.length >= 90){
                     temp.push(message[i].itemDescription.slice(0,90) + "...")
                 } else {
@@ -107,7 +107,7 @@ const Main = () => {
             temp.push(message[i].itemImage)
             temp.push(message[i].itemCategory)
             try{
-                if (message[i].itemCategory.includes("Hot Sales")){
+                if (message[i].itemCategory.includes("Hot Sales")){ //Hot sales will be displayed on the slideshow
                     tempHot.push(temp)
                 } else {
                     tempNotHot.push(temp)
@@ -116,34 +116,29 @@ const Main = () => {
                 tempNotHot.push(temp)
             }
             tempProd.push(temp)
-            if (tempHot.length===5){
+            if (tempHot.length===5){ //Hot sales will be displayed on the slideshow, but subject to a maximum of 5 products only
                 setProductData(tempProd)
                 setHotData(tempHot)
                 break;
             }
-            if(i===message.length-1){
+            if(i===message.length-1){ //If there is not enough hot sales product, randomly fill in the gap to 5 products 
                 setProductData(tempProd)
                 let lack = 5 - tempHot.length
                 for (let y=0;y<lack;y++){
                     tempHot.push(tempNotHot[y])
                 }
                 setHotData(tempHot)
-                set3(true)    
-                /*setHotData([ //[TBI] Recommendation product
-                    [1, "Table", 20, 1000, [["User0112","The prefect table with high quality."],["Bernald Meriq","Cheapest table I've seen in a while."]], [5.0, 4.5], "Made with the rare oakk wood found in India, the finest table that you..."],
-                    [2, "Washing machine", 20, 2000, [["User0445","Been using it for 10 years, perfect."],["Marina C.","Flawless."]], [5.0, 5.0], "Assist with AI production line, a washing machine for life."],
-                    [3, "Lamp", 20, 100, [["ProCommentor","Nice Lamp!"],["User0002","A little decoration to my pretty room."]], [5.0, 4.5], "Brighten your room with this lamp made with masters based in Germany."]
-                ]) //id, name, price, stock, reviews (array), rating (array), desc*/
+                set3(true)  
             }
         }
         console.log("review fetched")
     }
 
-    const loadProd3 = async () => {
+    const loadProd3 = async () => {//Fetch step 3: Get recommendation for the user
         const fetchRecommendation = null
         let tempRecommend = []
         let tempRecommendID = []
-        try{
+        try{ //Call backend for the recommendation list for user/admin
             fetchRecommendation = await axios.post( 
             'http://127.0.0.1:8000/product/recommendation/',{
                     userID: userid
@@ -158,12 +153,12 @@ const Main = () => {
                 tempRecommendID.push(fetchRecommendation.data["recommended items"][k].itemID)
             }
         }
-        catch (err) {//non-user case
+        catch (err) {//Non-user case
             console.log(accountType)
             tempRecommend = HotData
             tempRecommendID = [0,0,0,0,0,0]
         }
-        if (tempRecommendID.length<5){ //At least 5 products 
+        if (tempRecommendID.length<5){ //At least 5 products should be in the recommendation list, else fill in the gap randomly
             let lack = 5 - tempRecommendID.length
             for (let x=0; x<ProductData.length; x++){
                 if (!(tempRecommendID.includes(ProductData[x][0])) && lack>0){
@@ -193,7 +188,7 @@ const Main = () => {
         if(signal3){
             loadProd3(); 
         }
-    },[signal3]);
+    },[signal3]); //To ensure the data is loaded in order
 
 
       useEffect(() => {
@@ -203,11 +198,11 @@ const Main = () => {
               }, 3000);
           
           return () => clearInterval(interval)    
-      }, [showHot]);
+      }, [showHot]); //Allow slideshow of hot product
     
     function redirect(id){
         navigate('/product/' + id)
-    }
+    } //Allow redirect to product page
 
     function redirectSearch(name){
         let str = search.join('&&')
@@ -217,7 +212,7 @@ const Main = () => {
             str = name + "&&" + lPrice + "-" + hPrice + "&&" + str
         }
         navigate('/search/' + str)
-    }
+    } //Allow redirect to search page
 
     function modifySearch(types){
         if (types.target.checked){
@@ -226,7 +221,7 @@ const Main = () => {
         } else {
             search.splice(search.indexOf(types.target.id),1)
         }
-    }
+    } //Real-time update search string that might get passed to search page
 
     function updatePrice(e){
         if(e[0]==e[1]){
@@ -234,7 +229,7 @@ const Main = () => {
         }
         setLPrice(e[0])
         setHPrice(e[1])
-    }
+    } //Allow real-time update in price, reading from slider
 
     return (
         <>
@@ -245,13 +240,13 @@ const Main = () => {
                         <td id="img">
                             <img src={"/photo/"+HotData[showHot][7]} alt={HotData[showHot][1]} />
                         </td>
-                        <td id="productDesc">
+                        <td id="productDesc"> {/* Hot sale slideshow */}
                             <h5><FaFireAlt /> Seasonal Trend!</h5>
                             <p className="title">{HotData[showHot][1] + " - $" + HotData[showHot][3]}<span className="star"> {
                                 [0,1,2,3,4].map((element)=>{
                                     let rating = HotData[showHot][5].reduce((a, b) => a + b) / Math.max(0.001,HotData[showHot][5].length);
                                     let ratingHolder = null
-                                    if(rating>=element+1){
+                                    if(rating>=element+1){ {/* Display rating */}
                                         ratingHolder = <FaStar/>
                                     } else {
                                         if(rating >= element+0.5){
@@ -263,10 +258,10 @@ const Main = () => {
                                     return (ratingHolder)
                                 })
                             }</span></p>
-                            <p className="content">Our customers' feedback</p>
+                            <p className="content">Our customers' feedback</p> {/* Display review */}
                             <p className="feedback">{HotData[showHot][4][0][0] + ": " + HotData[showHot][4][0][1]}</p>
-                            <p id="displayBlock">
-                                {
+                            <p id="displayBlock"> {/* Display the dot indicator of which hot sales product is showing (red=showing) */}
+                                { 
                                     [0,1,2,3,4].map((element, index)=>{
                                         let returnDot = null
                                         if(element==showHot){
@@ -282,21 +277,21 @@ const Main = () => {
                     </tr>
                 </table>
                 <div id="lowerHalf">
-                    <div id="searchArea">
-                        <div id="searchGroup">
+                    <div id="searchArea"> {/* For searching (keyword, id, condition) */}
+                        <div id="searchGroup"> {/* For textbox searching (keyword, id) */}
                             <input id="searchBoxMain"type="text" placeholder="quote for name or id"/>
                             <FaSearch onClick={()=>redirectSearch(document.getElementById('searchBoxMain').value)}/>
                         </div>
-                        <div id="filter">
+                        <div id="filter"> {/* For condition searching */}
                             <div id="filterTitle1">
                                 <h5>Price</h5>
-                                <hr/>
+                                <hr/> {/* For price searching */}
                                 <Slider className="slider" thumbClassName="priceThumb" trackClassName="priceTrack" value={[lPrice,hPrice]} min={0} max={5000} onChange={(e)=>updatePrice(e)} />       
                                 <p id="minRange">$0</p>
                                 <p id="maxRange">$5,000</p>
                                 <p id="showRange">Selected price range: ${lPrice} - ${hPrice}</p>  
                             </div>
-                            <div id="filterTitle2">
+                            <div id="filterTitle2"> {/* For categorial condition searching */}
                                 <h5>Category</h5>
                                 <hr/>
                                 <table>
@@ -362,7 +357,7 @@ const Main = () => {
                                     </tr>
                                 </table>
                             </div>
-                            <div id="filterTitle3">
+                            <div id="filterTitle3"> {/* For special condition searching */}
                                 <h5>Other Attribute</h5>
                                 <hr/><table>
                                     <tr>
@@ -393,7 +388,7 @@ const Main = () => {
                             </div>
                         </div>
                     </div>
-                    <div id="recommendProduct">
+                    <div id="recommendProduct"> {/* Show recommendation and short description */}
                         <p id="titleRecommendation">Recommend for you base on your purchase history and favorite item</p>
                         <div id="productGroup">                      
                             {
@@ -404,9 +399,9 @@ const Main = () => {
                                             <div className="descArea">
                                                 <p className="titleBar">{element[1]}</p>
                                                 <p>{element[6]}</p>
-                                                <div className="highlightedFeedback">
+                                                <div className="highlightedFeedback"> {/* Show review */}
                                                     <p>{element[4][0][1] + " - "}</p>
-                                                    <p className="additionalComment">{element[4][0][0]}</p>
+                                                    <p className="additionalComment">{element[4][0][0]}</p> {/* Show rating */}
                                                     <span className="star">{
                                                         [0,1,2,3,4].map((element2)=>{
                                                             let rating = element[5].reduce((a, b) => a + b) / Math.max(element[5].length,0.001);
@@ -423,9 +418,9 @@ const Main = () => {
                                                             return (ratingHolder)
                                                         })
                                                     }</span>
-                                                </div>
+                                                </div> 
                                                 <button type="button" className="directButton" onClick={()=>redirect(element[0])}>Find out more &rarr;</button>
-                                            </div>
+                                            </div> {/* Redirect to product page */}
                                         </div>
                                     )
                                 })
