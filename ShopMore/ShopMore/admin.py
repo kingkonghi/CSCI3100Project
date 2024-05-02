@@ -7,6 +7,7 @@ from .backend.models.favoritelist import FavoriteList
 from .backend.models.user import User as UserList
 from django.contrib.auth.models import User
 
+#functions of django built-in admin website
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ['id', 'orderID', 'itemID', 'userID', 'Review', 'Rating']

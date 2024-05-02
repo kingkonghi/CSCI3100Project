@@ -78,11 +78,13 @@ def payment_checkout(request):
 def hello(request):
     return HttpResponse("Hello page")
 
-@api_view(['POST'])
+#login view
+@api_view(['POST']) 
 def login(request):
     response = loginfunction(request)
     return response
 
+#logout view
 @api_view(["POST"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -90,11 +92,13 @@ def logout(request):
     request.user.auth_token.delete()
     return Response({'detail': 'Successfully logged out'}, status=status.HTTP_200_OK)
 
+#register view
 @api_view(['POST'])
 def register(request):
    response = registerfunction(request)
    return response
 
+#show user information 
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -115,6 +119,7 @@ def user(request):
     ]
     return Response({'fields': serialized_user_info})
 
+#edit user info
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -132,6 +137,7 @@ def edit_info(request):
 
     return JsonResponse({'message': response})
 
+#add products to favorite list view
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -144,7 +150,7 @@ def add_to_favorite(request):
     response = add_favorite(user_id, item_id)
     return Response({'success': True, 'response': response})
     
-
+#display the whole favorite list view
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -154,8 +160,7 @@ def display_favorite(request):
     favorite_list = get_favorite_list(user_id)
     return JsonResponse(favorite_list, safe=False)
 
-
-
+#delete product from favorite list
 @api_view(['DELETE'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -167,7 +172,7 @@ def delete_favorite(request, itemID):
     response = delete_favorite_item(favorite_id)
     return Response({'success': True, 'response': response})
 
-
+#display products
 @api_view(["GET"])
 def product(request):
     itemlist = []
@@ -177,12 +182,14 @@ def product(request):
         itemlist.append(serializer.data)
     return Response({"item": itemlist})
 
+#display info of a specific product
 @api_view(["GET"])
 def product_specific(request,itemID):
     item = get_object_or_404(Item, itemID=itemID)
     serializer = ItemSerializer(instance=item)
     return Response({"item": serializer.data})
 
+#generate and display product recommendation view
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -194,8 +201,8 @@ def recommendation (request):
     response_data = {
         'recommended items': list(recommendation_items.values())
     }
-
     return JsonResponse(response_data)
+
 
 #Cart
 @api_view(['GET'])
@@ -271,7 +278,7 @@ def test_view(request):
     csrf_token = csrf.get_token(request)
     return HttpResponse(csrf_token)
 
-
+#admin function views (CRUD)
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])

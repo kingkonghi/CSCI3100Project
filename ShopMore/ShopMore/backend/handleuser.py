@@ -22,7 +22,7 @@ def add_user(user):
     auth_user.save()
     print(f"User {user.username} added.")
 
-
+#keep data of auth_user and user_list database to be the same when editing user info 
 def edit_user(user, username=None, accountType=None, password=None, email=None, profilePhoto=None, address=None, phoneNo=None):
     user_list_data = {}
     auth_user_data = {}
