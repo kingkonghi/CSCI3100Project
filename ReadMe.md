@@ -6,6 +6,8 @@ ShopMore is a full-stack online shopping system that offers a comprehensive set 
 
 ShopMore allows customers to register and authenticate themselves. After logging in, customers can browse products, add desired products to their favorite list and shopping cart, place orders, and check the order status conveniently. On the admin side, administrators can process CRUD functions of products and users on our admin page.
 
+![homepage!](readme_homepage.png)
+
 # Installation
 **1. Install the following Python library:**
 ```
