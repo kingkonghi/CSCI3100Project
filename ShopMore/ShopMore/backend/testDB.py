@@ -2,7 +2,7 @@ from database.connection import connect
 from models.user import User
 import sys
 
-
+# Test the database connection
 def test():
     try:
         conn = connect()
