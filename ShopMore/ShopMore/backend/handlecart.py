@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from ShopMore.serializers import CartSerializer
 
+# List all items in the cart of a user
 def list_cart(userID):
         cartlist = []
         for i in cart.objects.filter(userID=userID).all():
@@ -11,6 +12,7 @@ def list_cart(userID):
                 cartlist.append(serializer.data)
         return cartlist
 
+# Add an item to the cart of a user
 def add_item_to_cart(userID, itemID, quantity):
         try:
                 if not cart.objects.filter(userID=userID).exists():
@@ -25,7 +27,8 @@ def add_item_to_cart(userID, itemID, quantity):
                 return ""
         except Exception as e:
                 return e
-        
+
+# Edit an item quantity in the cart of a user
 def edit_item(userID, itemID, quantity): 
         try:   
                 if cart.objects.filter(userID=userID).exists():
@@ -35,7 +38,8 @@ def edit_item(userID, itemID, quantity):
                 return ""
         except Exception as e:
                 return e
-        
+
+# Remove an item from the cart of a user
 def remove_item(userID,itemID):
         try:   
                 if cart.objects.filter(userID=userID).exists():
@@ -45,7 +49,8 @@ def remove_item(userID,itemID):
                 return ""
         except Exception as e:
                 return e
-        
+
+# Remove all items from the cart of a user
 def remove_all_items(userID):
         if cart.objects.filter(userID=userID).exists():
                 cart_items = cart.objects.filter(userID=userID)
