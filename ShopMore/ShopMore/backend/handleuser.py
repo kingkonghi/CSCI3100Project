@@ -3,10 +3,12 @@ from .models.favoritelist import *
 from .models.cart import *
 from django.contrib.auth.models import User
 
+# Given user ID, return user info
 def list_user_info(userID):
     user_info = UserList.objects.filter(user_id=userID)
     return user_info
 
+#Create new user
 def add_user(user):
     max_id = UserList.objects.order_by('-user_id').first().user_id
     user1 = UserList(user_id=max_id+1,username=user.username, accountType=user.accountType, password=user.password, email=user.email, profilePhoto=user.profilePhoto, address=user.address, phoneNo=user.phoneNo)
@@ -64,7 +66,7 @@ def edit_user(user, username=None, accountType=None, password=None, email=None, 
 
     return f"edited"
 
-
+#Delete user by user ID
 def delete_user(userID):
     userlist = UserList.objects.get(user_id = userID)
     auth_user = userlist.user
