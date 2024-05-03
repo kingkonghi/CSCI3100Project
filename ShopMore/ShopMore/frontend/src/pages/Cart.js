@@ -1,3 +1,6 @@
+// Student Name : Lee Ho Kan, Leung Tsz Chung, Lee Kong Yau, Lui Chak Sum, Ho Yan Tung
+// Student ID : 1155157376, 1155141896, 1155149600, 1155158054, 1155176122
+
 import "../index.scss";
 import React, { useState, useEffect } from 'react';
 import { Card, Container, Row, Col, ListGroup, Form, Button, InputGroup, Alert } from 'react-bootstrap';
@@ -5,20 +8,27 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Cart = () => {
+    // State variables for cart items, product details, user's address, and quantity errors
     const [cartItems, setCartItems] = useState([]);
     const [products, setProducts] = useState([]);
     const [userAddress, setUserAddress] = useState('');
     const [quantityErrors, setQuantityErrors] = useState({ itemID: null, message: '' });
+
+    // Using react router navigation
     const navigate = useNavigate();
+
+    // Get user ID from localStorage
     const userID = localStorage.getItem('userid');
     const authToken = 'Token b09782e294306013522c0610bbbe5e601e021b3b';
 
+    // Fetch cart, product details, and user details on component mount
     useEffect(() => {
         fetchCart();
         fetchProducts();
         fetchUserDetails();
     }, []);
 
+    // Debounce function to limit rapid API calls on cart quantity updates (to avoid "jumping" quantity numbers)
     const debounce = (fn, delay) => {
         let timeoutId;
         return function(...args) {
@@ -31,6 +41,7 @@ const Cart = () => {
         };
     };
 
+    // Update quantity in the cart and fetch updated cart
     const updateQuantity = async (itemID, quantity) => {
         await axios.get(`http://127.0.0.1:8000/cart/edit/${userID}/${itemID}/${quantity}/`, {
             headers: {
@@ -39,8 +50,10 @@ const Cart = () => {
         }).then(() => fetchCart());
     };
 
+    // Create a debounced function for quantity update
     const debouncedUpdateQuantity = debounce(updateQuantity, 500);
 
+    // Handle quantity changes including error handling for unavailable stock
     const handleQuantityChange = (itemID, quantity, availableQuantity) => {
         if (quantity > availableQuantity) {
             // Immediately show an error and revert the quantity after 3 seconds
@@ -74,7 +87,7 @@ const Cart = () => {
         }
     };
 
-
+    // Fetch cart details from the server
     const fetchCart = async () => {
         const response = await axios.get(`http://127.0.0.1:8000/cart/${userID}/`, {
             headers: {
@@ -86,6 +99,7 @@ const Cart = () => {
         }
     };
 
+    // Fetch all product details
     const fetchProducts = async () => {
         const response = await axios.get('http://127.0.0.1:8000/product/', {
             headers: {
@@ -95,6 +109,7 @@ const Cart = () => {
         setProducts(response.data.item);
     };
 
+    // Fetch user details and update address state
     const fetchUserDetails = async () => {
         const response = await axios.post('http://127.0.0.1:8000/user/', {userID: userID}, {
             headers: {
@@ -106,6 +121,7 @@ const Cart = () => {
         }
     };
 
+    // Calculate the total cost of items in the cart
     const calculateTotal = () => {
         return cartItems.reduce((acc, cartItem) => {
             const product = products.find(p => p.itemID.toString() === cartItem.itemID);
@@ -113,6 +129,7 @@ const Cart = () => {
         }, 0);
     };
 
+    // Remove an item from the cart
     const removeItem = async (itemID) => {
         await axios.delete(`http://127.0.0.1:8000/cart/remove/${userID}/${itemID}/`, {
             headers: {
@@ -122,6 +139,7 @@ const Cart = () => {
         fetchCart();
     };
 
+    // Redirect user to the edit user info page
     const handleAddressChange = (e) => {
         const value = e.target.value;
         if (value === "edit-address") {

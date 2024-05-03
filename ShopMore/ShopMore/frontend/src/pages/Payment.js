@@ -1,3 +1,6 @@
+// Student Name : Lee Ho Kan, Leung Tsz Chung, Lee Kong Yau, Lui Chak Sum, Ho Yan Tung
+// Student ID : 1155157376, 1155141896, 1155149600, 1155158054, 1155176122
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -5,11 +8,13 @@ import { Card, Container, Row, Col, ListGroup, Form, FormControl, Button, InputG
 
 const authToken = 'Token b09782e294306013522c0610bbbe5e601e021b3b';
 
+// Parse the query parameters from the URL
 function useQuery() {
     return new URLSearchParams(useLocation().search);
 }
 
 const CardPayment = ({ onSubmit }) => {
+    // State to hold card details
     const [cardDetails, setCardDetails] = useState({
         cardNumber: '',
         cardHolderName: '',
@@ -18,10 +23,12 @@ const CardPayment = ({ onSubmit }) => {
         cvv: '',
     });
     
+    // Update state as user inputs card details
     const handleChange = (e) => {
         setCardDetails({ ...cardDetails, [e.target.name]: e.target.value });
     };
     
+    // Handle form submission for card payment
     const handleSubmit = (e) => {
         e.preventDefault();
         onSubmit(cardDetails);
@@ -100,6 +107,8 @@ const CardPayment = ({ onSubmit }) => {
 
 const PayPalPayment = ({ onSubmit , total}) => {
     const navigate = useNavigate();
+
+    // Function to initiate PayPal payment
     const handlePayPalPayment = async () => {
         const paymentDetails = {
             amount: total,
@@ -108,7 +117,7 @@ const PayPalPayment = ({ onSubmit , total}) => {
         axios.post('http://127.0.0.1:8000/create_payment/', paymentDetails, {
             headers: { Authorization: authToken },
         }).then(response => {
-            // Redirect to PayPal using the URL provided by your backend
+            // Redirect to PayPal using the URL provided by backend
             window.location.href = response.data.redirectUrl;
         }).catch(error => {
             console.error("Error during PayPal payment creation:", error);
@@ -138,6 +147,7 @@ const Payment = () => {
     const userID = localStorage.getItem('userid');
     let query = useQuery();
 
+    // Fetch cart and product details
     useEffect(() => {
         const fetchCart = () => {
             return axios.get(`http://127.0.0.1:8000/cart/${userID}/`, {
@@ -160,7 +170,8 @@ const Payment = () => {
                 setProducts(response.data.item);
             });
         };
-    
+
+        // Wait until both cart and products details have been fetched
         Promise.all([fetchCart(), fetchProducts()]).then(() => {
             let status = query.get("status");
             setShowSuccess(status);
@@ -171,17 +182,16 @@ const Payment = () => {
 
     useEffect(() => {
         if (showSuccess) {
-            // Convert cartItems to the required string format for the API call
+            // Convert cartItems to the required string format for order creation API call
             let orderItemsStr = cartItems.map(item => `"${item.itemID}":${item.quantity}`).join(',');
             orderItemsStr = "{" + orderItemsStr + "}";
             console.log(orderItemsStr);
     
-            // Calculate total amount again for clarity, though it could be reused from `amount`
+            // Calculate total amount again
             const totalAmount = calculateTotal();
     
             const createOrder = async () => {
                 try {
-                    // Here we assume userID is available in this scope as before
                     const response = await axios.get(`http://127.0.0.1:8000/order/add/${userID}/${orderItemsStr}/${totalAmount}/`, {
                         headers: {
                             Authorization: authToken
@@ -199,7 +209,7 @@ const Payment = () => {
                     
                 } catch (error) {
                     console.error('Order creation API call failed', error);
-                    setShowSuccess(false); // Optionally revert the success state if the order creation fails
+                    setShowSuccess(false); // Revert the success state if the order creation fails
                 }
             };
     
@@ -207,6 +217,7 @@ const Payment = () => {
         }
     }, [showSuccess]);
 
+    // Calculate total payment amount
     const calculateTotal = () => {
         const total = cartItems.reduce((acc, cartItem) => {
             const product = products.find(p => p.itemID.toString() === cartItem.itemID);
@@ -217,6 +228,7 @@ const Payment = () => {
 
     const amount = calculateTotal();
 
+    // Callback for when payment details are submitted
     const handlePaymentSubmit = (paymentDetails) => {
         setIsLoading(true);
         console.log(paymentDetails);
@@ -227,6 +239,7 @@ const Payment = () => {
         }, 3000); // 3s delay simulating payment loading
     };
 
+    // Dynamically render payment interface based on selected method
     const renderPaymentInterface = () => {
         switch (paymentMethod) {
             case 'Card':
@@ -238,6 +251,7 @@ const Payment = () => {
         }
     };
 
+    // Show a loading screen
     if (isLoading) {
         return (
             <div className="text-center my-5">
@@ -247,6 +261,7 @@ const Payment = () => {
         );
     }
 
+    // Show Success Page when order is created
     if (showSuccess && apiCallCompleted) {
         const orderIdStr = `ORD${orderId.toString().padStart(4, '0')}`;
         const orderCreationTime = new Date().toLocaleString();

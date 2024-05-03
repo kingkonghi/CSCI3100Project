@@ -1,8 +1,12 @@
+// Student Name : Lee Ho Kan, Leung Tsz Chung, Lee Kong Yau, Lui Chak Sum, Ho Yan Tung
+// Student ID : 1155157376, 1155141896, 1155149600, 1155158054, 1155176122
+
 import React, { useState, useEffect } from 'react';
 import { Button, Table, Form, Container, Nav } from 'react-bootstrap';
 import axios from 'axios';
 
 const Admin = () => {
+    // State variables for current view, users, products, and forms for editing or adding users and products
     const [view, setView] = useState('users');
     const [users, setUsers] = useState([]);
     const [products, setProducts] = useState([]);
@@ -11,6 +15,7 @@ const Admin = () => {
 
     const token = 'Token b09782e294306013522c0610bbbe5e601e021b3b';
 
+    // Fetch users and products on component mount
     useEffect(() => {
         fetchUsers();
         fetchProducts();
@@ -66,7 +71,7 @@ const Admin = () => {
         resetProductForm();
     };
 
-    // Delete functions
+    // Delete User/Product
     const deleteUser = async (userId) => {
         console.log(userId);
         await axios.delete(`http://127.0.0.1:8000/Admin/user/delete/${userId}/`, { headers: { Authorization: token } });
@@ -81,7 +86,7 @@ const Admin = () => {
         resetProductForm();
     };
 
-    // Selection functions
+    // Selection of User/Product to edit
     const selectUser = (userId) => {
         const user = users.find(user => user.user_id === userId);
         setUserForm({ ...user, id: user.user_id });
